@@ -75,6 +75,9 @@ uvx kokage-ui add crud Product      # Add CRUD model
 | [hello.py](examples/hello.py) | Minimal app | `uvicorn examples.hello:app` |
 | [todo.py](examples/todo.py) | CRUD todo app | `uvicorn examples.todo:app` |
 | [dashboard.py](examples/dashboard.py) | Full dashboard | `uvicorn examples.dashboard:app` |
+| [admin_demo.py](examples/admin_demo.py) | Admin panel + Auth | `uvicorn examples.admin_demo:app` |
+| [blog.py](examples/blog.py) | Markdown + Charts + Tabs | `uvicorn examples.blog:app` |
+| [realtime.py](examples/realtime.py) | SSE notifications | `uvicorn examples.realtime:app` |
 
 ## Documentation
 

@@ -61,4 +61,7 @@ nav:
     - Hello World: examples/hello.md
     - Todo App: examples/todo.md
     - Dashboard: examples/dashboard.md
+    - Admin Demo: examples/admin_demo.md
+    - Blog App: examples/blog.md
+    - Real-time: examples/realtime.md
   - API Reference: api/reference.md
