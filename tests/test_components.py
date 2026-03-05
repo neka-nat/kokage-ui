@@ -10,9 +10,11 @@ from kokage_ui.components import (
     DaisyTable,
     DaisyTextarea,
     Hero,
+    Layout,
     NavBar,
     Stat,
     Stats,
+    Toast,
 )
 
 
@@ -219,3 +221,78 @@ class TestDaisyTable:
             )
         )
         assert "table-xs" in result
+
+
+class TestToast:
+    def test_basic_toast(self):
+        result = str(Toast("Hello"))
+        assert "toast" in result
+        assert "z-50" in result
+        assert "Hello" in result
+
+    def test_toast_variant(self):
+        result = str(Toast("Error!", variant="error"))
+        assert "alert-error" in result
+
+    def test_toast_position(self):
+        result = str(Toast("Msg", position="toast-start toast-bottom"))
+        assert "toast-start" in result
+        assert "toast-bottom" in result
+
+    def test_toast_default_position(self):
+        result = str(Toast("Msg"))
+        assert "toast-end" in result
+        assert "toast-top" in result
+
+
+class TestLayout:
+    def test_wrap_basic(self):
+        layout = Layout()
+        page = layout.wrap("Content", "Title")
+        html = page.render()
+        assert "Content" in html
+        assert "<title>Title</title>" in html
+
+    def test_wrap_with_navbar(self):
+        layout = Layout(navbar=NavBar(start="Logo"))
+        page = layout.wrap("Body", "Test")
+        html = page.render()
+        assert "navbar" in html
+        assert "Logo" in html
+        assert "Body" in html
+
+    def test_wrap_with_sidebar(self):
+        from kokage_ui.elements import Div
+
+        sidebar = Div("Sidebar", cls="w-64")
+        layout = Layout(sidebar=sidebar)
+        page = layout.wrap("Main", "Test")
+        html = page.render()
+        assert "Sidebar" in html
+        assert "flex" in html
+
+    def test_wrap_with_footer(self):
+        from kokage_ui.elements import Footer
+
+        layout = Layout(footer=Footer("Footer text"))
+        page = layout.wrap("Body", "Test")
+        html = page.render()
+        assert "Footer text" in html
+
+    def test_wrap_title_suffix(self):
+        layout = Layout(title_suffix=" - My App")
+        page = layout.wrap("Content", "Home")
+        html = page.render()
+        assert "<title>Home - My App</title>" in html
+
+    def test_wrap_include_toast(self):
+        layout = Layout(include_toast=True)
+        page = layout.wrap("Content", "Test")
+        html = page.render()
+        assert "kokage-toast" in html
+
+    def test_wrap_theme(self):
+        layout = Layout(theme="dark")
+        page = layout.wrap("Content", "Test")
+        html = page.render()
+        assert 'data-theme="dark"' in html

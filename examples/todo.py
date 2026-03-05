@@ -11,7 +11,7 @@ from typing import Literal
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-from kokage_ui import A, InMemoryStorage, KokageUI, NavBar, Page
+from kokage_ui import A, InMemoryStorage, KokageUI, Layout, NavBar
 
 app = FastAPI()
 ui = KokageUI(app)
@@ -32,26 +32,19 @@ INITIAL_TODOS = [
 
 storage = InMemoryStorage(Todo, initial=INITIAL_TODOS)
 
-
-def _navbar():
-    return NavBar(
+layout = Layout(
+    navbar=NavBar(
         start=A("Todo App", cls="btn btn-ghost text-xl", href="/todos"),
         end=A("New Todo", cls="btn btn-primary btn-sm", href="/todos/new"),
-    )
-
-
-def page_wrapper(content, title):
-    return Page(
-        _navbar(),
-        content,
-        title=f"{title} - Todo App",
-    )
-
+    ),
+    title_suffix=" - Todo App",
+    include_toast=True,
+)
 
 ui.crud(
     "/todos",
     model=Todo,
     storage=storage,
     title="Todos",
-    page_wrapper=page_wrapper,
+    layout=layout,
 )

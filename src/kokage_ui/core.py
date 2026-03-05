@@ -71,6 +71,8 @@ class KokageUI:
         path: str,
         *,
         methods: list[str] | None = None,
+        layout: Any = None,
+        title: str = "",
         **route_kwargs: Any,
     ) -> Callable:
         """Decorator for full-page HTML routes.
@@ -81,6 +83,8 @@ class KokageUI:
         Args:
             path: URL path.
             methods: HTTP methods (default: ["GET"]).
+            layout: Optional Layout instance to wrap the result.
+            title: Page title (used with layout).
             **route_kwargs: Additional args passed to FastAPI add_api_route().
         """
         if methods is None:
@@ -92,6 +96,8 @@ class KokageUI:
                 result = func(**kwargs)
                 if inspect.isawaitable(result):
                     result = await result
+                if layout is not None and not isinstance(result, Page):
+                    result = layout.wrap(result, title)
                 html_str = _to_html_string(result)
                 return HTMLResponse(content=html_str)
 
@@ -119,6 +125,7 @@ class KokageUI:
         table_exclude: list[str] | None = None,
         form_exclude: list[str] | None = None,
         page_wrapper: Callable[..., Any] | None = None,
+        layout: Any = None,
         theme: str = "light",
     ) -> None:
         """Register full CRUD routes for a Pydantic model.
@@ -134,9 +141,13 @@ class KokageUI:
             table_exclude: Fields to exclude from table view.
             form_exclude: Fields to exclude from forms.
             page_wrapper: Optional callable(content, title) → Page.
+            layout: Optional Layout instance (used as page_wrapper if page_wrapper not set).
             theme: DaisyUI theme name.
         """
         from kokage_ui.crud import CRUDRouter
+
+        if layout is not None and page_wrapper is None:
+            page_wrapper = layout.wrap
 
         CRUDRouter(
             self.app,

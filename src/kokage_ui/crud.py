@@ -7,6 +7,7 @@ Pydantic BaseModel + Storage backend.
 from __future__ import annotations
 
 import math
+import urllib.parse
 import uuid
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Generic, TypeVar
@@ -294,7 +295,28 @@ class CRUDRouter(Generic[T]):
             return self.page_wrapper(content, page_title)
         from kokage_ui.page import Page
 
-        return Page(content, title=page_title, theme=self.theme)
+        return Page(content, title=page_title, theme=self.theme, include_toast=True)
+
+    @staticmethod
+    def _toast_url(base_url: str, message: str, toast_type: str = "success") -> str:
+        """Append toast query parameters to a URL."""
+        sep = "&" if "?" in base_url else "?"
+        return f"{base_url}{sep}_toast={urllib.parse.quote(message)}&_toast_type={toast_type}"
+
+    def _render_actions(self, row: T) -> Component:
+        """Render Edit + Delete action buttons for a table row."""
+        row_id = getattr(row, self.id_field)
+        return Div(
+            A("Edit", href=f"{self.prefix}/{row_id}/edit", cls="btn btn-warning btn-xs"),
+            ConfirmDelete(
+                "Delete",
+                url=f"{self.prefix}/{row_id}",
+                confirm_message=f"Delete this {self.model.__name__}?",
+                target="body",
+                cls="btn btn-error btn-outline btn-xs ml-2",
+            ),
+            cls="flex gap-1",
+        )
 
     def _build_list_table(
         self,
@@ -318,6 +340,7 @@ class CRUDRouter(Generic[T]):
             exclude=table_exclude,
             zebra=True,
             cell_renderers=cell_renderers,
+            extra_columns={"Actions": self._render_actions},
         )
 
         pagination = Pagination(
@@ -421,7 +444,9 @@ class CRUDRouter(Generic[T]):
                 instance = router.model.model_validate(raw_data)
                 created = await router.storage.create(instance)
                 created_id = getattr(created, router.id_field)
-                redirect_url = f"{prefix}/{created_id}"
+                redirect_url = router._toast_url(
+                    f"{prefix}/{created_id}", "Created successfully"
+                )
 
                 # htmx request → HX-Redirect header
                 if request.headers.get("hx-request"):
@@ -577,7 +602,9 @@ class CRUDRouter(Generic[T]):
             try:
                 instance = router.model.model_validate(raw_data)
                 await router.storage.update(id, instance)
-                redirect_url = f"{prefix}/{id}"
+                redirect_url = router._toast_url(
+                    f"{prefix}/{id}", "Updated successfully"
+                )
 
                 if request.headers.get("hx-request"):
                     return Response(
@@ -637,14 +664,15 @@ class CRUDRouter(Generic[T]):
             if not deleted:
                 return HTMLResponse(content="Not found", status_code=404)
 
+            redirect_url = router._toast_url(prefix, "Deleted successfully")
             if request.headers.get("hx-request"):
                 return Response(
                     status_code=200,
-                    headers={"HX-Redirect": prefix},
+                    headers={"HX-Redirect": redirect_url},
                 )
             return Response(
                 status_code=303,
-                headers={"Location": prefix},
+                headers={"Location": redirect_url},
             )
 
         app.add_api_route(

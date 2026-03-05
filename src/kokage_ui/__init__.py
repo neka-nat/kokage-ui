@@ -99,9 +99,11 @@ from kokage_ui.components import (
     DaisyTable,
     DaisyTextarea,
     Hero,
+    Layout,
     NavBar,
     Stat,
     Stats,
+    Toast,
 )
 
 # Pydantic model → UI auto-generation
@@ -199,6 +201,8 @@ __all__ = [
     "DaisySelect",
     "DaisyTextarea",
     "DaisyTable",
+    "Toast",
+    "Layout",
     # Pydantic Model → UI
     "ModelForm",
     "ModelTable",

@@ -482,15 +482,18 @@ class ModelTable(Component):
         zebra: bool = False,
         compact: bool = False,
         cell_renderers: dict[str, Callable[[Any], Any]] | None = None,
+        extra_columns: dict[str, Callable[[BaseModel], Any]] | None = None,
         **attrs: Any,
     ) -> None:
         fields = _filter_fields(model, include, exclude)
         cell_renderers = cell_renderers or {}
+        extra_columns = extra_columns or {}
 
         headers = [
             fi.title or name.replace("_", " ").title()
             for name, fi in fields
         ]
+        headers.extend(extra_columns.keys())
 
         table_rows = []
         for row in rows:
@@ -501,6 +504,8 @@ class ModelTable(Component):
                     cells.append(cell_renderers[name](value))
                 else:
                     cells.append(_render_value(value))
+            for renderer in extra_columns.values():
+                cells.append(renderer(row))
             table_rows.append(cells)
 
         table = DaisyTable(

@@ -132,7 +132,7 @@ ModelDetail(user_instance)
 
 ### One-Line CRUD
 
-Full list/create/detail/edit/delete UI from a single method call.
+Full list/create/detail/edit/delete UI from a single method call. Includes action buttons (Edit/Delete) in the list table and toast notifications on success.
 
 ```python
 from kokage_ui import KokageUI, InMemoryStorage
@@ -150,6 +150,34 @@ ui.crud(
 # Generates: GET /users, GET /users/new, POST /users/new,
 #             GET /users/{id}, GET /users/{id}/edit, POST /users/{id}/edit,
 #             DELETE /users/{id}
+```
+
+### Layout
+
+Reduce boilerplate by defining a reusable layout with navbar, sidebar, footer, and theme — then apply it to pages and CRUD routes.
+
+```python
+from kokage_ui import KokageUI, Layout, NavBar, A, InMemoryStorage
+
+ui = KokageUI(app)
+
+layout = Layout(
+    navbar=NavBar(
+        start=A("My App", cls="btn btn-ghost text-xl", href="/"),
+        end=A("New", cls="btn btn-primary btn-sm", href="/items/new"),
+    ),
+    title_suffix=" - My App",
+    include_toast=True,  # enable toast notifications
+    theme="light",
+)
+
+# Use with CRUD — all pages get the navbar + toast
+ui.crud("/items", model=Item, storage=storage, layout=layout)
+
+# Use with page decorator
+@ui.page("/", layout=layout, title="Home")
+def index():
+    return Div(H1("Welcome"))  # automatically wrapped in layout
 ```
 
 ### htmx Patterns
@@ -233,7 +261,7 @@ No virtual DOM, no JavaScript bundler, no client-side state management. The serv
 |---|---|
 | **Core** | `KokageUI`, `Page`, `Component`, `Raw` |
 | **HTML Elements** | `Div`, `Span`, `H1`–`H6`, `P`, `A`, `Img`, `Form`, `Input`, `Button`, `Table`, `Ul`, `Li`, ... (50+ elements) |
-| **DaisyUI** | `Card`, `Hero`, `Stats`, `Stat`, `Alert`, `Badge`, `NavBar`, `DaisyButton`, `DaisyInput`, `DaisySelect`, `DaisyTextarea`, `DaisyTable` |
+| **DaisyUI** | `Card`, `Hero`, `Stats`, `Stat`, `Alert`, `Badge`, `NavBar`, `DaisyButton`, `DaisyInput`, `DaisySelect`, `DaisyTextarea`, `DaisyTable`, `Toast`, `Layout` |
 | **Model → UI** | `ModelForm`, `ModelTable`, `ModelDetail` |
 | **htmx Patterns** | `AutoRefresh`, `SearchFilter`, `InfiniteScroll`, `SSEStream`, `ConfirmDelete`, `HxSwapOOB` |
 | **CRUD** | `CRUDRouter`, `InMemoryStorage`, `Storage`, `Pagination` |

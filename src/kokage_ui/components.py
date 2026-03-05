@@ -5,7 +5,7 @@ Abstracts DaisyUI class structure so you can build UI with Python args alone.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from kokage_ui.elements import (
     Component,
@@ -21,6 +21,9 @@ from kokage_ui.elements import (
     Thead,
     Tr,
 )
+
+if TYPE_CHECKING:
+    from kokage_ui.page import Page
 
 
 def _merge_cls(base: str, extra: str | None) -> str:
@@ -571,3 +574,106 @@ class DaisyTable(Component):
 
         attrs["cls"] = _merge_cls("overflow-x-auto", attrs.get("cls"))
         super().__init__(table, **attrs)
+
+
+# ========================================
+# Toast
+# ========================================
+
+
+class Toast(Component):
+    """DaisyUI Toast notification component.
+
+    Args:
+        *children: Toast content.
+        variant: Alert variant (info, success, warning, error).
+        position: DaisyUI toast position classes.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *children: Any,
+        variant: str = "info",
+        position: str = "toast-end toast-top",
+        **attrs: Any,
+    ) -> None:
+        alert = Alert(*children, variant=variant)
+        attrs["cls"] = _merge_cls(f"toast {position} z-50", attrs.get("cls"))
+        super().__init__(alert, **attrs)
+
+
+# ========================================
+# Layout
+# ========================================
+
+
+class Layout:
+    """Reusable page layout configuration.
+
+    NOT a Component subclass — a settings/builder object that wraps content
+    in a consistent Page structure with navbar, sidebar, footer, etc.
+
+    Args:
+        navbar: NavBar or component for the top of the page.
+        sidebar: Component for a left sidebar.
+        footer: Component for the page footer.
+        theme: DaisyUI theme name.
+        title_suffix: Appended to every page title.
+        include_toast: Enable toast notification support.
+        include_sse: Load htmx SSE extension.
+        lang: HTML lang attribute.
+    """
+
+    def __init__(
+        self,
+        *,
+        navbar: Any = None,
+        sidebar: Any = None,
+        footer: Any = None,
+        theme: str = "light",
+        title_suffix: str = "",
+        include_toast: bool = False,
+        include_sse: bool = False,
+        lang: str = "ja",
+    ) -> None:
+        self.navbar = navbar
+        self.sidebar = sidebar
+        self.footer = footer
+        self.theme = theme
+        self.title_suffix = title_suffix
+        self.include_toast = include_toast
+        self.include_sse = include_sse
+        self.lang = lang
+
+    def wrap(self, content: Any, title: str = "") -> Page:
+        """Wrap content in a full Page with the configured layout.
+
+        Compatible with CRUDRouter's page_wrapper(content, title) signature.
+        """
+        from kokage_ui.page import Page as PageCls
+
+        page_children: list[Any] = []
+        if self.navbar is not None:
+            page_children.append(self.navbar)
+
+        if self.sidebar is not None:
+            main_content = Div(content, cls="flex-1")
+            page_children.append(Div(self.sidebar, main_content, cls="flex"))
+        else:
+            page_children.append(content)
+
+        if self.footer is not None:
+            page_children.append(self.footer)
+
+        full_title = f"{title}{self.title_suffix}" if title else self.title_suffix
+
+        return PageCls(
+            *page_children,
+            title=full_title,
+            theme=self.theme,
+            include_toast=self.include_toast,
+            include_sse=self.include_sse,
+            lang=self.lang,
+        )

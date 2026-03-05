@@ -304,7 +304,7 @@ class TestCRUDEditPage:
             follow_redirects=False,
         )
         assert response.status_code == 303
-        assert response.headers["location"] == "/items/1"
+        assert response.headers["location"].startswith("/items/1")
 
     def test_edit_htmx_success(self, client):
         response = client.post(
@@ -314,7 +314,7 @@ class TestCRUDEditPage:
             follow_redirects=False,
         )
         assert response.status_code == 200
-        assert response.headers["HX-Redirect"] == "/items/1"
+        assert response.headers["HX-Redirect"].startswith("/items/1")
 
     def test_edit_validation_error(self, client):
         response = client.post(
@@ -332,7 +332,7 @@ class TestCRUDDelete:
             headers={"HX-Request": "true"},
         )
         assert response.status_code == 200
-        assert response.headers["HX-Redirect"] == "/items"
+        assert response.headers["HX-Redirect"].startswith("/items")
 
     def test_delete_not_found(self, client):
         response = client.delete("/items/999")
@@ -341,7 +341,7 @@ class TestCRUDDelete:
     def test_delete_normal(self, client):
         response = client.delete("/items/1", follow_redirects=False)
         assert response.status_code == 303
-        assert response.headers["location"] == "/items"
+        assert response.headers["location"].startswith("/items")
 
 
 class TestCRUDPageWrapper:
@@ -376,3 +376,46 @@ class TestCRUDBoolHandling:
         # Item was created; verify by checking the list
         list_response = client.get("/items/_list")
         assert "No Active" in list_response.text
+
+
+class TestCRUDActionColumn:
+    def test_list_has_edit_links(self, client):
+        response = client.get("/items/_list")
+        assert "/items/1/edit" in response.text
+        assert "Edit" in response.text
+
+    def test_list_has_delete_buttons(self, client):
+        response = client.get("/items/_list")
+        assert "Delete" in response.text
+        assert "hx-delete" in response.text
+
+    def test_actions_header(self, client):
+        response = client.get("/items/_list")
+        assert "<th>Actions</th>" in response.text
+
+
+class TestCRUDToast:
+    def test_create_toast_param(self, client):
+        response = client.post(
+            "/items/new",
+            data={"name": "New Item", "price": "15.00"},
+            follow_redirects=False,
+        )
+        assert "_toast=" in response.headers["location"]
+
+    def test_edit_toast_param(self, client):
+        response = client.post(
+            "/items/1/edit",
+            data={"name": "Updated Widget", "price": "12.00"},
+            follow_redirects=False,
+        )
+        assert "_toast=" in response.headers["location"]
+
+    def test_delete_toast_param(self, client):
+        response = client.delete("/items/1", follow_redirects=False)
+        assert "_toast=" in response.headers["location"]
+
+    def test_default_page_includes_toast(self, client):
+        """Default _wrap_page (no page_wrapper) includes toast support."""
+        response = client.get("/items")
+        assert "kokage-toast" in response.text

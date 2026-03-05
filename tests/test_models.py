@@ -311,6 +311,40 @@ class TestModelTable:
         assert "<th>Title</th>" in result
         assert "<td>" not in result
 
+    def test_extra_columns_basic(self):
+        rows = self._sample_rows()
+        result = str(
+            ModelTable(
+                SimpleModel,
+                rows=rows,
+                extra_columns={"Actions": lambda row: f"act-{row.title}"},
+            )
+        )
+        assert "<th>Actions</th>" in result
+        assert "act-First" in result
+        assert "act-Second" in result
+
+    def test_extra_columns_header_order(self):
+        rows = self._sample_rows()
+        result = str(
+            ModelTable(
+                SimpleModel,
+                rows=rows,
+                extra_columns={"Extra": lambda row: "x"},
+            )
+        )
+        # Extra header should appear after model field headers
+        title_pos = result.index("<th>Title</th>")
+        count_pos = result.index("<th>Count</th>")
+        extra_pos = result.index("<th>Extra</th>")
+        assert title_pos < count_pos < extra_pos
+
+    def test_extra_columns_empty_dict(self):
+        rows = self._sample_rows()
+        result_without = str(ModelTable(SimpleModel, rows=rows))
+        result_with = str(ModelTable(SimpleModel, rows=rows, extra_columns={}))
+        assert result_without == result_with
+
 
 # ========================================
 # ModelDetail tests

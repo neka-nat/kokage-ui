@@ -18,6 +18,31 @@ DAISYUI_CSS_CDN = "https://cdn.jsdelivr.net/npm/daisyui@5"
 TAILWIND_CDN = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
 
 
+_TOAST_SCRIPT = """\
+<script>
+(function(){
+  var p = new URLSearchParams(window.location.search);
+  var msg = p.get('_toast');
+  if (!msg) return;
+  var t = p.get('_toast_type') || 'success';
+  var cls = {'success':'alert-success','error':'alert-error','warning':'alert-warning','info':'alert-info'}[t] || 'alert-info';
+  var safe = msg.replace(/</g, '&lt;');
+  var c = document.getElementById('kokage-toast');
+  if (!c) return;
+  c.innerHTML = '<div class="alert ' + cls + '" role="alert"><span>' + safe + '</span></div>';
+  c.style.display = '';
+  setTimeout(function(){ c.style.display = 'none'; }, 3000);
+  p.delete('_toast'); p.delete('_toast_type');
+  var u = window.location.pathname;
+  var s = p.toString();
+  if (s) u += '?' + s;
+  window.history.replaceState({}, '', u);
+})();
+</script>"""
+
+_TOAST_CONTAINER = '<div id="kokage-toast" class="toast toast-end toast-top z-50" style="display:none"></div>'
+
+
 class Page:
     """Full HTML document.
 
@@ -31,6 +56,7 @@ class Page:
         head_extra: Additional elements for <head>.
         lang: lang attribute for <html> (default: "ja").
         include_sse: Whether to load htmx SSE extension.
+        include_toast: Whether to include toast notification support.
     """
 
     def __init__(
@@ -41,6 +67,7 @@ class Page:
         head_extra: list[Any] | None = None,
         lang: str = "ja",
         include_sse: bool = False,
+        include_toast: bool = False,
     ) -> None:
         self.children = children
         self.title = title
@@ -48,6 +75,7 @@ class Page:
         self.head_extra = head_extra or []
         self.lang = lang
         self.include_sse = include_sse
+        self.include_toast = include_toast
 
     def render(self) -> str:
         """Generate full HTML document string."""
@@ -68,6 +96,9 @@ class Page:
 
         head_html = "\n    ".join(head_parts)
         body_html = "\n".join(_render_child(c) for c in self.children if c is not None)
+
+        if self.include_toast:
+            body_html += f"\n{_TOAST_CONTAINER}\n{_TOAST_SCRIPT}"
 
         return Markup(
             f"<!DOCTYPE html>\n"
