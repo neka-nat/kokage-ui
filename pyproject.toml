@@ -17,6 +17,9 @@ dev = [
     "uvicorn>=0.30.0",
     "ruff>=0.8.0",
 ]
+markdown = [
+    "markdown>=3.5",
+]
 docs = [
     "mkdocs-material>=9.0",
     "mkdocs-autorefs",

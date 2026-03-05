@@ -10,6 +10,7 @@ from kokage_ui.models import (
     ModelDetail,
     ModelForm,
     ModelTable,
+    SortableTable,
     _extract_constraints,
     _field_to_component,
     _resolve_annotation,
@@ -384,3 +385,105 @@ class TestModelDetail:
         result = str(ModelDetail(instance, exclude=["count"]))
         assert "Hello" in result
         assert "Count" not in result
+
+
+# ========================================
+# SortableTable tests
+# ========================================
+
+
+class TestSortableTable:
+    def _sample_rows(self):
+        return [
+            SimpleModel(title="Alpha", count=10),
+            SimpleModel(title="Beta", count=20),
+        ]
+
+    def test_renders_table(self):
+        result = str(SortableTable(SimpleModel, rows=self._sample_rows(), sort_url="/sort"))
+        assert "<table" in result
+
+    def test_headers_are_links(self):
+        result = str(SortableTable(SimpleModel, rows=self._sample_rows(), sort_url="/sort"))
+        assert "hx-get" in result
+        assert "sort=title" in result
+        assert "sort=count" in result
+
+    def test_default_order_asc(self):
+        result = str(SortableTable(SimpleModel, rows=self._sample_rows(), sort_url="/sort"))
+        assert "order=asc" in result
+
+    def test_current_sort_indicator(self):
+        result = str(SortableTable(
+            SimpleModel, rows=self._sample_rows(), sort_url="/sort",
+            current_sort="title", current_order="asc",
+        ))
+        assert "\u2191" in result  # up arrow on active column
+
+    def test_current_sort_toggles_order(self):
+        result = str(SortableTable(
+            SimpleModel, rows=self._sample_rows(), sort_url="/sort",
+            current_sort="title", current_order="asc",
+        ))
+        # Active column should link to desc
+        assert "sort=title&amp;order=desc" in result
+
+    def test_down_arrow_desc(self):
+        result = str(SortableTable(
+            SimpleModel, rows=self._sample_rows(), sort_url="/sort",
+            current_sort="title", current_order="desc",
+        ))
+        assert "\u2193" in result  # down arrow
+
+    def test_table_id_default(self):
+        result = str(SortableTable(SimpleModel, rows=self._sample_rows(), sort_url="/sort"))
+        assert 'id="sortable-table"' in result
+
+    def test_custom_table_id(self):
+        result = str(SortableTable(
+            SimpleModel, rows=self._sample_rows(), sort_url="/sort",
+            table_id="my-table",
+        ))
+        assert 'id="my-table"' in result
+        assert "#my-table" in result
+
+    def test_hx_target(self):
+        result = str(SortableTable(
+            SimpleModel, rows=self._sample_rows(), sort_url="/sort",
+            table_id="tbl",
+        ))
+        assert 'hx-target="#tbl"' in result
+
+    def test_data_rows(self):
+        result = str(SortableTable(SimpleModel, rows=self._sample_rows(), sort_url="/sort"))
+        assert "Alpha" in result
+        assert "Beta" in result
+        assert "10" in result
+
+    def test_csv_url(self):
+        result = str(SortableTable(
+            SimpleModel, rows=self._sample_rows(), sort_url="/sort",
+            csv_url="/export.csv",
+        ))
+        assert "Export CSV" in result
+        assert 'href="/export.csv"' in result
+
+    def test_no_csv_url(self):
+        result = str(SortableTable(SimpleModel, rows=self._sample_rows(), sort_url="/sort"))
+        assert "Export CSV" not in result
+
+    def test_zebra(self):
+        result = str(SortableTable(SimpleModel, rows=self._sample_rows(), sort_url="/sort", zebra=True))
+        assert "table-zebra" in result
+
+    def test_compact(self):
+        result = str(SortableTable(SimpleModel, rows=self._sample_rows(), sort_url="/sort", compact=True))
+        assert "table-xs" in result
+
+    def test_extra_columns(self):
+        result = str(SortableTable(
+            SimpleModel, rows=self._sample_rows(), sort_url="/sort",
+            extra_columns={"Actions": lambda row: f"edit-{row.title}"},
+        ))
+        assert "<th>Actions</th>" in result
+        assert "edit-Alpha" in result

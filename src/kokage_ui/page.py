@@ -16,6 +16,10 @@ HTMX_JS_PATH = "/_kokage/static/htmx.min.js"
 HTMX_SSE_CDN = "https://cdn.jsdelivr.net/npm/htmx-ext-sse@2.2.4/sse.js"
 DAISYUI_CSS_CDN = "https://cdn.jsdelivr.net/npm/daisyui@5"
 TAILWIND_CDN = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
+CHARTJS_CDN = "https://cdn.jsdelivr.net/npm/chart.js@4"
+HIGHLIGHTJS_CDN = "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build"
+HIGHLIGHTJS_CSS = f"{HIGHLIGHTJS_CDN}/styles/github-dark.min.css"
+HIGHLIGHTJS_JS = f"{HIGHLIGHTJS_CDN}/highlight.min.js"
 
 
 _TOAST_SCRIPT = """\
@@ -57,6 +61,8 @@ class Page:
         lang: lang attribute for <html> (default: "ja").
         include_sse: Whether to load htmx SSE extension.
         include_toast: Whether to include toast notification support.
+        include_chartjs: Whether to load Chart.js from CDN.
+        include_highlightjs: Whether to load Highlight.js from CDN.
     """
 
     def __init__(
@@ -68,6 +74,8 @@ class Page:
         lang: str = "ja",
         include_sse: bool = False,
         include_toast: bool = False,
+        include_chartjs: bool = False,
+        include_highlightjs: bool = False,
     ) -> None:
         self.children = children
         self.title = title
@@ -76,6 +84,8 @@ class Page:
         self.lang = lang
         self.include_sse = include_sse
         self.include_toast = include_toast
+        self.include_chartjs = include_chartjs
+        self.include_highlightjs = include_highlightjs
 
     def render(self) -> str:
         """Generate full HTML document string."""
@@ -90,6 +100,18 @@ class Page:
 
         if self.include_sse:
             head_parts.append(f'<script src="{HTMX_SSE_CDN}"></script>')
+
+        if self.include_chartjs:
+            head_parts.append(f'<script src="{CHARTJS_CDN}"></script>')
+
+        if self.include_highlightjs:
+            head_parts.append(f'<link rel="stylesheet" href="{HIGHLIGHTJS_CSS}" />')
+            head_parts.append(f'<script src="{HIGHLIGHTJS_JS}"></script>')
+            head_parts.append(
+                '<script>document.addEventListener("htmx:afterSwap",function(e){'
+                'e.detail.elt.querySelectorAll("pre code").forEach(function(el){hljs.highlightElement(el);});'
+                '});</script>'
+            )
 
         for extra in self.head_extra:
             head_parts.append(_render_child(extra))

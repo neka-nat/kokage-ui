@@ -120,7 +120,12 @@ from kokage_ui.components import (
 )
 
 # Pydantic model → UI auto-generation
-from kokage_ui.models import ModelDetail, ModelForm, ModelTable, ValidatedModelForm
+from kokage_ui.models import ModelDetail, ModelForm, ModelTable, SortableTable, ValidatedModelForm
+
+# Data display
+from kokage_ui.charts import Chart
+from kokage_ui.code import CodeBlock
+from kokage_ui.markdown import Markdown
 
 # htmx helpers
 from kokage_ui.htmx import (
@@ -255,4 +260,9 @@ __all__ = [
     "Storage",
     "InMemoryStorage",
     "Pagination",
+    # Data Display
+    "Chart",
+    "Markdown",
+    "CodeBlock",
+    "SortableTable",
 ]

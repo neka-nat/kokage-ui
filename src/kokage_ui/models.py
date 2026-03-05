@@ -17,6 +17,7 @@ from pydantic_core import PydanticUndefined
 
 from kokage_ui.components import Alert, Badge, Card, DaisyTable
 from kokage_ui.elements import (
+    A,
     Button,
     Component,
     Div,
@@ -26,7 +27,12 @@ from kokage_ui.elements import (
     Select,
     Span,
     Strong,
+    Tbody,
+    Td,
     Textarea,
+    Th,
+    Thead,
+    Tr,
 )
 
 _SENTINEL = object()
@@ -577,6 +583,116 @@ class ModelTable(Component):
         )
 
         super().__init__(table, **attrs)
+
+
+class SortableTable(Component):
+    """ModelTable with sortable column headers via htmx.
+
+    Column headers become htmx links that GET ``sort_url`` with
+    ``?sort=field&order=asc|desc`` query parameters.
+
+    Args:
+        model: Pydantic BaseModel class.
+        rows: List of model instances.
+        sort_url: Base URL for sort requests.
+        table_id: Container id for htmx target (default "sortable-table").
+        current_sort: Currently sorted field name.
+        current_order: Current sort order ("asc" or "desc").
+        csv_url: If set, show an "Export CSV" button linking here.
+        exclude: Field names to exclude.
+        include: Field names to include.
+        zebra: Use zebra striping.
+        compact: Use compact size.
+        cell_renderers: Dict of field_name → callable(value) for custom rendering.
+        extra_columns: Dict of column_name → callable(row) for extra columns.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        model: type[BaseModel],
+        *,
+        rows: list[BaseModel],
+        sort_url: str,
+        table_id: str = "sortable-table",
+        current_sort: str | None = None,
+        current_order: str = "asc",
+        csv_url: str | None = None,
+        exclude: set[str] | list[str] | None = None,
+        include: set[str] | list[str] | None = None,
+        zebra: bool = False,
+        compact: bool = False,
+        cell_renderers: dict[str, Callable[[Any], Any]] | None = None,
+        extra_columns: dict[str, Callable[[BaseModel], Any]] | None = None,
+        **attrs: Any,
+    ) -> None:
+        from kokage_ui.elements import Table as BaseTable
+
+        fields = _filter_fields(model, include, exclude)
+        cell_renderers = cell_renderers or {}
+        extra_columns = extra_columns or {}
+
+        # Build header cells with sort links
+        header_cells = []
+        for name, fi in fields:
+            label = fi.title or name.replace("_", " ").title()
+            if current_sort == name:
+                indicator = " \u2191" if current_order == "asc" else " \u2193"
+                next_order = "desc" if current_order == "asc" else "asc"
+            else:
+                indicator = ""
+                next_order = "asc"
+            link = A(
+                f"{label}{indicator}",
+                hx_get=f"{sort_url}?sort={name}&order={next_order}",
+                hx_target=f"#{table_id}",
+                style="cursor:pointer",
+            )
+            header_cells.append(Th(link))
+
+        for col_name in extra_columns:
+            header_cells.append(Th(col_name))
+
+        # Build body rows
+        body_rows = []
+        for row in rows:
+            cells = []
+            for name, _fi in fields:
+                value = getattr(row, name)
+                if name in cell_renderers:
+                    cells.append(Td(cell_renderers[name](value)))
+                else:
+                    cells.append(Td(_render_value(value)))
+            for renderer in extra_columns.values():
+                cells.append(Td(renderer(row)))
+            body_rows.append(Tr(*cells))
+
+        table_cls_parts = ["table"]
+        if zebra:
+            table_cls_parts.append("table-zebra")
+        if compact:
+            table_cls_parts.append("table-xs")
+        table_cls = " ".join(table_cls_parts)
+
+        table = BaseTable(
+            Thead(Tr(*header_cells)),
+            Tbody(*body_rows),
+            cls=table_cls,
+        )
+
+        children: list[Any] = [table]
+
+        if csv_url:
+            children.append(
+                Div(
+                    A("Export CSV", href=csv_url, cls="btn btn-outline btn-sm mt-2"),
+                    cls="mt-2",
+                )
+            )
+
+        attrs["id"] = table_id
+        super().__init__(*children, **attrs)
 
 
 class ModelDetail(Component):
