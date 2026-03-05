@@ -169,6 +169,9 @@ from kokage_ui.sortable import SortableList
 # Media
 from kokage_ui.media import AudioPlayer, ImageGallery, MediaCard, MediaField, VideoPlayer
 
+# Rich Text
+from kokage_ui.richtext import RichTextEditor, RichTextField
+
 # Admin dashboard
 from kokage_ui.admin import AdminSite, ModelAdmin
 
@@ -328,4 +331,7 @@ __all__ = [
     "AudioPlayer",
     "ImageGallery",
     "MediaCard",
+    # Rich Text
+    "RichTextEditor",
+    "RichTextField",
 ]

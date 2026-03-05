@@ -39,6 +39,7 @@ from kokage_ui.elements import (
     Video,
 )
 from kokage_ui.media import MediaField
+from kokage_ui.richtext import RichTextField, RichTextEditor
 
 _SENTINEL = object()
 
@@ -145,6 +146,14 @@ def _extract_media_field(field_info: FieldInfo) -> MediaField | None:
     return None
 
 
+def _extract_rich_text_field(field_info: FieldInfo) -> RichTextField | None:
+    """Extract RichTextField from Pydantic field metadata."""
+    for m in field_info.metadata:
+        if isinstance(m, RichTextField):
+            return m
+    return None
+
+
 def _field_to_component(
     name: str,
     field_info: FieldInfo,
@@ -175,6 +184,26 @@ def _field_to_component(
         common_attrs.update(extra_input_attrs)
 
     error_cls_suffix = " input-error" if error_message else ""
+
+    # --- RichTextField → Quill editor ---
+    rich = _extract_rich_text_field(field_info)
+    if rich is not None:
+        editor_value = ""
+        if value is not _SENTINEL and value:
+            editor_value = str(value)
+        editor = RichTextEditor(
+            name=name,
+            value=editor_value,
+            height=rich.height,
+            placeholder=rich.placeholder,
+            toolbar=rich.toolbar,
+        )
+        return _build_form_input(
+            label_text=label_text,
+            input_element=editor,
+            error_message=error_message,
+            field_id=field_id,
+        )
 
     # --- MediaField → file input with preview ---
     media = _extract_media_field(field_info)
@@ -565,7 +594,12 @@ class ValidatedModelForm(ModelForm):
         }
 
 
-def _render_value(value: Any, *, media_field: MediaField | None = None) -> Any:
+def _render_value(
+    value: Any,
+    *,
+    media_field: MediaField | None = None,
+    rich_text_field: RichTextField | None = None,
+) -> Any:
     """Render a field value for display in table/detail views."""
     if isinstance(value, bool):
         if value:
@@ -575,6 +609,11 @@ def _render_value(value: Any, *, media_field: MediaField | None = None) -> Any:
         return str(value.value)
     if value is None:
         return "-"
+    if rich_text_field and value:
+        from kokage_ui.elements import Raw
+
+        safe_html = str(value)[:200]
+        return Div(Raw(safe_html), cls="prose prose-sm max-w-xs line-clamp-2")
     if media_field and value:
         if media_field.media_type == "image":
             return Img(src=str(value), cls="max-h-16 rounded", alt="")
@@ -632,7 +671,8 @@ class ModelTable(Component):
                     cells.append(cell_renderers[name](value))
                 else:
                     media = _extract_media_field(fi)
-                    cells.append(_render_value(value, media_field=media))
+                    rich = _extract_rich_text_field(fi)
+                    cells.append(_render_value(value, media_field=media, rich_text_field=rich))
             for renderer in extra_columns.values():
                 cells.append(renderer(row))
             table_rows.append(cells)
@@ -788,7 +828,8 @@ class ModelDetail(Component):
             label_text = fi.title or name.replace("_", " ").title()
             value = getattr(instance, name)
             media = _extract_media_field(fi)
-            rendered = _render_value(value, media_field=media)
+            rich = _extract_rich_text_field(fi)
+            rendered = _render_value(value, media_field=media, rich_text_field=rich)
             rows.append(
                 Div(
                     Strong(label_text, cls="text-sm opacity-70"),

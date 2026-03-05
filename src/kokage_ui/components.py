@@ -632,6 +632,7 @@ class Layout:
         title_suffix: Appended to every page title.
         include_toast: Enable toast notification support.
         include_sse: Load htmx SSE extension.
+        include_quill: Load Quill rich text editor from CDN.
         lang: HTML lang attribute.
     """
 
@@ -645,6 +646,7 @@ class Layout:
         title_suffix: str = "",
         include_toast: bool = False,
         include_sse: bool = False,
+        include_quill: bool = False,
         lang: str = "ja",
     ) -> None:
         self.navbar = navbar
@@ -654,6 +656,7 @@ class Layout:
         self.title_suffix = title_suffix
         self.include_toast = include_toast
         self.include_sse = include_sse
+        self.include_quill = include_quill
         self.lang = lang
 
     def wrap(self, content: Any, title: str = "") -> Page:
@@ -684,6 +687,7 @@ class Layout:
             theme=self.theme,
             include_toast=self.include_toast,
             include_sse=self.include_sse,
+            include_quill=self.include_quill,
             lang=self.lang,
         )
 
