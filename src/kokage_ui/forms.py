@@ -102,13 +102,16 @@ class MultiStepForm(Component):
         for i in range(current_step):
             for field_name in steps[i].fields:
                 if field_name in values:
-                    hidden_fields.append(
-                        Input(
-                            type="hidden",
-                            name=field_name,
-                            value=str(values[field_name]),
+                    val = values[field_name]
+                    if isinstance(val, list):
+                        for item in val:
+                            hidden_fields.append(
+                                Input(type="hidden", name=field_name, value=str(item))
+                            )
+                    else:
+                        hidden_fields.append(
+                            Input(type="hidden", name=field_name, value=str(val))
                         )
-                    )
 
         # Navigation buttons
         nav_buttons: list[Any] = []

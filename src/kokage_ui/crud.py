@@ -12,7 +12,7 @@ import urllib.parse
 import uuid
 from abc import ABC, abstractmethod
 from collections.abc import Awaitable
-from typing import Any, Callable, Generic, TypeVar
+from typing import Any, Callable, Generic, TypeVar, get_origin
 
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse
@@ -233,6 +233,21 @@ def _to_html_string_lazy(result: Any) -> str:
 
         _to_html_string_fn = _to_html_string
     return _to_html_string_fn(result)
+
+
+def _process_list_fields(
+    model: type[BaseModel],
+    raw_data: dict[str, Any],
+    form_data: Any,
+    exclude: list[str],
+) -> None:
+    """Handle list fields: collect multiple form values via getlist()."""
+    for field_name, field_info in model.model_fields.items():
+        if field_name in exclude:
+            continue
+        base_type, _ = _resolve_annotation(field_info.annotation)
+        if get_origin(base_type) is list:
+            raw_data[field_name] = form_data.getlist(field_name)
 
 
 def _process_bool_fields(
@@ -596,6 +611,7 @@ class CRUDRouter(Generic[T]):
             form_data = await request.form()
             raw_data = dict(form_data)
             _process_bool_fields(router.model, raw_data, form_data, router._get_form_exclude())
+            _process_list_fields(router.model, raw_data, form_data, router._get_form_exclude())
             await _process_media_fields(router.model, raw_data, form_data, router._get_form_exclude(), router.file_handler)
 
             try:
@@ -770,6 +786,7 @@ class CRUDRouter(Generic[T]):
             form_data = await request.form()
             raw_data = dict(form_data)
             _process_bool_fields(router.model, raw_data, form_data, router._get_form_exclude())
+            _process_list_fields(router.model, raw_data, form_data, router._get_form_exclude())
             await _process_media_fields(router.model, raw_data, form_data, router._get_form_exclude(), router.file_handler, existing_instance=item)
 
             # Preserve ID

@@ -172,6 +172,9 @@ from kokage_ui.media import AudioPlayer, ImageGallery, MediaCard, MediaField, Vi
 # Rich Text
 from kokage_ui.richtext import RichTextEditor, RichTextField
 
+# Repeater
+from kokage_ui.repeater import RepeaterField, RepeaterInput
+
 # Admin dashboard
 from kokage_ui.admin import AdminSite, ModelAdmin
 
@@ -345,6 +348,9 @@ __all__ = [
     # Rich Text
     "RichTextEditor",
     "RichTextField",
+    # Repeater
+    "RepeaterField",
+    "RepeaterInput",
     # Testing
     "render",
     "rendered",

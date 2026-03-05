@@ -39,6 +39,7 @@ from kokage_ui.elements import (
     Video,
 )
 from kokage_ui.media import MediaField
+from kokage_ui.repeater import RepeaterField, RepeaterInput
 from kokage_ui.richtext import RichTextField, RichTextEditor
 
 _SENTINEL = object()
@@ -154,6 +155,14 @@ def _extract_rich_text_field(field_info: FieldInfo) -> RichTextField | None:
     return None
 
 
+def _extract_repeater_field(field_info: FieldInfo) -> RepeaterField | None:
+    """Extract RepeaterField from Pydantic field metadata."""
+    for m in field_info.metadata:
+        if isinstance(m, RepeaterField):
+            return m
+    return None
+
+
 def _field_to_component(
     name: str,
     field_info: FieldInfo,
@@ -229,6 +238,26 @@ def _field_to_component(
         children.append(input_el)
         wrapper = Div(*children)
         return _build_form_input(label_text=label_text, input_element=wrapper, error_message=error_message, field_id=field_id)
+
+    # --- RepeaterField → dynamic add/remove rows ---
+    repeater = _extract_repeater_field(field_info)
+    if repeater is not None:
+        items: list[str] = []
+        if value is not _SENTINEL and isinstance(value, list):
+            items = [str(v) for v in value]
+        return _build_form_input(
+            label_text=label_text,
+            input_element=RepeaterInput(
+                name=name,
+                values=items,
+                min_items=repeater.min_items,
+                max_items=repeater.max_items,
+                placeholder=repeater.placeholder,
+                add_label=repeater.add_label,
+            ),
+            error_message=error_message,
+            field_id=field_id,
+        )
 
     # --- bool → checkbox ---
     if base_type is bool:
@@ -605,6 +634,13 @@ def _render_value(
         if value:
             return Badge("Active", color="success")
         return Badge("Inactive", color="error")
+    if isinstance(value, list):
+        if not value:
+            return "-"
+        badges = [Badge(str(v), color="ghost") for v in value[:5]]
+        if len(value) > 5:
+            badges.append(Span(f"+{len(value) - 5}", cls="text-sm opacity-60"))
+        return Div(*badges, cls="flex flex-wrap gap-1")
     if isinstance(value, enum.Enum):
         return str(value.value)
     if value is None:
