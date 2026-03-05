@@ -154,6 +154,9 @@ from kokage_ui.datagrid import ColumnFilter, DataGrid, DataGridState
 from kokage_ui.crud import CRUDRouter, InMemoryStorage, Pagination, Storage
 from kokage_ui.storage import SQLModelStorage, create_tables
 
+# Admin dashboard
+from kokage_ui.admin import AdminSite, ModelAdmin
+
 __all__ = [
     # Core
     "KokageUI",
@@ -290,4 +293,7 @@ __all__ = [
     "UserMenu",
     "RoleGuard",
     "protected",
+    # Admin
+    "AdminSite",
+    "ModelAdmin",
 ]
