@@ -144,6 +144,9 @@ from kokage_ui.forms import FormStep, MultiStepForm
 # Authentication & authorization
 from kokage_ui.auth import LoginForm, RegisterForm, RoleGuard, UserMenu, protected
 
+# Theme switching
+from kokage_ui.theme import DarkModeToggle, ThemeSwitcher
+
 # DataGrid
 from kokage_ui.datagrid import ColumnFilter, DataGrid, DataGridState
 
@@ -278,6 +281,9 @@ __all__ = [
     "DataGrid",
     "DataGridState",
     "ColumnFilter",
+    # Theme
+    "DarkModeToggle",
+    "ThemeSwitcher",
     # Auth
     "LoginForm",
     "RegisterForm",
