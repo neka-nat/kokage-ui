@@ -1,0 +1,58 @@
+site_name: kokage-ui
+site_description: Add htmx + DaisyUI based UI to FastAPI with pure Python
+site_url: https://neka-nat.github.io/kokage-ui/
+repo_url: https://github.com/neka-nat/kokage-ui
+repo_name: neka-nat/kokage-ui
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+  palette:
+    - scheme: default
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.snippets
+  - attr_list
+  - md_in_html
+  - tables
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Guide:
+    - HTML Elements: guide/elements.md
+    - DaisyUI Components: guide/components.md
+    - Pages & Layout: guide/pages.md
+    - Pydantic Models: guide/models.md
+    - CRUD: guide/crud.md
+    - htmx Patterns: guide/htmx.md
+  - Examples:
+    - Hello World: examples/hello.md
+    - Todo App: examples/todo.md
+    - Dashboard: examples/dashboard.md
+  - API Reference: api/reference.md
