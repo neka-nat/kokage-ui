@@ -147,6 +147,9 @@ from kokage_ui.auth import LoginForm, RegisterForm, RoleGuard, UserMenu, protect
 # Theme switching
 from kokage_ui.theme import DarkModeToggle, ThemeSwitcher
 
+# Notifications
+from kokage_ui.notifications import Notifier, NotificationStream
+
 # DataGrid
 from kokage_ui.datagrid import ColumnFilter, DataGrid, DataGridState
 
@@ -296,4 +299,7 @@ __all__ = [
     # Admin
     "AdminSite",
     "ModelAdmin",
+    # Notifications
+    "Notifier",
+    "NotificationStream",
 ]
