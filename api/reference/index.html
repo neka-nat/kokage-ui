@@ -1,0 +1,2116 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Add htmx + DaisyUI based UI to FastAPI with pure Python">
+      
+      
+      
+        <link rel="canonical" href="https://neka-nat.github.io/kokage-ui/api/reference/">
+      
+      
+        <link rel="prev" href="../../examples/dashboard/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+    
+    
+      
+        <title>API Reference - kokage-ui</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="kokage-ui" class="md-header__button md-logo" aria-label="kokage-ui" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            kokage-ui
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/neka-nat/kokage-ui" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    neka-nat/kokage-ui
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guide/elements/" class="md-tabs__link">
+          
+  
+  
+  Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/hello/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Reference
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="kokage-ui" class="md-nav__button md-logo" aria-label="kokage-ui" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    kokage-ui
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/neka-nat/kokage-ui" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    neka-nat/kokage-ui
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTML Elements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DaisyUI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/pages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pages & Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pydantic Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/crud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CRUD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/datagrid/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DataGrid
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/admin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/htmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    htmx Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/hello/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hello World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/todo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Todo App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#html-elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTML Elements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#daisyui-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DaisyUI Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pydantic-model-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pydantic Model → UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datagrid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DataGrid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#htmx-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        htmx Helpers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-step-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-step Forms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CRUD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#admin-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication &amp; Authorization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Theme
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Display
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#html-elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTML Elements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#daisyui-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DaisyUI Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pydantic-model-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pydantic Model → UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datagrid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DataGrid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#htmx-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        htmx Helpers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-step-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-step Forms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CRUD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#admin-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication &amp; Authorization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Theme
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Display
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api-reference">API Reference</h1>
+<p>Quick reference of all exports from <code>kokage_ui</code>.</p>
+<h2 id="core">Core</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KokageUI</code></td>
+<td><code>core</code></td>
+<td>FastAPI integration — <code>page()</code>, <code>fragment()</code>, <code>crud()</code>, <code>validate()</code> decorators</td>
+</tr>
+<tr>
+<td><code>Page</code></td>
+<td><code>page</code></td>
+<td>Full <code>&lt;!DOCTYPE html&gt;</code> document generator</td>
+</tr>
+</tbody>
+</table>
+<h2 id="html-elements">HTML Elements</h2>
+<p>All elements inherit from <code>Component</code>. Children are positional args, attributes are keyword args.</p>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Tag</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Component</code></td>
+<td><code>div</code></td>
+<td>Base class for all elements</td>
+</tr>
+<tr>
+<td><code>Raw</code></td>
+<td>—</td>
+<td>Insert raw (unescaped) HTML</td>
+</tr>
+<tr>
+<td><code>Div</code></td>
+<td><code>&lt;div&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Span</code></td>
+<td><code>&lt;span&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Section</code></td>
+<td><code>&lt;section&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Article</code></td>
+<td><code>&lt;article&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Aside</code></td>
+<td><code>&lt;aside&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Header</code></td>
+<td><code>&lt;header&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Footer</code></td>
+<td><code>&lt;footer&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Main</code></td>
+<td><code>&lt;main&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Nav</code></td>
+<td><code>&lt;nav&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td><code>&lt;p&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>H1</code> – <code>H6</code></td>
+<td><code>&lt;h1&gt;</code> – <code>&lt;h6&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Strong</code></td>
+<td><code>&lt;strong&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Em</code></td>
+<td><code>&lt;em&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Small</code></td>
+<td><code>&lt;small&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Pre</code></td>
+<td><code>&lt;pre&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Code</code></td>
+<td><code>&lt;code&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Blockquote</code></td>
+<td><code>&lt;blockquote&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td><code>&lt;a&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Img</code></td>
+<td><code>&lt;img&gt;</code></td>
+<td>Void element</td>
+</tr>
+<tr>
+<td><code>Br</code></td>
+<td><code>&lt;br&gt;</code></td>
+<td>Void element</td>
+</tr>
+<tr>
+<td><code>Hr</code></td>
+<td><code>&lt;hr&gt;</code></td>
+<td>Void element</td>
+</tr>
+<tr>
+<td><code>Ul</code></td>
+<td><code>&lt;ul&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Ol</code></td>
+<td><code>&lt;ol&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Li</code></td>
+<td><code>&lt;li&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Table</code></td>
+<td><code>&lt;table&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Thead</code></td>
+<td><code>&lt;thead&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Tbody</code></td>
+<td><code>&lt;tbody&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Tfoot</code></td>
+<td><code>&lt;tfoot&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Tr</code></td>
+<td><code>&lt;tr&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Th</code></td>
+<td><code>&lt;th&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Td</code></td>
+<td><code>&lt;td&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Form</code></td>
+<td><code>&lt;form&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Button</code></td>
+<td><code>&lt;button&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Input</code></td>
+<td><code>&lt;input&gt;</code></td>
+<td>Void element</td>
+</tr>
+<tr>
+<td><code>Textarea</code></td>
+<td><code>&lt;textarea&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Select</code></td>
+<td><code>&lt;select&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Option</code></td>
+<td><code>&lt;option&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Label</code></td>
+<td><code>&lt;label&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Fieldset</code></td>
+<td><code>&lt;fieldset&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Legend</code></td>
+<td><code>&lt;legend&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Script</code></td>
+<td><code>&lt;script&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Style</code></td>
+<td><code>&lt;style&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Link</code></td>
+<td><code>&lt;link&gt;</code></td>
+<td>Void element</td>
+</tr>
+<tr>
+<td><code>Meta</code></td>
+<td><code>&lt;meta&gt;</code></td>
+<td>Void element</td>
+</tr>
+<tr>
+<td><code>Title</code></td>
+<td><code>&lt;title&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Head</code></td>
+<td><code>&lt;head&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Body</code></td>
+<td><code>&lt;body&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Html</code></td>
+<td><code>&lt;html&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Figure</code></td>
+<td><code>&lt;figure&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Figcaption</code></td>
+<td><code>&lt;figcaption&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Details</code></td>
+<td><code>&lt;details&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Summary</code></td>
+<td><code>&lt;summary&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Dialog</code></td>
+<td><code>&lt;dialog&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Progress</code></td>
+<td><code>&lt;progress&gt;</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="daisyui-components">DaisyUI Components</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Card</code></td>
+<td>Card with title, image, actions</td>
+</tr>
+<tr>
+<td><code>Stat</code></td>
+<td>Single stat item</td>
+</tr>
+<tr>
+<td><code>Stats</code></td>
+<td>Stats container</td>
+</tr>
+<tr>
+<td><code>Hero</code></td>
+<td>Hero banner section</td>
+</tr>
+<tr>
+<td><code>Alert</code></td>
+<td>Alert notification (info/success/warning/error)</td>
+</tr>
+<tr>
+<td><code>Badge</code></td>
+<td>Small label badge</td>
+</tr>
+<tr>
+<td><code>NavBar</code></td>
+<td>Navigation bar (start/center/end)</td>
+</tr>
+<tr>
+<td><code>DaisyButton</code></td>
+<td>Styled button (color/variant/size)</td>
+</tr>
+<tr>
+<td><code>DaisyInput</code></td>
+<td>Form input with label</td>
+</tr>
+<tr>
+<td><code>DaisySelect</code></td>
+<td>Select dropdown with label</td>
+</tr>
+<tr>
+<td><code>DaisyTextarea</code></td>
+<td>Textarea with label</td>
+</tr>
+<tr>
+<td><code>DaisyTable</code></td>
+<td>Data table with headers and rows</td>
+</tr>
+<tr>
+<td><code>Toast</code></td>
+<td>Toast notification</td>
+</tr>
+<tr>
+<td><code>Layout</code></td>
+<td>Reusable page layout builder</td>
+</tr>
+<tr>
+<td><code>Modal</code></td>
+<td>Dialog overlay (<code>showModal()</code>)</td>
+</tr>
+<tr>
+<td><code>Drawer</code></td>
+<td>Sidebar/off-canvas panel</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td>Single tab definition (dataclass)</td>
+</tr>
+<tr>
+<td><code>Tabs</code></td>
+<td>Tabbed navigation (link or content mode)</td>
+</tr>
+<tr>
+<td><code>Step</code></td>
+<td>Single step definition (dataclass)</td>
+</tr>
+<tr>
+<td><code>Steps</code></td>
+<td>Progress step indicator</td>
+</tr>
+<tr>
+<td><code>Breadcrumb</code></td>
+<td>Navigation breadcrumb trail</td>
+</tr>
+<tr>
+<td><code>Collapse</code></td>
+<td>Expandable content section</td>
+</tr>
+<tr>
+<td><code>Accordion</code></td>
+<td>Radio-linked collapse group</td>
+</tr>
+<tr>
+<td><code>Dropdown</code></td>
+<td>Dropdown menu (click or hover)</td>
+</tr>
+<tr>
+<td><code>FileUpload</code></td>
+<td>File upload input with styling</td>
+</tr>
+<tr>
+<td><code>DropZone</code></td>
+<td>Drag-and-drop file upload area</td>
+</tr>
+<tr>
+<td><code>DependentSelect</code></td>
+<td>Select that depends on another field</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pydantic-model-ui">Pydantic Model → UI</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ModelForm</code></td>
+<td>Auto-generate form from BaseModel</td>
+</tr>
+<tr>
+<td><code>ValidatedModelForm</code></td>
+<td>Form with real-time field validation</td>
+</tr>
+<tr>
+<td><code>ModelTable</code></td>
+<td>Auto-generate table from BaseModel + rows</td>
+</tr>
+<tr>
+<td><code>ModelDetail</code></td>
+<td>Auto-generate detail card from model instance</td>
+</tr>
+<tr>
+<td><code>SortableTable</code></td>
+<td>Table with sortable column headers</td>
+</tr>
+</tbody>
+</table>
+<h2 id="datagrid">DataGrid</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DataGrid</code></td>
+<td>Advanced table with sort, filter, pagination, bulk actions, CSV export</td>
+</tr>
+<tr>
+<td><code>DataGridState</code></td>
+<td>Parse grid state from request query parameters</td>
+</tr>
+<tr>
+<td><code>ColumnFilter</code></td>
+<td>Per-column filter definition (text, select, number_range)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="htmx-helpers">htmx Helpers</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AutoRefresh</code></td>
+<td>Poll URL at interval (<code>hx-trigger="every Ns"</code>)</td>
+</tr>
+<tr>
+<td><code>SearchFilter</code></td>
+<td>Debounced search input (<code>hx-trigger="keyup changed delay:Nms"</code>)</td>
+</tr>
+<tr>
+<td><code>InfiniteScroll</code></td>
+<td>Load on scroll (<code>hx-trigger="revealed"</code>)</td>
+</tr>
+<tr>
+<td><code>SSEStream</code></td>
+<td>Server-Sent Events receiver (htmx SSE extension)</td>
+</tr>
+<tr>
+<td><code>ConfirmDelete</code></td>
+<td>Delete button with confirmation (<code>hx-confirm</code> + <code>hx-delete</code>)</td>
+</tr>
+<tr>
+<td><code>HxSwapOOB</code></td>
+<td>Out-of-Band swap (<code>hx-swap-oob</code>)</td>
+</tr>
+<tr>
+<td><code>DependentField</code></td>
+<td>Field that updates based on another field's value</td>
+</tr>
+</tbody>
+</table>
+<h2 id="multi-step-forms">Multi-step Forms</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FormStep</code></td>
+<td>Step definition (title, fields, description)</td>
+</tr>
+<tr>
+<td><code>MultiStepForm</code></td>
+<td>Multi-step form with progress and htmx navigation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="crud">CRUD</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CRUDRouter</code></td>
+<td>Auto-register all CRUD routes for a model</td>
+</tr>
+<tr>
+<td><code>Storage</code></td>
+<td>Abstract storage interface (ABC)</td>
+</tr>
+<tr>
+<td><code>InMemoryStorage</code></td>
+<td>Dict-based in-memory storage</td>
+</tr>
+<tr>
+<td><code>Pagination</code></td>
+<td>Pagination button group component</td>
+</tr>
+<tr>
+<td><code>SQLModelStorage</code></td>
+<td>Async SQL storage via SQLModel (requires <code>kokage-ui[sql]</code>)</td>
+</tr>
+<tr>
+<td><code>create_tables</code></td>
+<td>Create all SQLModel tables</td>
+</tr>
+</tbody>
+</table>
+<h2 id="admin-dashboard">Admin Dashboard</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AdminSite</code></td>
+<td>Auto-generate admin panel from registered models</td>
+</tr>
+<tr>
+<td><code>ModelAdmin</code></td>
+<td>Model registration configuration (dataclass)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="authentication-authorization">Authentication &amp; Authorization</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LoginForm</code></td>
+<td>Pre-built login form card</td>
+</tr>
+<tr>
+<td><code>RegisterForm</code></td>
+<td>Pre-built registration form card</td>
+</tr>
+<tr>
+<td><code>UserMenu</code></td>
+<td>User dropdown menu for NavBar</td>
+</tr>
+<tr>
+<td><code>RoleGuard</code></td>
+<td>Server-side role-based content guard</td>
+</tr>
+<tr>
+<td><code>protected</code></td>
+<td>Route protection decorator (auth + role check)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="theme">Theme</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DarkModeToggle</code></td>
+<td>Light/dark theme toggle with sun/moon icons</td>
+</tr>
+<tr>
+<td><code>ThemeSwitcher</code></td>
+<td>Theme selector dropdown with color previews</td>
+</tr>
+</tbody>
+</table>
+<h2 id="notifications">Notifications</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Notifier</code></td>
+<td>Server-side SSE notification dispatcher</td>
+</tr>
+<tr>
+<td><code>NotificationStream</code></td>
+<td>Client-side SSE listener with toast display</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-display">Data Display</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Chart</code></td>
+<td>Chart.js chart (line, bar, pie, doughnut, radar, scatter)</td>
+</tr>
+<tr>
+<td><code>CodeBlock</code></td>
+<td>Syntax-highlighted code block (Highlight.js)</td>
+</tr>
+<tr>
+<td><code>Markdown</code></td>
+<td>Server-side Markdown rendering (requires <code>kokage-ui[markdown]</code>)</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
