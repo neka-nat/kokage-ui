@@ -10,6 +10,7 @@ import math
 import urllib.parse
 import uuid
 from abc import ABC, abstractmethod
+from collections.abc import Awaitable
 from typing import Any, Callable, Generic, TypeVar
 
 from fastapi import FastAPI, Request, Response
@@ -19,7 +20,9 @@ from pydantic import BaseModel, ValidationError
 from kokage_ui.components import Alert
 from kokage_ui.elements import A, Button, Component, Div, H1
 from kokage_ui.htmx import ConfirmDelete, SearchFilter
-from kokage_ui.models import ModelDetail, ModelForm, ModelTable, _resolve_annotation
+from kokage_ui.models import ModelDetail, ModelForm, ModelTable, _extract_media_field, _resolve_annotation
+
+FileHandler = Callable[[str, Any], Awaitable[str]]
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -233,6 +236,39 @@ def _process_bool_fields(
             raw_data[field_name] = field_name in form_data
 
 
+async def _process_media_fields(
+    model: type[BaseModel],
+    raw_data: dict[str, Any],
+    form_data: Any,
+    exclude: list[str],
+    file_handler: FileHandler | None,
+    existing_instance: BaseModel | None = None,
+) -> None:
+    """Process media fields: call file_handler for uploaded files."""
+    for field_name, field_info in model.model_fields.items():
+        if field_name in exclude:
+            continue
+        media = _extract_media_field(field_info)
+        if media is None:
+            continue
+
+        file_value = form_data.get(field_name)
+
+        # Check if a file was actually uploaded
+        if file_value and hasattr(file_value, "filename") and file_value.filename:
+            if file_handler:
+                url = await file_handler(field_name, file_value)
+                raw_data[field_name] = url
+            else:
+                raw_data[field_name] = ""
+        else:
+            # No new file uploaded → keep existing value (edit mode)
+            if existing_instance:
+                raw_data[field_name] = getattr(existing_instance, field_name, "")
+            else:
+                raw_data[field_name] = raw_data.get(field_name, "")
+
+
 class CRUDRouter(Generic[T]):
     """Auto-register all CRUD routes for a Pydantic model.
 
@@ -250,6 +286,7 @@ class CRUDRouter(Generic[T]):
         page_wrapper: Optional callable(content, title) → Page for custom layout.
         theme: DaisyUI theme name.
         realtime_validation: Enable per-field htmx validation.
+        file_handler: Async callback (field_name, UploadFile) → URL string.
     """
 
     def __init__(
@@ -268,6 +305,7 @@ class CRUDRouter(Generic[T]):
         page_wrapper: Callable[..., Any] | None = None,
         theme: str = "light",
         realtime_validation: bool = False,
+        file_handler: FileHandler | None = None,
     ) -> None:
         self.app = app
         self.prefix = prefix.rstrip("/")
@@ -279,6 +317,7 @@ class CRUDRouter(Generic[T]):
         self.page_wrapper = page_wrapper
         self.theme = theme
         self.realtime_validation = realtime_validation
+        self.file_handler = file_handler
 
         # Cache computed exclude lists
         _exclude = exclude_fields or []
@@ -295,8 +334,17 @@ class CRUDRouter(Generic[T]):
     def _get_form_exclude(self) -> list[str]:
         return self._form_exclude
 
+    def _has_media_fields(self) -> bool:
+        """Check if the model has any MediaField annotated fields."""
+        for fi in self.model.model_fields.values():
+            if _extract_media_field(fi) is not None:
+                return True
+        return False
+
     def _build_form(self, **kwargs: Any) -> Any:
         """Build a ModelForm or ValidatedModelForm depending on config."""
+        if self._has_media_fields():
+            kwargs.setdefault("hx_encoding", "multipart/form-data")
         if self.realtime_validation:
             from kokage_ui.models import ValidatedModelForm
 
@@ -505,6 +553,7 @@ class CRUDRouter(Generic[T]):
             form_data = await request.form()
             raw_data = dict(form_data)
             _process_bool_fields(router.model, raw_data, form_data, router._get_form_exclude())
+            await _process_media_fields(router.model, raw_data, form_data, router._get_form_exclude(), router.file_handler)
 
             try:
                 instance = router.model.model_validate(raw_data)
@@ -659,6 +708,7 @@ class CRUDRouter(Generic[T]):
             form_data = await request.form()
             raw_data = dict(form_data)
             _process_bool_fields(router.model, raw_data, form_data, router._get_form_exclude())
+            await _process_media_fields(router.model, raw_data, form_data, router._get_form_exclude(), router.file_handler, existing_instance=item)
 
             # Preserve ID
             raw_data[router.id_field] = id

@@ -66,8 +66,14 @@ from kokage_ui.elements import (
     Option,
     P,
     Pre,
+    Audio,
+    Canvas,
+    Picture,
     Progress,
     Raw,
+    Source,
+    Track,
+    Video,
     Script,
     Section,
     Select,
@@ -157,6 +163,9 @@ from kokage_ui.datagrid import ColumnFilter, DataGrid, DataGridState
 from kokage_ui.crud import CRUDRouter, InMemoryStorage, Pagination, Storage
 from kokage_ui.storage import SQLModelStorage, create_tables
 
+# Media
+from kokage_ui.media import AudioPlayer, ImageGallery, MediaCard, MediaField, VideoPlayer
+
 # Admin dashboard
 from kokage_ui.admin import AdminSite, ModelAdmin
 
@@ -226,6 +235,12 @@ __all__ = [
     "Summary",
     "Dialog",
     "Progress",
+    "Video",
+    "Audio",
+    "Picture",
+    "Canvas",
+    "Source",
+    "Track",
     # DaisyUI Components
     "Card",
     "Stat",
@@ -302,4 +317,10 @@ __all__ = [
     # Notifications
     "Notifier",
     "NotificationStream",
+    # Media
+    "MediaField",
+    "VideoPlayer",
+    "AudioPlayer",
+    "ImageGallery",
+    "MediaCard",
 ]

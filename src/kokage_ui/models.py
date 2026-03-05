@@ -9,7 +9,7 @@ from __future__ import annotations
 import enum
 import types
 from dataclasses import dataclass, field
-from typing import Any, Callable, Literal, Union, get_args, get_origin
+from typing import Annotated, Any, Callable, Literal, Union, get_args, get_origin
 
 from pydantic import BaseModel
 from pydantic.fields import FieldInfo
@@ -18,13 +18,16 @@ from pydantic_core import PydanticUndefined
 from kokage_ui.components import Alert, Badge, Card, DaisyTable
 from kokage_ui.elements import (
     A,
+    Audio,
     Button,
     Component,
     Div,
+    Img,
     Input,
     Label,
     Option,
     Select,
+    Source,
     Span,
     Strong,
     Tbody,
@@ -33,7 +36,9 @@ from kokage_ui.elements import (
     Th,
     Thead,
     Tr,
+    Video,
 )
+from kokage_ui.media import MediaField
 
 _SENTINEL = object()
 
@@ -48,16 +53,24 @@ _TEXTAREA_MAX_LENGTH_THRESHOLD = 200
 def _resolve_annotation(annotation: Any) -> tuple[Any, bool]:
     """Resolve a type annotation to (base_type, is_optional).
 
-    Handles Optional[X], X | None, Literal, and plain types.
+    Handles Annotated[X, ...], Optional[X], X | None, Literal, and plain types.
     """
     origin = get_origin(annotation)
+
+    # Handle Annotated[X, ...] → unwrap to X
+    if origin is Annotated:
+        args = get_args(annotation)
+        if args:
+            return _resolve_annotation(args[0])
+        return annotation, False
 
     # Handle Union types: Optional[X] is Union[X, None]
     if origin is Union or isinstance(annotation, types.UnionType):
         args = get_args(annotation)
         non_none = [a for a in args if a is not type(None)]
         if len(non_none) == 1:
-            return non_none[0], True
+            base, _ = _resolve_annotation(non_none[0])
+            return base, True
         # Multi-type union (not just Optional) — return as-is
         return annotation, False
 
@@ -124,6 +137,14 @@ def _build_form_input(
     return Div(*children, **wrapper_attrs)
 
 
+def _extract_media_field(field_info: FieldInfo) -> MediaField | None:
+    """Extract MediaField from Pydantic field metadata."""
+    for m in field_info.metadata:
+        if isinstance(m, MediaField):
+            return m
+    return None
+
+
 def _field_to_component(
     name: str,
     field_info: FieldInfo,
@@ -154,6 +175,31 @@ def _field_to_component(
         common_attrs.update(extra_input_attrs)
 
     error_cls_suffix = " input-error" if error_message else ""
+
+    # --- MediaField → file input with preview ---
+    media = _extract_media_field(field_info)
+    if media is not None:
+        input_el = Input(
+            type="file",
+            accept=media.accept_str,
+            cls=f"file-input file-input-bordered w-full{error_cls_suffix}",
+            **common_attrs,
+        )
+        children: list[Any] = []
+        if value is not _SENTINEL and value:
+            if media.media_type == "image":
+                preview = Img(src=str(value), cls="max-h-32 rounded mb-2", alt=label_text)
+            elif media.media_type == "video":
+                preview = Video(Source(src=str(value)), controls=True, cls="max-h-32 rounded mb-2")
+            elif media.media_type == "audio":
+                preview = Audio(Source(src=str(value)), controls=True, cls="w-full mb-2")
+            else:
+                preview = None
+            if preview:
+                children.append(preview)
+        children.append(input_el)
+        wrapper = Div(*children)
+        return _build_form_input(label_text=label_text, input_element=wrapper, error_message=error_message, field_id=field_id)
 
     # --- bool → checkbox ---
     if base_type is bool:
@@ -418,6 +464,14 @@ class ModelForm(Component):
     ) -> None:
         fields = _filter_fields(model, include, exclude)
 
+        # Auto-detect media fields → set enctype
+        has_media = any(
+            _extract_media_field(fi) is not None
+            for _, fi in fields
+        )
+        if has_media:
+            attrs.setdefault("enctype", "multipart/form-data")
+
         # Build error lookup: field_name → first error message
         error_map: dict[str, str] = {}
         if errors:
@@ -511,7 +565,7 @@ class ValidatedModelForm(ModelForm):
         }
 
 
-def _render_value(value: Any) -> Any:
+def _render_value(value: Any, *, media_field: MediaField | None = None) -> Any:
     """Render a field value for display in table/detail views."""
     if isinstance(value, bool):
         if value:
@@ -521,6 +575,13 @@ def _render_value(value: Any) -> Any:
         return str(value.value)
     if value is None:
         return "-"
+    if media_field and value:
+        if media_field.media_type == "image":
+            return Img(src=str(value), cls="max-h-16 rounded", alt="")
+        elif media_field.media_type == "video":
+            return Badge("Video", color="info")
+        elif media_field.media_type == "audio":
+            return Badge("Audio", color="info")
     return str(value)
 
 
@@ -565,12 +626,13 @@ class ModelTable(Component):
         table_rows = []
         for row in rows:
             cells = []
-            for name, _fi in fields:
+            for name, fi in fields:
                 value = getattr(row, name)
                 if name in cell_renderers:
                     cells.append(cell_renderers[name](value))
                 else:
-                    cells.append(_render_value(value))
+                    media = _extract_media_field(fi)
+                    cells.append(_render_value(value, media_field=media))
             for renderer in extra_columns.values():
                 cells.append(renderer(row))
             table_rows.append(cells)
@@ -725,7 +787,8 @@ class ModelDetail(Component):
         for name, fi in fields:
             label_text = fi.title or name.replace("_", " ").title()
             value = getattr(instance, name)
-            rendered = _render_value(value)
+            media = _extract_media_field(fi)
+            rendered = _render_value(value, media_field=media)
             rows.append(
                 Div(
                     Strong(label_text, cls="text-sm opacity-70"),

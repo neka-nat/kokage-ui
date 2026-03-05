@@ -400,3 +400,28 @@ class Dialog(Component):
 
 class Progress(Component):
     tag = "progress"
+
+
+# --- Media ---
+class Video(Component):
+    tag = "video"
+
+
+class Audio(Component):
+    tag = "audio"
+
+
+class Picture(Component):
+    tag = "picture"
+
+
+class Canvas(Component):
+    tag = "canvas"
+
+
+class Source(Component):
+    tag = "source"
+
+
+class Track(Component):
+    tag = "track"
