@@ -1,4 +1,4 @@
-# kokage-ui
+![logo](assets/logo.svg)
 
 [![PyPI version](https://img.shields.io/pypi/v/kokage-ui)](https://pypi.org/project/kokage-ui/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
