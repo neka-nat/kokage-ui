@@ -144,6 +144,9 @@ from kokage_ui.forms import FormStep, MultiStepForm
 # Authentication & authorization
 from kokage_ui.auth import LoginForm, RegisterForm, RoleGuard, UserMenu, protected
 
+# DataGrid
+from kokage_ui.datagrid import ColumnFilter, DataGrid, DataGridState
+
 # CRUD auto-generation
 from kokage_ui.crud import CRUDRouter, InMemoryStorage, Pagination, Storage
 from kokage_ui.storage import SQLModelStorage, create_tables
@@ -271,6 +274,10 @@ __all__ = [
     "Markdown",
     "CodeBlock",
     "SortableTable",
+    # DataGrid
+    "DataGrid",
+    "DataGridState",
+    "ColumnFilter",
     # Auth
     "LoginForm",
     "RegisterForm",
