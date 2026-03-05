@@ -1,19 +1,29 @@
 """Tests for DaisyUI high-level components."""
 
 from kokage_ui.components import (
+    Accordion,
     Alert,
     Badge,
+    Breadcrumb,
     Card,
+    Collapse,
     DaisyButton,
     DaisyInput,
     DaisySelect,
     DaisyTable,
     DaisyTextarea,
+    Drawer,
+    Dropdown,
     Hero,
     Layout,
+    Modal,
     NavBar,
     Stat,
     Stats,
+    Step,
+    Steps,
+    Tab,
+    Tabs,
     Toast,
 )
 
@@ -296,3 +306,266 @@ class TestLayout:
         page = layout.wrap("Content", "Test")
         html = page.render()
         assert 'data-theme="dark"' in html
+
+
+class TestModal:
+    def test_basic_modal(self):
+        result = str(Modal("Content", modal_id="my-modal"))
+        assert "<dialog" in result
+        assert 'id="my-modal"' in result
+        assert "modal" in result
+        assert "modal-box" in result
+        assert "Content" in result
+
+    def test_modal_with_title(self):
+        result = str(Modal("Body", modal_id="m1", title="Title"))
+        assert "Title" in result
+        assert "<h3" in result
+
+    def test_modal_with_actions(self):
+        result = str(
+            Modal("Body", modal_id="m1", actions=[DaisyButton("OK")])
+        )
+        assert "modal-action" in result
+        assert "OK" in result
+
+    def test_modal_closable(self):
+        result = str(Modal("Body", modal_id="m1", closable=True))
+        assert "modal-backdrop" in result
+        assert 'method="dialog"' in result
+
+    def test_modal_not_closable(self):
+        result = str(Modal("Body", modal_id="m1", closable=False))
+        assert "modal-backdrop" not in result
+
+
+class TestDrawer:
+    def test_basic_drawer(self):
+        result = str(Drawer(content="Main", side="Side"))
+        assert "drawer" in result
+        assert "drawer-content" in result
+        assert "drawer-side" in result
+        assert "drawer-toggle" in result
+        assert "Main" in result
+        assert "Side" in result
+
+    def test_drawer_end(self):
+        result = str(Drawer(content="Main", side="Side", end=True))
+        assert "drawer-end" in result
+
+    def test_drawer_open(self):
+        result = str(Drawer(content="Main", side="Side", open=True))
+        assert "checked" in result
+
+    def test_drawer_custom_id(self):
+        result = str(Drawer(content="M", side="S", drawer_id="my-drawer"))
+        assert 'id="my-drawer"' in result
+
+
+class TestTabs:
+    def test_link_tabs(self):
+        result = str(Tabs(tabs=[
+            Tab("Tab 1", href="/t1"),
+            Tab("Tab 2", href="/t2"),
+        ]))
+        assert "tabs" in result
+        assert "Tab 1" in result
+        assert 'href="/t1"' in result
+
+    def test_active_tab(self):
+        result = str(Tabs(tabs=[
+            Tab("A", href="/a", active=True),
+            Tab("B", href="/b"),
+        ]))
+        assert "tab-active" in result
+
+    def test_disabled_tab(self):
+        result = str(Tabs(tabs=[
+            Tab("A", href="/a"),
+            Tab("B", href="/b", disabled=True),
+        ]))
+        assert "tab-disabled" in result
+
+    def test_content_tabs(self):
+        result = str(Tabs(tabs=[
+            Tab("Tab 1", content="Content 1", active=True),
+            Tab("Tab 2", content="Content 2"),
+        ]))
+        assert 'type="radio"' in result
+        assert "tab-content" in result
+        assert "Content 1" in result
+
+    def test_tabs_variant(self):
+        result = str(Tabs(tabs=[Tab("A", href="/a")], variant="bordered"))
+        assert "tabs-bordered" in result
+
+    def test_tabs_size(self):
+        result = str(Tabs(tabs=[Tab("A", href="/a")], size="lg"))
+        assert "tabs-lg" in result
+
+    def test_tabs_boxed(self):
+        result = str(Tabs(tabs=[Tab("A", href="/a")], variant="boxed"))
+        assert "tabs-boxed" in result
+
+
+class TestSteps:
+    def test_basic_steps(self):
+        result = str(Steps(steps=[
+            Step("Register"),
+            Step("Choose"),
+            Step("Pay"),
+        ], current=1))
+        assert "steps" in result
+        assert "Register" in result
+        assert "step-primary" in result
+
+    def test_steps_current(self):
+        result = str(Steps(steps=[
+            Step("A"),
+            Step("B"),
+            Step("C"),
+        ], current=0))
+        # Only first step should have color
+        assert result.count("step-primary") == 1
+
+    def test_steps_vertical(self):
+        result = str(Steps(steps=[Step("A")], vertical=True))
+        assert "steps-vertical" in result
+
+    def test_steps_color(self):
+        result = str(Steps(steps=[Step("A")], current=0, color="accent"))
+        assert "step-accent" in result
+
+    def test_step_data_content(self):
+        result = str(Steps(steps=[Step("A", data_content="★")], current=0))
+        assert "data-content" in result
+
+    def test_step_per_step_color(self):
+        result = str(Steps(steps=[
+            Step("A", color="error"),
+            Step("B"),
+        ], current=1))
+        assert "step-error" in result
+        assert "step-primary" in result
+
+
+class TestBreadcrumb:
+    def test_basic_breadcrumb(self):
+        result = str(Breadcrumb(items=[
+            ("Home", "/"),
+            ("Users", "/users"),
+            ("Alice", None),
+        ]))
+        assert "breadcrumbs" in result
+        assert 'href="/"' in result
+        assert "Alice" in result
+
+    def test_breadcrumb_no_link(self):
+        result = str(Breadcrumb(items=[("Current", None)]))
+        assert "<span>" in result
+        assert "<a" not in result or 'href' not in result.split("Current")[0].split("<")[-1]
+
+    def test_breadcrumb_all_links(self):
+        result = str(Breadcrumb(items=[
+            ("A", "/a"),
+            ("B", "/b"),
+        ]))
+        assert result.count("href=") == 2
+
+
+class TestCollapse:
+    def test_basic_collapse(self):
+        result = str(Collapse("Title", "Content"))
+        assert "collapse" in result
+        assert "collapse-title" in result
+        assert "collapse-content" in result
+        assert "Title" in result
+        assert "Content" in result
+
+    def test_collapse_open(self):
+        result = str(Collapse("T", "C", open=True))
+        assert "checked" in result
+
+    def test_collapse_variant_arrow(self):
+        result = str(Collapse("T", "C", variant="arrow"))
+        assert "collapse-arrow" in result
+
+    def test_collapse_variant_plus(self):
+        result = str(Collapse("T", "C", variant="plus"))
+        assert "collapse-plus" in result
+
+    def test_collapse_with_name(self):
+        result = str(Collapse("T", "C", name="acc"))
+        assert 'type="radio"' in result
+        assert 'name="acc"' in result
+
+    def test_collapse_without_name(self):
+        result = str(Collapse("T", "C"))
+        assert 'type="checkbox"' in result
+
+
+class TestAccordion:
+    def test_basic_accordion(self):
+        result = str(Accordion(items=[
+            ("Section 1", "Content 1"),
+            ("Section 2", "Content 2"),
+        ]))
+        assert "collapse" in result
+        assert "Section 1" in result
+        assert "Content 2" in result
+        assert 'name="accordion"' in result
+
+    def test_accordion_default_open(self):
+        result = str(Accordion(items=[
+            ("A", "C1"),
+            ("B", "C2"),
+        ], default_open=0))
+        assert "checked" in result
+
+    def test_accordion_variant(self):
+        result = str(Accordion(items=[("A", "C")], variant="arrow"))
+        assert "collapse-arrow" in result
+
+    def test_accordion_custom_name(self):
+        result = str(Accordion(items=[("A", "C")], name="faq"))
+        assert 'name="faq"' in result
+
+
+class TestDropdown:
+    def test_basic_dropdown_with_items(self):
+        result = str(Dropdown(
+            "Options",
+            items=[("Edit", "/edit"), ("Delete", "/delete")],
+        ))
+        assert "dropdown" in result
+        assert "Options" in result
+        assert "Edit" in result
+        assert 'href="/edit"' in result
+
+    def test_dropdown_string_trigger(self):
+        result = str(Dropdown("Menu", items=[("A", "/a")]))
+        assert 'role="button"' in result
+        assert "btn" in result
+
+    def test_dropdown_component_trigger(self):
+        btn = DaisyButton("Menu", color="ghost")
+        result = str(Dropdown(btn, items=[("A", "/a")]))
+        assert "btn-ghost" in result
+
+    def test_dropdown_position(self):
+        result = str(Dropdown("M", items=[("A", "/a")], position="top"))
+        assert "dropdown-top" in result
+
+    def test_dropdown_hover(self):
+        result = str(Dropdown("M", items=[("A", "/a")], hover=True))
+        assert "dropdown-hover" in result
+
+    def test_dropdown_align_end(self):
+        result = str(Dropdown("M", items=[("A", "/a")], align_end=True))
+        assert "dropdown-end" in result
+
+    def test_dropdown_custom_children(self):
+        from kokage_ui.elements import Ul, Li, A
+
+        result = str(Dropdown("Trigger", Ul(Li(A("Custom")))))
+        assert "Custom" in result

@@ -90,6 +90,16 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `DaisyTable` | Data table with headers and rows |
 | `Toast` | Toast notification |
 | `Layout` | Reusable page layout builder |
+| `Modal` | Dialog overlay (`showModal()`) |
+| `Drawer` | Sidebar/off-canvas panel |
+| `Tab` | Single tab definition (dataclass) |
+| `Tabs` | Tabbed navigation (link or content mode) |
+| `Step` | Single step definition (dataclass) |
+| `Steps` | Progress step indicator |
+| `Breadcrumb` | Navigation breadcrumb trail |
+| `Collapse` | Expandable content section |
+| `Accordion` | Radio-linked collapse group |
+| `Dropdown` | Dropdown menu (click or hover) |
 
 ## Pydantic Model → UI
 

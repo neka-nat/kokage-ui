@@ -258,6 +258,214 @@ Toast("Error occurred", variant="error", position="toast-start toast-bottom")
 | `variant` | str | `"info"`, `"success"`, `"warning"`, `"error"` |
 | `position` | str | DaisyUI position classes (default: `"toast-end toast-top"`) |
 
+## Modal
+
+A dialog overlay triggered via JavaScript `showModal()`.
+
+```python
+from kokage_ui import Modal, DaisyButton, P
+
+Modal(
+    P("Are you sure?"),
+    modal_id="confirm-modal",
+    title="Confirm",
+    actions=[DaisyButton("OK", color="primary")],
+    closable=True,
+)
+```
+
+Open with: `<button onclick="document.getElementById('confirm-modal').showModal()">Open</button>`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `*children` | Any | Content inside modal-box |
+| `modal_id` | str | Required id for `.showModal()` |
+| `title` | str \| None | Title rendered as H3 |
+| `actions` | list \| None | Components for modal-action area |
+| `closable` | bool | Add backdrop to close on outside click (default: True) |
+
+## Drawer
+
+A sidebar/off-canvas panel that slides in.
+
+```python
+from kokage_ui import Drawer, Div, Ul, Li, A
+
+Drawer(
+    content=Div("Main content"),
+    side=Ul(Li(A("Home", href="/"))),
+    drawer_id="my-drawer",
+)
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `content` | Any | Main area content (keyword-only) |
+| `side` | Any | Sidebar content (keyword-only) |
+| `drawer_id` | str | Checkbox id for toggling (default: `"kokage-drawer"`) |
+| `end` | bool | Place drawer on the right |
+| `open` | bool | Initially open |
+
+## Tabs
+
+Tabbed navigation with automatic mode detection.
+
+```python
+from kokage_ui import Tabs, Tab, Div
+
+# Link-based tabs (htmx-friendly)
+Tabs(tabs=[
+    Tab("Tab 1", href="/tab1", active=True),
+    Tab("Tab 2", href="/tab2"),
+])
+
+# Content tabs (pure CSS switching)
+Tabs(tabs=[
+    Tab("Tab 1", content=Div("Content 1"), active=True),
+    Tab("Tab 2", content=Div("Content 2")),
+], variant="bordered")
+```
+
+### Tab
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `label` | str | Tab label text |
+| `content` | Any | Tab panel content (enables radio mode) |
+| `active` | bool | Active/selected tab |
+| `disabled` | bool | Disabled tab |
+| `href` | str \| None | Link URL (for link mode) |
+
+### Tabs
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `tabs` | list[Tab] | List of Tab instances |
+| `variant` | str \| None | `bordered`, `lifted`, `boxed` |
+| `size` | str \| None | `xs`, `sm`, `md`, `lg` |
+
+## Steps
+
+A progress indicator showing sequential steps.
+
+```python
+from kokage_ui import Steps, Step
+
+Steps(
+    steps=[
+        Step("Register"),
+        Step("Choose plan"),
+        Step("Payment"),
+        Step("Complete"),
+    ],
+    current=1,
+    color="primary",
+)
+```
+
+### Step
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `label` | str | Step label text |
+| `data_content` | str \| None | Custom content for step marker |
+| `color` | str \| None | Per-step color override |
+
+### Steps
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `steps` | list[Step] | List of Step instances |
+| `current` | int | 0-indexed; steps at index <= current get color |
+| `color` | str | Color for completed steps (default: `"primary"`) |
+| `vertical` | bool | Vertical layout |
+
+## Breadcrumb
+
+Navigation breadcrumb trail.
+
+```python
+from kokage_ui import Breadcrumb
+
+Breadcrumb(items=[
+    ("Home", "/"),
+    ("Users", "/users"),
+    ("Alice", None),  # current page, no link
+])
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `items` | list[tuple[str, str \| None]] | `(label, href)` pairs; `None` href renders plain text |
+
+## Collapse / Accordion
+
+Expandable content sections.
+
+```python
+from kokage_ui import Collapse, Accordion, P
+
+# Single collapse
+Collapse("Click to open", P("Hidden content"), variant="arrow", open=True)
+
+# Accordion (radio-linked group)
+Accordion(items=[
+    ("Section 1", P("Content 1")),
+    ("Section 2", P("Content 2")),
+    ("Section 3", P("Content 3")),
+], variant="arrow", default_open=0)
+```
+
+### Collapse
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `title` | str | Title text (first positional arg) |
+| `*children` | Any | Hidden content |
+| `open` | bool | Initially open |
+| `variant` | str \| None | `arrow` or `plus` |
+| `name` | str \| None | Group name for radio-based accordion |
+
+### Accordion
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `items` | list[tuple[str, Any]] | `(title, content)` pairs (keyword-only) |
+| `name` | str | Shared radio name (default: `"accordion"`) |
+| `variant` | str \| None | `arrow` or `plus` |
+| `default_open` | int \| None | Index of initially open item |
+
+## Dropdown
+
+A dropdown menu triggered by click or hover.
+
+```python
+from kokage_ui import Dropdown, DaisyButton
+
+# Simple item list
+Dropdown(
+    "Options",
+    items=[("Edit", "/edit"), ("Delete", "/delete")],
+    position="bottom",
+)
+
+# Custom trigger
+Dropdown(
+    DaisyButton("Menu", color="ghost"),
+    items=[("Profile", "/profile"), ("Settings", "/settings")],
+    hover=True,
+)
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `trigger` | str \| Any | Button text or component; strings auto-wrapped in btn |
+| `*children` | Any | Custom dropdown content (alternative to items) |
+| `items` | list[tuple[str, str]] \| None | `(label, href)` pairs for auto-generated menu |
+| `position` | str \| None | `top`, `bottom`, `left`, `right`, `end` |
+| `hover` | bool | Open on hover |
+| `align_end` | bool | Align dropdown to the end |
+
 ## Layout
 
 A reusable page layout builder (not a Component). Wraps content in a consistent `Page` with navbar, sidebar, footer, and theme.

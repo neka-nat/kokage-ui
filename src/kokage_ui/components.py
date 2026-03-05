@@ -7,12 +7,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from dataclasses import dataclass, field
+
 from kokage_ui.elements import (
+    A,
     Component,
     Div,
     Figure,
+    Form,
     H2,
+    H3,
     Img,
+    Input,
+    Label,
+    Li,
     Option,
     Span,
     Tbody,
@@ -20,6 +28,7 @@ from kokage_ui.elements import (
     Th,
     Thead,
     Tr,
+    Ul,
 )
 
 if TYPE_CHECKING:
@@ -677,3 +686,468 @@ class Layout:
             include_sse=self.include_sse,
             lang=self.lang,
         )
+
+
+# ========================================
+# Modal
+# ========================================
+
+
+class Modal(Component):
+    """DaisyUI Modal (dialog) component.
+
+    Args:
+        *children: Content inside modal-box.
+        modal_id: Required id for JS `.showModal()`.
+        title: Optional title rendered as H3.
+        actions: Components for modal-action area.
+        closable: Add backdrop form to close on outside click.
+    """
+
+    tag = "dialog"
+
+    def __init__(
+        self,
+        *children: Any,
+        modal_id: str,
+        title: str | None = None,
+        actions: list[Any] | None = None,
+        closable: bool = True,
+        **attrs: Any,
+    ) -> None:
+        attrs["id"] = modal_id
+        attrs["cls"] = _merge_cls("modal", attrs.get("cls"))
+
+        box_children: list[Any] = []
+        if title:
+            box_children.append(H3(title, cls="font-bold text-lg"))
+        box_children.extend(children)
+        if actions:
+            box_children.append(Div(*actions, cls="modal-action"))
+
+        built: list[Any] = [Div(*box_children, cls="modal-box")]
+        if closable:
+            built.append(Form(method="dialog", cls="modal-backdrop"))
+
+        super().__init__(*built, **attrs)
+
+
+# ========================================
+# Drawer
+# ========================================
+
+
+class Drawer(Component):
+    """DaisyUI Drawer component.
+
+    Args:
+        content: Main area content (keyword-only).
+        side: Sidebar content (keyword-only).
+        drawer_id: Checkbox id for toggling.
+        end: Place drawer on the right.
+        open: Initially open.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *,
+        content: Any,
+        side: Any,
+        drawer_id: str = "kokage-drawer",
+        end: bool = False,
+        open: bool = False,
+        **attrs: Any,
+    ) -> None:
+        cls_parts = ["drawer"]
+        if end:
+            cls_parts.append("drawer-end")
+        attrs["cls"] = _merge_cls(" ".join(cls_parts), attrs.get("cls"))
+
+        toggle_attrs: dict[str, Any] = {
+            "id": drawer_id,
+            "type": "checkbox",
+            "cls": "drawer-toggle",
+        }
+        if open:
+            toggle_attrs["checked"] = True
+
+        built: list[Any] = [
+            Input(**toggle_attrs),
+            Div(content, cls="drawer-content"),
+            Div(
+                Label(side, cls="drawer-overlay", **{"for": drawer_id}),
+                cls="drawer-side",
+            ),
+        ]
+
+        super().__init__(*built, **attrs)
+
+
+# ========================================
+# Tabs
+# ========================================
+
+
+@dataclass
+class Tab:
+    """Single tab definition for Tabs component."""
+
+    label: str
+    content: Any = None
+    active: bool = False
+    disabled: bool = False
+    href: str | None = None
+
+
+_TAB_VARIANTS = {
+    "bordered": "tabs-bordered",
+    "lifted": "tabs-lifted",
+    "boxed": "tabs-boxed",
+}
+
+_TAB_SIZES = {
+    "xs": "tabs-xs",
+    "sm": "tabs-sm",
+    "md": "tabs-md",
+    "lg": "tabs-lg",
+}
+
+
+class Tabs(Component):
+    """DaisyUI Tabs component.
+
+    Auto-detects mode: if any tab has `content`, uses radio-based
+    pure-CSS switching; otherwise uses link/anchor mode (htmx-friendly).
+
+    Args:
+        tabs: List of Tab instances.
+        variant: bordered, lifted, or boxed.
+        size: xs, sm, md, lg.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *,
+        tabs: list[Tab],
+        variant: str | None = None,
+        size: str | None = None,
+        **attrs: Any,
+    ) -> None:
+        has_content = any(t.content is not None for t in tabs)
+
+        tabs_cls_parts = ["tabs"]
+        if variant and variant in _TAB_VARIANTS:
+            tabs_cls_parts.append(_TAB_VARIANTS[variant])
+        if size and size in _TAB_SIZES:
+            tabs_cls_parts.append(_TAB_SIZES[size])
+        tabs_cls = " ".join(tabs_cls_parts)
+
+        if has_content:
+            # Radio-based tabs with content panels
+            built: list[Any] = []
+            attrs["role"] = "tablist"
+            attrs["cls"] = _merge_cls(tabs_cls, attrs.get("cls"))
+            for i, tab in enumerate(tabs):
+                tab_attrs: dict[str, Any] = {
+                    "type": "radio",
+                    "name": "kokage-tabs",
+                    "cls": "tab",
+                    "aria_label": tab.label,
+                }
+                if tab.active:
+                    tab_attrs["checked"] = True
+                if tab.disabled:
+                    tab_attrs["disabled"] = True
+                built.append(Input(**tab_attrs))
+                panel_content = tab.content if tab.content is not None else ""
+                built.append(
+                    Div(panel_content, cls="tab-content p-4", role="tabpanel")
+                )
+            super().__init__(*built, **attrs)
+        else:
+            # Link-based tabs
+            tab_links: list[Any] = []
+            for tab in tabs:
+                link_cls_parts = ["tab"]
+                if tab.active:
+                    link_cls_parts.append("tab-active")
+                if tab.disabled:
+                    link_cls_parts.append("tab-disabled")
+                link_cls = " ".join(link_cls_parts)
+                if tab.href:
+                    tab_links.append(A(tab.label, href=tab.href, cls=link_cls))
+                else:
+                    tab_links.append(A(tab.label, cls=link_cls))
+            attrs["cls"] = _merge_cls(tabs_cls, attrs.get("cls"))
+            attrs["role"] = "tablist"
+            super().__init__(*tab_links, **attrs)
+
+
+# ========================================
+# Steps
+# ========================================
+
+_STEP_COLORS = {
+    "primary": "step-primary",
+    "secondary": "step-secondary",
+    "accent": "step-accent",
+    "info": "step-info",
+    "success": "step-success",
+    "warning": "step-warning",
+    "error": "step-error",
+    "neutral": "step-neutral",
+}
+
+
+@dataclass
+class Step:
+    """Single step definition for Steps component."""
+
+    label: str
+    data_content: str | None = None
+    color: str | None = None
+
+
+class Steps(Component):
+    """DaisyUI Steps component.
+
+    Args:
+        steps: List of Step instances.
+        current: 0-indexed; steps at index <= current get the color.
+        color: Color for completed steps.
+        vertical: Vertical layout.
+    """
+
+    tag = "ul"
+
+    def __init__(
+        self,
+        *,
+        steps: list[Step],
+        current: int = 0,
+        color: str = "primary",
+        vertical: bool = False,
+        **attrs: Any,
+    ) -> None:
+        cls_parts = ["steps"]
+        if vertical:
+            cls_parts.append("steps-vertical")
+        attrs["cls"] = _merge_cls(" ".join(cls_parts), attrs.get("cls"))
+
+        built: list[Any] = []
+        for i, step in enumerate(steps):
+            step_cls_parts = ["step"]
+            if i <= current:
+                step_color = step.color or color
+                color_cls = _STEP_COLORS.get(step_color)
+                if color_cls:
+                    step_cls_parts.append(color_cls)
+            li_attrs: dict[str, Any] = {"cls": " ".join(step_cls_parts)}
+            if step.data_content is not None:
+                li_attrs["data_content"] = step.data_content
+            built.append(Li(step.label, **li_attrs))
+
+        super().__init__(*built, **attrs)
+
+
+# ========================================
+# Breadcrumb
+# ========================================
+
+
+class Breadcrumb(Component):
+    """DaisyUI Breadcrumb component.
+
+    Args:
+        items: List of (label, href) tuples. href=None for current page.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *,
+        items: list[tuple[str, str | None]],
+        **attrs: Any,
+    ) -> None:
+        attrs["cls"] = _merge_cls("breadcrumbs text-sm", attrs.get("cls"))
+
+        li_children: list[Any] = []
+        for label, href in items:
+            if href:
+                li_children.append(Li(A(label, href=href)))
+            else:
+                li_children.append(Li(Span(label)))
+
+        super().__init__(Ul(*li_children), **attrs)
+
+
+# ========================================
+# Collapse / Accordion
+# ========================================
+
+_COLLAPSE_VARIANTS = {
+    "arrow": "collapse-arrow",
+    "plus": "collapse-plus",
+}
+
+
+class Collapse(Component):
+    """DaisyUI Collapse component.
+
+    Args:
+        title: Title text (first positional arg).
+        *children: Hidden content.
+        open: Initially open.
+        variant: arrow or plus.
+        name: Group name for radio-based accordion.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        title: str,
+        *children: Any,
+        open: bool = False,
+        variant: str | None = None,
+        name: str | None = None,
+        **attrs: Any,
+    ) -> None:
+        cls_parts = ["collapse", "bg-base-200"]
+        if variant and variant in _COLLAPSE_VARIANTS:
+            cls_parts.append(_COLLAPSE_VARIANTS[variant])
+        attrs["cls"] = _merge_cls(" ".join(cls_parts), attrs.get("cls"))
+
+        if name:
+            # Radio-based (for accordion grouping)
+            toggle_attrs: dict[str, Any] = {"type": "radio", "name": name}
+            if open:
+                toggle_attrs["checked"] = True
+            built: list[Any] = [
+                Input(**toggle_attrs),
+                Div(title, cls="collapse-title text-xl font-medium"),
+                Div(*children, cls="collapse-content"),
+            ]
+        else:
+            # Checkbox-based (standalone)
+            toggle_attrs = {"type": "checkbox"}
+            if open:
+                toggle_attrs["checked"] = True
+            built = [
+                Input(**toggle_attrs),
+                Div(title, cls="collapse-title text-xl font-medium"),
+                Div(*children, cls="collapse-content"),
+            ]
+
+        super().__init__(*built, **attrs)
+
+
+class Accordion(Component):
+    """DaisyUI Accordion — multiple Collapse items linked by radio name.
+
+    Args:
+        items: List of (title, content) tuples (keyword-only).
+        name: Shared radio name for mutual exclusion.
+        variant: arrow or plus.
+        default_open: Index of the initially open item.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *,
+        items: list[tuple[str, Any]],
+        name: str = "accordion",
+        variant: str | None = None,
+        default_open: int | None = None,
+        **attrs: Any,
+    ) -> None:
+        built: list[Any] = []
+        for i, (title, content) in enumerate(items):
+            is_open = default_open == i
+            built.append(
+                Collapse(
+                    title,
+                    content,
+                    open=is_open,
+                    variant=variant,
+                    name=name,
+                )
+            )
+        super().__init__(*built, **attrs)
+
+
+# ========================================
+# Dropdown
+# ========================================
+
+_DROPDOWN_POSITIONS = {
+    "top": "dropdown-top",
+    "bottom": "dropdown-bottom",
+    "left": "dropdown-left",
+    "right": "dropdown-right",
+    "end": "dropdown-end",
+}
+
+
+class Dropdown(Component):
+    """DaisyUI Dropdown component.
+
+    Args:
+        trigger: Button text or component. Strings auto-wrapped in a btn div.
+        *children: Custom dropdown content (alternative to items).
+        items: List of (label, href) tuples for auto-generated menu.
+        position: top, bottom, left, right, end.
+        hover: Open on hover.
+        align_end: Align dropdown to the end.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        trigger: Any,
+        *children: Any,
+        items: list[tuple[str, str]] | None = None,
+        position: str | None = None,
+        hover: bool = False,
+        align_end: bool = False,
+        **attrs: Any,
+    ) -> None:
+        cls_parts = ["dropdown"]
+        if position and position in _DROPDOWN_POSITIONS:
+            cls_parts.append(_DROPDOWN_POSITIONS[position])
+        if hover:
+            cls_parts.append("dropdown-hover")
+        if align_end:
+            cls_parts.append("dropdown-end")
+        attrs["cls"] = _merge_cls(" ".join(cls_parts), attrs.get("cls"))
+
+        # Build trigger
+        if isinstance(trigger, str):
+            trigger_el = Div(trigger, tabindex="0", role="button", cls="btn m-1")
+        else:
+            trigger_el = trigger
+
+        # Build dropdown content
+        if children:
+            dropdown_content = list(children)
+        elif items:
+            menu_items = [Li(A(label, href=href)) for label, href in items]
+            dropdown_content = [
+                Ul(
+                    *menu_items,
+                    tabindex="0",
+                    cls="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow",
+                )
+            ]
+        else:
+            dropdown_content = []
+
+        super().__init__(trigger_el, *dropdown_content, **attrs)
