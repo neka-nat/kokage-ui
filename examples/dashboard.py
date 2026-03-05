@@ -25,6 +25,7 @@ from kokage_ui import (
     H1,
     H2,
     Hero,
+    InMemoryStorage,
     KokageUI,
     ModelDetail,
     ModelForm,
@@ -52,6 +53,7 @@ class Role(enum.Enum):
 
 
 class User(BaseModel):
+    id: str = ""
     name: str = Field(min_length=1, max_length=100)
     email: str
     age: int = Field(ge=0, le=150, default=30)
@@ -60,28 +62,25 @@ class User(BaseModel):
     bio: str = Field(default="", max_length=500)
 
 
-# Sample data (dict for search, Pydantic instances for ModelTable/ModelDetail)
-USERS_DICT = [
-    {"name": "Tanaka Taro", "email": "tanaka@example.com", "role": "Admin"},
-    {"name": "Suzuki Hanako", "email": "suzuki@example.com", "role": "Editor"},
-    {"name": "Sato Jiro", "email": "sato@example.com", "role": "Viewer"},
-    {"name": "Takahashi Misaki", "email": "takahashi@example.com", "role": "Editor"},
-    {"name": "Ito Kenichi", "email": "ito@example.com", "role": "Admin"},
-    {"name": "Yamamoto Yuki", "email": "yamamoto@example.com", "role": "Viewer"},
-    {"name": "Nakamura Risa", "email": "nakamura@example.com", "role": "Editor"},
-    {"name": "Kobayashi Sota", "email": "kobayashi@example.com", "role": "Admin"},
+# Sample data
+INITIAL_USERS = [
+    User(id="1", name="Tanaka Taro", email="tanaka@example.com", age=35, role=Role.ADMIN, is_active=True, bio="System administrator"),
+    User(id="2", name="Suzuki Hanako", email="suzuki@example.com", age=28, role=Role.EDITOR, is_active=True),
+    User(id="3", name="Sato Jiro", email="sato@example.com", age=42, role=Role.VIEWER, is_active=False),
+    User(id="4", name="Takahashi Misaki", email="takahashi@example.com", age=31, role=Role.EDITOR, is_active=True),
+    User(id="5", name="Ito Kenichi", email="ito@example.com", age=50, role=Role.ADMIN, is_active=True),
+    User(id="6", name="Yamamoto Yuki", email="yamamoto@example.com", age=24, role=Role.VIEWER, is_active=True),
+    User(id="7", name="Nakamura Risa", email="nakamura@example.com", age=33, role=Role.EDITOR, is_active=True),
+    User(id="8", name="Kobayashi Sota", email="kobayashi@example.com", age=45, role=Role.ADMIN, is_active=False),
 ]
 
-USERS = [
-    User(name="Tanaka Taro", email="tanaka@example.com", age=35, role=Role.ADMIN, is_active=True, bio="System administrator"),
-    User(name="Suzuki Hanako", email="suzuki@example.com", age=28, role=Role.EDITOR, is_active=True),
-    User(name="Sato Jiro", email="sato@example.com", age=42, role=Role.VIEWER, is_active=False),
-    User(name="Takahashi Misaki", email="takahashi@example.com", age=31, role=Role.EDITOR, is_active=True),
-    User(name="Ito Kenichi", email="ito@example.com", age=50, role=Role.ADMIN, is_active=True),
-    User(name="Yamamoto Yuki", email="yamamoto@example.com", age=24, role=Role.VIEWER, is_active=True),
-    User(name="Nakamura Risa", email="nakamura@example.com", age=33, role=Role.EDITOR, is_active=True),
-    User(name="Kobayashi Sota", email="kobayashi@example.com", age=45, role=Role.ADMIN, is_active=False),
+# Sample data for search demo (dict-based)
+USERS_DICT = [
+    {"name": u.name, "email": u.email, "role": u.role.value.title()}
+    for u in INITIAL_USERS
 ]
+
+storage = InMemoryStorage(User, initial=INITIAL_USERS)
 
 
 def _navbar():
@@ -93,6 +92,27 @@ def _navbar():
             A("New User", cls="btn btn-ghost", href="/users/new"),
         ),
     )
+
+
+def _page_wrapper(content, title):
+    """Wrap CRUD content with the navbar."""
+    return Page(
+        _navbar(),
+        content,
+        title=f"{title} - kokage Dashboard",
+        theme="light",
+    )
+
+
+# Register CRUD routes for User model
+ui.crud(
+    "/users",
+    model=User,
+    storage=storage,
+    title="Users",
+    form_exclude=["bio"],
+    page_wrapper=_page_wrapper,
+)
 
 
 @ui.page("/")
@@ -149,76 +169,4 @@ def search_users(request: Request, q: str = ""):
         headers=["Name", "Email", "Role"],
         rows=[[u["name"], u["email"], u["role"]] for u in filtered],
         zebra=True,
-    )
-
-
-@ui.page("/users")
-def users_page():
-    return Page(
-        _navbar(),
-        Div(
-            H1("User Management", cls="text-3xl font-bold mb-6"),
-            Alert("This is a demo page with ModelTable auto-generation.", variant="info"),
-            Div(
-                ModelTable(
-                    User,
-                    rows=USERS,
-                    exclude=["bio", "password"],
-                    zebra=True,
-                ),
-                cls="mt-4",
-            ),
-            cls="container mx-auto p-4",
-        ),
-        title="Users - kokage Dashboard",
-    )
-
-
-@ui.page("/users/new")
-def new_user_page():
-    return Page(
-        _navbar(),
-        Div(
-            H1("New User", cls="text-3xl font-bold mb-6"),
-            Alert("This form is auto-generated from a Pydantic model.", variant="info"),
-            Div(
-                ModelForm(
-                    User,
-                    action="/users/new",
-                    method="post",
-                    submit_text="Create User",
-                    submit_color="primary",
-                ),
-                cls="mt-4 max-w-lg",
-            ),
-            cls="container mx-auto p-4",
-        ),
-        title="New User - kokage Dashboard",
-    )
-
-
-@ui.page("/users/{idx}")
-def user_detail_page(idx: int):
-    if idx < 0 or idx >= len(USERS):
-        return Page(
-            _navbar(),
-            Div(
-                Alert("User not found.", variant="error"),
-                cls="container mx-auto p-4",
-            ),
-            title="Not Found - kokage Dashboard",
-        )
-    user = USERS[idx]
-    return Page(
-        _navbar(),
-        Div(
-            H1("User Detail", cls="text-3xl font-bold mb-6"),
-            Alert("This detail view is auto-generated from a Pydantic model instance.", variant="info"),
-            Div(
-                ModelDetail(user, title=user.name),
-                cls="mt-4 max-w-lg",
-            ),
-            cls="container mx-auto p-4",
-        ),
-        title=f"{user.name} - kokage Dashboard",
     )

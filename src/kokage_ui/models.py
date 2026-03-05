@@ -15,7 +15,7 @@ from pydantic import BaseModel
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
-from kokage_ui.components import Badge, Card, DaisyTable
+from kokage_ui.components import Alert, Badge, Card, DaisyTable
 from kokage_ui.elements import (
     Button,
     Component,
@@ -28,6 +28,8 @@ from kokage_ui.elements import (
     Strong,
     Textarea,
 )
+
+_SENTINEL = object()
 
 # Heuristic field name patterns
 _TEXTAREA_NAME_HINTS = {"bio", "description", "about", "summary", "note", "notes", "comment", "comments", "content", "body", "message", "text"}
@@ -99,6 +101,7 @@ def _build_form_input(
     *,
     label_text: str,
     input_element: Component,
+    error_message: str | None = None,
 ) -> Component:
     """Build a DaisyUI-styled form-control wrapping an input element."""
     children: list[Any] = []
@@ -106,11 +109,26 @@ def _build_form_input(
         Label(Span(label_text, cls="label-text"), cls="label")
     )
     children.append(input_element)
+    if error_message:
+        children.append(Span(error_message, cls="text-error text-sm mt-1"))
     return Div(*children, cls="form-control w-full")
 
 
-def _field_to_component(name: str, field_info: FieldInfo) -> Component:
-    """Convert a single Pydantic field to a form input component."""
+def _field_to_component(
+    name: str,
+    field_info: FieldInfo,
+    *,
+    value: Any = _SENTINEL,
+    error_message: str | None = None,
+) -> Component:
+    """Convert a single Pydantic field to a form input component.
+
+    Args:
+        name: Field name.
+        field_info: Pydantic FieldInfo.
+        value: Pre-fill value (_SENTINEL means use default).
+        error_message: Inline error message to display.
+    """
     base_type, is_optional = _resolve_annotation(field_info.annotation)
     constraints = _extract_constraints(field_info)
     label_text = field_info.title or name.replace("_", " ").title()
@@ -121,67 +139,102 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Component:
     if is_required:
         common_attrs["required"] = True
 
+    error_cls_suffix = " input-error" if error_message else ""
+
     # --- bool → checkbox ---
     if base_type is bool:
-        checked = False
-        if field_info.default is not None and field_info.default is not PydanticUndefined:
+        if value is not _SENTINEL:
+            checked = bool(value)
+        elif field_info.default is not None and field_info.default is not PydanticUndefined:
             checked = bool(field_info.default)
+        else:
+            checked = False
         input_el = Input(
             type="checkbox",
             cls="checkbox",
             checked=checked if checked else False,
             **common_attrs,
         )
-        return Div(
+        children: list[Any] = [
             Label(
                 input_el,
                 Span(label_text, cls="label-text ml-2"),
                 cls="label cursor-pointer justify-start gap-2",
             ),
-            cls="form-control w-full",
-        )
+        ]
+        if error_message:
+            children.append(Span(error_message, cls="text-error text-sm mt-1"))
+        return Div(*children, cls="form-control w-full")
 
     # --- Literal → select ---
     origin = get_origin(base_type)
     if origin is Literal:
         choices = get_args(base_type)
-        default_val = field_info.default if field_info.default is not PydanticUndefined else None
+        if value is not _SENTINEL:
+            selected_val = value
+        else:
+            selected_val = field_info.default if field_info.default is not PydanticUndefined else None
         options = []
         for choice in choices:
             opt_attrs: dict[str, Any] = {"value": str(choice)}
-            if default_val is not None and choice == default_val:
+            if selected_val is not None and str(choice) == str(selected_val):
                 opt_attrs["selected"] = True
             options.append(Option(str(choice), **opt_attrs))
-        select_el = Select(*options, cls="select select-bordered w-full", **common_attrs)
-        return _build_form_input(label_text=label_text, input_element=select_el)
+        select_el = Select(
+            *options,
+            cls=f"select select-bordered w-full{error_cls_suffix}",
+            **common_attrs,
+        )
+        return _build_form_input(label_text=label_text, input_element=select_el, error_message=error_message)
 
     # --- Enum → select ---
     if isinstance(base_type, type) and issubclass(base_type, enum.Enum):
-        default_val = field_info.default if field_info.default is not PydanticUndefined else None
+        if value is not _SENTINEL:
+            selected_val = value
+        else:
+            selected_val = field_info.default if field_info.default is not PydanticUndefined else None
         options = []
         for member in base_type:
             opt_attrs = {"value": member.value}
-            if default_val is not None and member == default_val:
+            if selected_val is not None and (member == selected_val or member.value == selected_val):
                 opt_attrs["selected"] = True
             options.append(Option(member.name, **opt_attrs))
-        select_el = Select(*options, cls="select select-bordered w-full", **common_attrs)
-        return _build_form_input(label_text=label_text, input_element=select_el)
+        select_el = Select(
+            *options,
+            cls=f"select select-bordered w-full{error_cls_suffix}",
+            **common_attrs,
+        )
+        return _build_form_input(label_text=label_text, input_element=select_el, error_message=error_message)
 
     # --- int → number input (step=1) ---
     if base_type is int:
         input_attrs = _numeric_attrs(constraints, step="1")
         input_attrs.update(common_attrs)
-        _apply_default(input_attrs, field_info)
-        input_el = Input(type="number", cls="input input-bordered w-full", **input_attrs)
-        return _build_form_input(label_text=label_text, input_element=input_el)
+        if value is not _SENTINEL:
+            input_attrs["value"] = str(value)
+        else:
+            _apply_default(input_attrs, field_info)
+        input_el = Input(
+            type="number",
+            cls=f"input input-bordered w-full{error_cls_suffix}",
+            **input_attrs,
+        )
+        return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
 
     # --- float → number input (step=any) ---
     if base_type is float:
         input_attrs = _numeric_attrs(constraints, step="any")
         input_attrs.update(common_attrs)
-        _apply_default(input_attrs, field_info)
-        input_el = Input(type="number", cls="input input-bordered w-full", **input_attrs)
-        return _build_form_input(label_text=label_text, input_element=input_el)
+        if value is not _SENTINEL:
+            input_attrs["value"] = str(value)
+        else:
+            _apply_default(input_attrs, field_info)
+        input_el = Input(
+            type="number",
+            cls=f"input input-bordered w-full{error_cls_suffix}",
+            **input_attrs,
+        )
+        return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
 
     # --- str (with heuristics) ---
     if base_type is str:
@@ -191,17 +244,31 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Component:
         if name_lower in _EMAIL_NAME_HINTS:
             input_attrs = _string_attrs(constraints)
             input_attrs.update(common_attrs)
-            _apply_default(input_attrs, field_info)
-            input_el = Input(type="email", cls="input input-bordered w-full", **input_attrs)
-            return _build_form_input(label_text=label_text, input_element=input_el)
+            if value is not _SENTINEL:
+                input_attrs["value"] = str(value)
+            else:
+                _apply_default(input_attrs, field_info)
+            input_el = Input(
+                type="email",
+                cls=f"input input-bordered w-full{error_cls_suffix}",
+                **input_attrs,
+            )
+            return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
 
         # password heuristic
         if name_lower in _PASSWORD_NAME_HINTS:
             input_attrs = _string_attrs(constraints)
             input_attrs.update(common_attrs)
-            _apply_default(input_attrs, field_info)
-            input_el = Input(type="password", cls="input input-bordered w-full", **input_attrs)
-            return _build_form_input(label_text=label_text, input_element=input_el)
+            if value is not _SENTINEL:
+                input_attrs["value"] = str(value)
+            else:
+                _apply_default(input_attrs, field_info)
+            input_el = Input(
+                type="password",
+                cls=f"input input-bordered w-full{error_cls_suffix}",
+                **input_attrs,
+            )
+            return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
 
         # textarea heuristic: long max_length or name hint
         is_textarea = (
@@ -216,26 +283,44 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Component:
                 ta_attrs["maxlength"] = str(constraints.max_length)
             ta_attrs.update(common_attrs)
             ta_attrs["rows"] = "3"
-            default = field_info.default
-            children: list[Any] = []
-            if default is not None and default is not PydanticUndefined:
-                children.append(str(default))
-            ta_el = Textarea(*children, cls="textarea textarea-bordered w-full", **ta_attrs)
-            return _build_form_input(label_text=label_text, input_element=ta_el)
+            ta_children: list[Any] = []
+            if value is not _SENTINEL:
+                ta_children.append(str(value))
+            else:
+                default = field_info.default
+                if default is not None and default is not PydanticUndefined:
+                    ta_children.append(str(default))
+            ta_cls = f"textarea textarea-bordered w-full{' textarea-error' if error_message else ''}"
+            ta_el = Textarea(*ta_children, cls=ta_cls, **ta_attrs)
+            return _build_form_input(label_text=label_text, input_element=ta_el, error_message=error_message)
 
         # fallback: text input
         input_attrs = _string_attrs(constraints)
         input_attrs.update(common_attrs)
-        _apply_default(input_attrs, field_info)
-        input_el = Input(type="text", cls="input input-bordered w-full", **input_attrs)
-        return _build_form_input(label_text=label_text, input_element=input_el)
+        if value is not _SENTINEL:
+            input_attrs["value"] = str(value)
+        else:
+            _apply_default(input_attrs, field_info)
+        input_el = Input(
+            type="text",
+            cls=f"input input-bordered w-full{error_cls_suffix}",
+            **input_attrs,
+        )
+        return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
 
     # --- fallback for unknown types → text input ---
     input_attrs = _string_attrs(constraints)
     input_attrs.update(common_attrs)
-    _apply_default(input_attrs, field_info)
-    input_el = Input(type="text", cls="input input-bordered w-full", **input_attrs)
-    return _build_form_input(label_text=label_text, input_element=input_el)
+    if value is not _SENTINEL:
+        input_attrs["value"] = str(value)
+    else:
+        _apply_default(input_attrs, field_info)
+    input_el = Input(
+        type="text",
+        cls=f"input input-bordered w-full{error_cls_suffix}",
+        **input_attrs,
+    )
+    return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
 
 
 def _numeric_attrs(constraints: FieldConstraints, step: str) -> dict[str, Any]:
@@ -300,6 +385,9 @@ class ModelForm(Component):
         submit_color: DaisyUI color for the submit button.
         exclude: Field names to exclude.
         include: Field names to include (if set, only these are shown).
+        instance: Model instance to pre-fill the form (edit mode).
+        values: Dict of field values to restore (validation failure).
+        errors: List of Pydantic ValidationError dicts for inline errors.
     """
 
     tag = "form"
@@ -314,13 +402,46 @@ class ModelForm(Component):
         submit_color: str = "primary",
         exclude: set[str] | list[str] | None = None,
         include: set[str] | list[str] | None = None,
+        instance: BaseModel | None = None,
+        values: dict[str, Any] | None = None,
+        errors: list[dict[str, Any]] | None = None,
         **attrs: Any,
     ) -> None:
         fields = _filter_fields(model, include, exclude)
 
+        # Build error lookup: field_name → first error message
+        error_map: dict[str, str] = {}
+        if errors:
+            for err in errors:
+                loc = err.get("loc", ())
+                if loc:
+                    field_name = str(loc[0])
+                    if field_name not in error_map:
+                        error_map[field_name] = err.get("msg", "Invalid value")
+
         children: list[Any] = []
+
+        # Show alert when errors exist
+        if errors:
+            children.append(Alert("Please fix the errors below.", variant="error"))
+
         for name, field_info in fields:
-            children.append(_field_to_component(name, field_info))
+            # Determine value: values dict takes priority, then instance
+            if values is not None and name in values:
+                val = values[name]
+            elif instance is not None:
+                val = getattr(instance, name)
+            else:
+                val = _SENTINEL
+
+            children.append(
+                _field_to_component(
+                    name,
+                    field_info,
+                    value=val,
+                    error_message=error_map.get(name),
+                )
+            )
 
         # Submit button
         btn_cls = f"btn btn-{submit_color} mt-4"

@@ -15,7 +15,7 @@ Example:
         )
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 # FastAPI integration
 from kokage_ui.core import KokageUI
@@ -117,6 +117,9 @@ from kokage_ui.htmx import (
     SearchFilter,
 )
 
+# CRUD auto-generation
+from kokage_ui.crud import CRUDRouter, InMemoryStorage, Pagination, Storage
+
 __all__ = [
     # Core
     "KokageUI",
@@ -207,4 +210,9 @@ __all__ = [
     "InfiniteScroll",
     "SSEStream",
     "ConfirmDelete",
+    # CRUD
+    "CRUDRouter",
+    "Storage",
+    "InMemoryStorage",
+    "Pagination",
 ]

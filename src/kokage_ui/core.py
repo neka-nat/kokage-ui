@@ -8,7 +8,7 @@ from __future__ import annotations
 import functools
 import inspect
 from pathlib import Path
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any, Callable
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
@@ -16,6 +16,11 @@ from fastapi.staticfiles import StaticFiles
 
 from kokage_ui.elements import Component
 from kokage_ui.page import Page
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
+
+    from kokage_ui.crud import Storage
 
 STATIC_DIR = Path(__file__).parent / "static"
 
@@ -100,6 +105,53 @@ class KokageUI:
             return wrapper
 
         return decorator
+
+    def crud(
+        self,
+        prefix: str,
+        *,
+        model: type[BaseModel],
+        storage: Storage,
+        id_field: str = "id",
+        per_page: int = 20,
+        title: str | None = None,
+        exclude_fields: list[str] | None = None,
+        table_exclude: list[str] | None = None,
+        form_exclude: list[str] | None = None,
+        page_wrapper: Callable[..., Any] | None = None,
+        theme: str = "light",
+    ) -> None:
+        """Register full CRUD routes for a Pydantic model.
+
+        Args:
+            prefix: URL prefix (e.g., "/users").
+            model: Pydantic BaseModel class.
+            storage: Storage backend.
+            id_field: Name of the ID field.
+            per_page: Items per page.
+            title: Display title.
+            exclude_fields: Fields to exclude from all views.
+            table_exclude: Fields to exclude from table view.
+            form_exclude: Fields to exclude from forms.
+            page_wrapper: Optional callable(content, title) → Page.
+            theme: DaisyUI theme name.
+        """
+        from kokage_ui.crud import CRUDRouter
+
+        CRUDRouter(
+            self.app,
+            prefix,
+            model,
+            storage,
+            id_field=id_field,
+            per_page=per_page,
+            title=title,
+            exclude_fields=exclude_fields,
+            table_exclude=table_exclude,
+            form_exclude=form_exclude,
+            page_wrapper=page_wrapper,
+            theme=theme,
+        )
 
     def fragment(
         self,
