@@ -141,6 +141,9 @@ from kokage_ui.htmx import (
 # Multi-step forms
 from kokage_ui.forms import FormStep, MultiStepForm
 
+# Authentication & authorization
+from kokage_ui.auth import LoginForm, RegisterForm, RoleGuard, UserMenu, protected
+
 # CRUD auto-generation
 from kokage_ui.crud import CRUDRouter, InMemoryStorage, Pagination, Storage
 
@@ -265,4 +268,10 @@ __all__ = [
     "Markdown",
     "CodeBlock",
     "SortableTable",
+    # Auth
+    "LoginForm",
+    "RegisterForm",
+    "UserMenu",
+    "RoleGuard",
+    "protected",
 ]

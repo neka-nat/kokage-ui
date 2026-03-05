@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, Any, Callable
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.responses import Response
 
 from kokage_ui.elements import Component
 from kokage_ui.page import Page
@@ -96,6 +97,9 @@ class KokageUI:
                 result = func(**kwargs)
                 if inspect.isawaitable(result):
                     result = await result
+                # Allow Response objects to pass through (e.g., RedirectResponse from @protected)
+                if isinstance(result, Response):
+                    return result
                 if layout is not None and not isinstance(result, Page):
                     result = layout.wrap(result, title)
                 html_str = _to_html_string(result)
@@ -361,6 +365,9 @@ class KokageUI:
                 result = func(**kwargs)
                 if inspect.isawaitable(result):
                     result = await result
+                # Allow Response objects to pass through (e.g., RedirectResponse from @protected)
+                if isinstance(result, Response):
+                    return result
                 html_str = _to_html_string(result)
                 return HTMLResponse(content=html_str)
 
