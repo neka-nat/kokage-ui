@@ -13,7 +13,7 @@ from kokage_ui.models import (
     _field_to_component,
     _render_value,
 )
-from kokage_ui.repeater import RepeaterField, RepeaterInput
+from kokage_ui.fields.repeater import RepeaterField, RepeaterInput
 
 
 # ---- Test models ----
@@ -193,7 +193,7 @@ class TestFieldToComponentRepeater:
 
 class TestProcessListFields:
     def test_getlist_collects_values(self) -> None:
-        from kokage_ui.crud import _process_list_fields
+        from kokage_ui.data.crud import _process_list_fields
 
         form_data = MagicMock()
         form_data.getlist.return_value = ["a", "b", "c"]
@@ -204,7 +204,7 @@ class TestProcessListFields:
         form_data.getlist.assert_called_with("tags")
 
     def test_exclude_skips_field(self) -> None:
-        from kokage_ui.crud import _process_list_fields
+        from kokage_ui.data.crud import _process_list_fields
 
         form_data = MagicMock()
         raw_data: dict[str, Any] = {}
@@ -213,7 +213,7 @@ class TestProcessListFields:
         form_data.getlist.assert_not_called()
 
     def test_non_list_field_ignored(self) -> None:
-        from kokage_ui.crud import _process_list_fields
+        from kokage_ui.data.crud import _process_list_fields
 
         form_data = MagicMock()
         raw_data: dict[str, Any] = {"name": "test"}
@@ -253,7 +253,7 @@ class TestRenderValueList:
 
 class TestMultiStepFormListHidden:
     def test_list_values_as_multiple_hidden(self) -> None:
-        from kokage_ui.forms import FormStep, MultiStepForm
+        from kokage_ui.features.forms import FormStep, MultiStepForm
 
         class MyModel(BaseModel):
             tags: list[str] = []
@@ -278,7 +278,7 @@ class TestMultiStepFormListHidden:
         assert 'value="z"' in html
 
     def test_scalar_value_single_hidden(self) -> None:
-        from kokage_ui.forms import FormStep, MultiStepForm
+        from kokage_ui.features.forms import FormStep, MultiStepForm
 
         class MyModel(BaseModel):
             name: str = ""

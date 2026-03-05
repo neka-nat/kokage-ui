@@ -38,9 +38,9 @@ from kokage_ui.elements import (
     Tr,
     Video,
 )
-from kokage_ui.media import MediaField
-from kokage_ui.repeater import RepeaterField, RepeaterInput
-from kokage_ui.richtext import RichTextField, RichTextEditor
+from kokage_ui.fields.media import MediaField
+from kokage_ui.fields.repeater import RepeaterField, RepeaterInput
+from kokage_ui.fields.richtext import RichTextField, RichTextEditor
 
 _SENTINEL = object()
 

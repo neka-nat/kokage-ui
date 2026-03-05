@@ -6,7 +6,7 @@ import sys
 
 import pytest
 
-from kokage_ui.cli import _to_snake, cmd_add_crud, cmd_add_page, cmd_init
+from kokage_ui.dev.cli import _to_snake, cmd_add_crud, cmd_add_page, cmd_init
 
 
 # --- _to_snake ---
@@ -181,7 +181,7 @@ class TestCmdAddCrud:
 class TestMain:
     def test_help(self):
         result = subprocess.run(
-            [sys.executable, "-m", "kokage_ui.cli", "--help"],
+            [sys.executable, "-m", "kokage_ui.dev.cli", "--help"],
             capture_output=True,
             text=True,
         )
@@ -190,7 +190,7 @@ class TestMain:
 
     def test_init_subcommand(self, tmp_path):
         result = subprocess.run(
-            [sys.executable, "-m", "kokage_ui.cli", "init", "testproject"],
+            [sys.executable, "-m", "kokage_ui.dev.cli", "init", "testproject"],
             capture_output=True,
             text=True,
             cwd=tmp_path,
@@ -200,7 +200,7 @@ class TestMain:
 
     def test_no_args_shows_help(self):
         result = subprocess.run(
-            [sys.executable, "-m", "kokage_ui.cli"],
+            [sys.executable, "-m", "kokage_ui.dev.cli"],
             capture_output=True,
             text=True,
         )

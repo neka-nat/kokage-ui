@@ -19,15 +19,15 @@ from fastapi.responses import HTMLResponse, StreamingResponse
 from pydantic import BaseModel, ValidationError
 from starlette.responses import RedirectResponse
 
-from kokage_ui.auth import UserMenu
 from kokage_ui.components import Alert, Breadcrumb, Card, NavBar, Stat, Stats
-from kokage_ui.crud import Storage, _process_bool_fields
-from kokage_ui.datagrid import DataGrid, DataGridState
+from kokage_ui.data.crud import Storage, _process_bool_fields
+from kokage_ui.data.datagrid import DataGrid, DataGridState
 from kokage_ui.elements import A, Component, Div, H1, Li, Span, Ul
+from kokage_ui.features.auth import UserMenu
+from kokage_ui.features.theme import ThemeSwitcher
 from kokage_ui.htmx import ConfirmDelete
 from kokage_ui.models import ModelDetail, ModelForm, _filter_fields
 from kokage_ui.page import Page
-from kokage_ui.theme import ThemeSwitcher
 
 
 def _to_html_string_lazy(result: Any) -> str:

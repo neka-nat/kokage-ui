@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 from pydantic import BaseModel, Field
 
 from kokage_ui import InMemoryStorage, KokageUI, Page
-from kokage_ui.crud import CRUDRouter, Pagination
+from kokage_ui.data.crud import CRUDRouter, Pagination
 
 
 # ---- Test models ----

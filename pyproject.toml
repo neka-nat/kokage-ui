@@ -30,7 +30,7 @@ docs = [
 ]
 
 [project.scripts]
-kokage-ui = "kokage_ui.cli:main"
+kokage-ui = "kokage_ui.dev.cli:main"
 
 [build-system]
 requires = ["hatchling"]

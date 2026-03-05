@@ -18,7 +18,7 @@ from kokage_ui.models import (
     _render_value,
 )
 from kokage_ui.page import Page, QUILL_CSS_CDN, QUILL_JS_CDN
-from kokage_ui.richtext import RichTextEditor, RichTextField, _TOOLBAR_PRESETS
+from kokage_ui.fields.richtext import RichTextEditor, RichTextField, _TOOLBAR_PRESETS
 
 
 # --- TestRichTextField ---

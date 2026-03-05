@@ -21,7 +21,7 @@ from kokage_ui.page import Page
 if TYPE_CHECKING:
     from pydantic import BaseModel
 
-    from kokage_ui.crud import Storage
+    from kokage_ui.data.crud import Storage
 
 STATIC_DIR = Path(__file__).parent / "static"
 
@@ -60,7 +60,7 @@ class KokageUI:
         self._routes: list[dict] = []
         self._setup_static_files()
         if self.debug:
-            from kokage_ui.toolbar import DevToolbarMiddleware
+            from kokage_ui.dev.toolbar import DevToolbarMiddleware
 
             self.app.add_middleware(DevToolbarMiddleware, routes=self._routes)
 
@@ -160,7 +160,7 @@ class KokageUI:
             file_handler: Async callback (field_name, UploadFile) → URL string.
             sortable: Enable drag & drop reordering with SortableJS.
         """
-        from kokage_ui.crud import CRUDRouter
+        from kokage_ui.data.crud import CRUDRouter
 
         if layout is not None and page_wrapper is None:
             page_wrapper = layout.wrap
@@ -290,7 +290,7 @@ class KokageUI:
         """
         from pydantic import ValidationError
 
-        from kokage_ui.forms import MultiStepForm
+        from kokage_ui.features.forms import MultiStepForm
 
         async def validate_step(request: Request, step: int) -> HTMLResponse:
             form_data = await request.form()

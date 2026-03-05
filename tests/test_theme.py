@@ -1,6 +1,6 @@
 """Tests for theme switching components."""
 
-from kokage_ui.theme import ALL_THEMES, DarkModeToggle, ThemeSwitcher
+from kokage_ui.features.theme import ALL_THEMES, DarkModeToggle, ThemeSwitcher
 
 
 class TestDarkModeToggle:

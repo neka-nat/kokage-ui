@@ -4,7 +4,7 @@ import argparse
 import os
 import sys
 
-from kokage_ui.templates import (
+from kokage_ui.dev.templates import (
     APP_CRUD_TEMPLATE,
     APP_TEMPLATE,
     CRUD_MODEL_TEMPLATE,

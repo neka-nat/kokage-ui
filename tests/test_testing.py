@@ -3,7 +3,7 @@
 import pytest
 
 from kokage_ui import Card, Div, Page, Raw
-from kokage_ui.testing import (
+from kokage_ui.dev.testing import (
     HTMLAssertions,
     ResponseAssertions,
     assert_response,

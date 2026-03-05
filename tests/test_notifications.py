@@ -8,7 +8,7 @@ import json
 import pytest
 from starlette.responses import StreamingResponse
 
-from kokage_ui.notifications import Notifier, NotificationStream
+from kokage_ui.features.notifications import Notifier, NotificationStream
 
 
 # ---------------------------------------------------------------------------

@@ -129,9 +129,9 @@ from kokage_ui.components import (
 from kokage_ui.models import ModelDetail, ModelForm, ModelTable, SortableTable, ValidatedModelForm
 
 # Data display
-from kokage_ui.charts import Chart
-from kokage_ui.code import CodeBlock
-from kokage_ui.markdown import Markdown
+from kokage_ui.features.charts import Chart
+from kokage_ui.features.code import CodeBlock
+from kokage_ui.features.markdown import Markdown
 
 # htmx helpers
 from kokage_ui.htmx import (
@@ -145,41 +145,41 @@ from kokage_ui.htmx import (
 )
 
 # Multi-step forms
-from kokage_ui.forms import FormStep, MultiStepForm
+from kokage_ui.features.forms import FormStep, MultiStepForm
 
 # Authentication & authorization
-from kokage_ui.auth import LoginForm, RegisterForm, RoleGuard, UserMenu, protected
+from kokage_ui.features.auth import LoginForm, RegisterForm, RoleGuard, UserMenu, protected
 
 # Theme switching
-from kokage_ui.theme import DarkModeToggle, ThemeSwitcher
+from kokage_ui.features.theme import DarkModeToggle, ThemeSwitcher
 
 # Notifications
-from kokage_ui.notifications import Notifier, NotificationStream
+from kokage_ui.features.notifications import Notifier, NotificationStream
 
 # DataGrid
-from kokage_ui.datagrid import ColumnFilter, DataGrid, DataGridState
+from kokage_ui.data.datagrid import ColumnFilter, DataGrid, DataGridState
 
 # CRUD auto-generation
-from kokage_ui.crud import CRUDRouter, InMemoryStorage, Pagination, Storage
-from kokage_ui.storage import SQLModelStorage, create_tables
+from kokage_ui.data.crud import CRUDRouter, InMemoryStorage, Pagination, Storage
+from kokage_ui.data.storage import SQLModelStorage, create_tables
 
 # Sortable
-from kokage_ui.sortable import SortableList
+from kokage_ui.fields.sortable import SortableList
 
 # Media
-from kokage_ui.media import AudioPlayer, ImageGallery, MediaCard, MediaField, VideoPlayer
+from kokage_ui.fields.media import AudioPlayer, ImageGallery, MediaCard, MediaField, VideoPlayer
 
 # Rich Text
-from kokage_ui.richtext import RichTextEditor, RichTextField
+from kokage_ui.fields.richtext import RichTextEditor, RichTextField
 
 # Repeater
-from kokage_ui.repeater import RepeaterField, RepeaterInput
+from kokage_ui.fields.repeater import RepeaterField, RepeaterInput
 
 # Admin dashboard
-from kokage_ui.admin import AdminSite, ModelAdmin
+from kokage_ui.features.admin import AdminSite, ModelAdmin
 
 # Testing helpers
-from kokage_ui.testing import (
+from kokage_ui.dev.testing import (
     HTMLAssertions,
     ResponseAssertions,
     assert_response,

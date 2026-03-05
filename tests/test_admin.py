@@ -5,8 +5,8 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from pydantic import BaseModel, Field
 
-from kokage_ui.admin import AdminSite, ModelAdmin
-from kokage_ui.crud import InMemoryStorage
+from kokage_ui.data.crud import InMemoryStorage
+from kokage_ui.features.admin import AdminSite, ModelAdmin
 
 
 # ---- Test models ----

@@ -4,7 +4,7 @@ Provides utilities for rendering components, asserting HTML content,
 and creating test FastAPI apps.
 
 Usage:
-    from kokage_ui.testing import rendered, assert_response, make_app
+    from kokage_ui.dev.testing import rendered, assert_response, make_app
 
     # Component assertions
     rendered(Card("Hello", title="My Card")).has("card-body", "My Card")

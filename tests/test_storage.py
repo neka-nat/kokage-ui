@@ -7,8 +7,8 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlmodel import Field, SQLModel
 
 from kokage_ui import KokageUI, SQLModelStorage
-from kokage_ui.crud import CRUDRouter
-from kokage_ui.storage import create_tables
+from kokage_ui.data.crud import CRUDRouter
+from kokage_ui.data.storage import create_tables
 
 
 # ---- Test models ----

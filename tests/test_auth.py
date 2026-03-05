@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request
 from fastapi.testclient import TestClient
 
 from kokage_ui import KokageUI, Page
-from kokage_ui.auth import LoginForm, RegisterForm, RoleGuard, UserMenu, protected
+from kokage_ui.features.auth import LoginForm, RegisterForm, RoleGuard, UserMenu, protected
 from kokage_ui.elements import Div, H1
 
 

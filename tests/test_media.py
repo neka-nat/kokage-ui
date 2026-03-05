@@ -9,7 +9,7 @@ import pytest
 from pydantic import BaseModel
 
 from kokage_ui.elements import Audio, Canvas, Component, Picture, Source, Track, Video
-from kokage_ui.media import AudioPlayer, ImageGallery, MediaCard, MediaField, VideoPlayer
+from kokage_ui.fields.media import AudioPlayer, ImageGallery, MediaCard, MediaField, VideoPlayer
 from kokage_ui.models import (
     ModelDetail,
     ModelForm,
@@ -230,7 +230,7 @@ class TestModelFormEnctype:
 class TestProcessMediaFields:
     @pytest.mark.anyio
     async def test_file_upload_with_handler(self):
-        from kokage_ui.crud import _process_media_fields
+        from kokage_ui.data.crud import _process_media_fields
 
         class M(BaseModel):
             image: Annotated[str, MediaField()] = ""
@@ -248,7 +248,7 @@ class TestProcessMediaFields:
 
     @pytest.mark.anyio
     async def test_no_handler_sets_empty(self):
-        from kokage_ui.crud import _process_media_fields
+        from kokage_ui.data.crud import _process_media_fields
 
         class M(BaseModel):
             image: Annotated[str, MediaField()] = ""
@@ -264,7 +264,7 @@ class TestProcessMediaFields:
 
     @pytest.mark.anyio
     async def test_keep_existing_on_no_upload(self):
-        from kokage_ui.crud import _process_media_fields
+        from kokage_ui.data.crud import _process_media_fields
 
         class M(BaseModel):
             image: Annotated[str, MediaField()] = ""
@@ -281,7 +281,7 @@ class TestProcessMediaFields:
 
     @pytest.mark.anyio
     async def test_excluded_field_skipped(self):
-        from kokage_ui.crud import _process_media_fields
+        from kokage_ui.data.crud import _process_media_fields
 
         class M(BaseModel):
             image: Annotated[str, MediaField()] = ""

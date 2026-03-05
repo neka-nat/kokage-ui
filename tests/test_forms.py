@@ -8,7 +8,7 @@ import pytest
 from pydantic import BaseModel, Field
 
 from kokage_ui.components import DependentSelect, DropZone, FileUpload
-from kokage_ui.forms import FormStep, MultiStepForm
+from kokage_ui.features.forms import FormStep, MultiStepForm
 from kokage_ui.htmx import DependentField
 from kokage_ui.models import ValidatedModelForm, _build_form_input, _field_to_component, _SENTINEL
 
@@ -659,7 +659,7 @@ class TestCRUDRouterValidation:
     def test_registers_validation_routes(self):
         from fastapi import FastAPI
 
-        from kokage_ui.crud import CRUDRouter, InMemoryStorage
+        from kokage_ui.data.crud import CRUDRouter, InMemoryStorage
 
         class Item(BaseModel):
             id: str = ""
@@ -685,7 +685,7 @@ class TestCRUDRouterValidation:
     def test_no_validation_routes_by_default(self):
         from fastapi import FastAPI
 
-        from kokage_ui.crud import CRUDRouter, InMemoryStorage
+        from kokage_ui.data.crud import CRUDRouter, InMemoryStorage
 
         class Item(BaseModel):
             id: str = ""

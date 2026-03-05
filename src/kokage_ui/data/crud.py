@@ -480,7 +480,7 @@ class CRUDRouter(Generic[T]):
     ) -> Component:
         """Build the table + pagination fragment."""
         if self.sortable:
-            from kokage_ui.sortable import SortableList
+            from kokage_ui.fields.sortable import SortableList
 
             list_items = []
             for row in items:

@@ -1,6 +1,6 @@
 """Tests for Chart component."""
 
-from kokage_ui.charts import Chart
+from kokage_ui.features.charts import Chart
 
 
 class TestChart:

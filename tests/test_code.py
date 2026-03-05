@@ -1,6 +1,6 @@
 """Tests for CodeBlock component."""
 
-from kokage_ui.code import CodeBlock
+from kokage_ui.features.code import CodeBlock
 
 
 class TestCodeBlock:

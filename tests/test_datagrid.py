@@ -8,7 +8,7 @@ from unittest.mock import MagicMock
 import pytest
 from pydantic import BaseModel
 
-from kokage_ui.datagrid import ColumnFilter, DataGrid, DataGridState
+from kokage_ui.data.datagrid import ColumnFilter, DataGrid, DataGridState
 
 
 # ========================================

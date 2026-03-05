@@ -14,7 +14,7 @@ from typing import Any, TypeVar
 
 from pydantic import BaseModel
 
-from kokage_ui.crud import Storage
+from kokage_ui.data.crud import Storage
 from kokage_ui.models import _resolve_annotation
 
 T = TypeVar("T", bound=BaseModel)

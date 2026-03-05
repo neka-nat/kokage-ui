@@ -2,7 +2,7 @@
 
 import pytest
 
-from kokage_ui.markdown import Markdown, _sanitize_html
+from kokage_ui.features.markdown import Markdown, _sanitize_html
 
 
 class TestSanitizeHtml:

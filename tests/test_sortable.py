@@ -9,9 +9,9 @@ from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 from pydantic import BaseModel
 
-from kokage_ui.crud import CRUDRouter, InMemoryStorage
+from kokage_ui.data.crud import CRUDRouter, InMemoryStorage
+from kokage_ui.fields.sortable import SortableList
 from kokage_ui.page import Page, SORTABLEJS_CDN
-from kokage_ui.sortable import SortableList
 
 
 # ========================================
