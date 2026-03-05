@@ -29,6 +29,9 @@ docs = [
     "mkdocs-autorefs",
 ]
 
+[project.scripts]
+kokage-ui = "kokage_ui.cli:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
