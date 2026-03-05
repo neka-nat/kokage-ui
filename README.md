@@ -36,6 +36,11 @@ def home():
 uvicorn hello:app --reload
 ```
 
+Please open [http://localhost:8000](http://localhost:8000) in your browser.
+
+![](assets/hello_world.png)
+
+
 ## Features
 
 - **50+ HTML Elements** — `Div`, `H1`, `Form`, `Input`, etc. as Python classes
