@@ -6,6 +6,7 @@ Pydantic BaseModel + Storage backend.
 
 from __future__ import annotations
 
+import json
 import math
 import urllib.parse
 import uuid
@@ -56,6 +57,9 @@ class Storage(ABC, Generic[T]):
     @abstractmethod
     async def delete(self, id: str) -> bool:
         """Delete an item. Returns True if deleted, False if not found."""
+
+    async def reorder(self, ids: list[str]) -> None:
+        """Reorder items by the given ID list. Default is a no-op."""
 
 
 # ========================================
@@ -131,6 +135,16 @@ class InMemoryStorage(Storage[T]):
             del self._data[id]
             return True
         return False
+
+    async def reorder(self, ids: list[str]) -> None:
+        new_data: dict[str, T] = {}
+        for id_ in ids:
+            if id_ in self._data:
+                new_data[id_] = self._data[id_]
+        for id_, item in self._data.items():
+            if id_ not in new_data:
+                new_data[id_] = item
+        self._data = new_data
 
 
 # ========================================
@@ -287,6 +301,7 @@ class CRUDRouter(Generic[T]):
         theme: DaisyUI theme name.
         realtime_validation: Enable per-field htmx validation.
         file_handler: Async callback (field_name, UploadFile) → URL string.
+        sortable: Enable drag & drop reordering with SortableJS.
     """
 
     def __init__(
@@ -306,6 +321,7 @@ class CRUDRouter(Generic[T]):
         theme: str = "light",
         realtime_validation: bool = False,
         file_handler: FileHandler | None = None,
+        sortable: bool = False,
     ) -> None:
         self.app = app
         self.prefix = prefix.rstrip("/")
@@ -318,6 +334,7 @@ class CRUDRouter(Generic[T]):
         self.theme = theme
         self.realtime_validation = realtime_validation
         self.file_handler = file_handler
+        self.sortable = sortable
 
         # Cache computed exclude lists
         _exclude = exclude_fields or []
@@ -410,7 +427,13 @@ class CRUDRouter(Generic[T]):
             return self.page_wrapper(content, page_title)
         from kokage_ui.page import Page
 
-        return Page(content, title=page_title, theme=self.theme, include_toast=True)
+        return Page(
+            content,
+            title=page_title,
+            theme=self.theme,
+            include_toast=True,
+            include_sortablejs=self.sortable,
+        )
 
     @staticmethod
     def _toast_url(base_url: str, message: str, toast_type: str = "success") -> str:
@@ -441,6 +464,26 @@ class CRUDRouter(Generic[T]):
         search: str | None,
     ) -> Component:
         """Build the table + pagination fragment."""
+        if self.sortable:
+            from kokage_ui.sortable import SortableList
+
+            list_items = []
+            for row in items:
+                row_id = str(getattr(row, self.id_field))
+                label = row_id
+                for fname in self.model.model_fields:
+                    if fname == self.id_field:
+                        continue
+                    val = getattr(row, fname, None)
+                    if isinstance(val, str) and val:
+                        label = val
+                        break
+                list_items.append({"id": row_id, "label": label})
+            return Div(
+                SortableList(items=list_items, url=f"{self.prefix}/_reorder"),
+                id="table-container",
+            )
+
         total_pages = max(1, math.ceil(total / self.per_page))
         table_exclude = self._get_table_exclude()
 
@@ -616,6 +659,25 @@ class CRUDRouter(Generic[T]):
             create_handler,
             methods=["POST"],
         )
+
+        # --- POST {prefix}/_reorder — Reorder handler (sortable) ---
+        if router.sortable:
+
+            async def reorder_handler(request: Request) -> Response:
+                form_data = await request.form()
+                ids_raw = form_data.get("ids", "[]")
+                try:
+                    ids = json.loads(ids_raw)
+                except (json.JSONDecodeError, ValueError):
+                    return Response(status_code=400, content="Invalid ids")
+                await router.storage.reorder([str(i) for i in ids])
+                return Response(status_code=204)
+
+            app.add_api_route(
+                f"{prefix}/_reorder",
+                reorder_handler,
+                methods=["POST"],
+            )
 
         # --- GET {prefix}/{id} — Detail page ---
         async def detail_page(request: Request, id: str) -> HTMLResponse:

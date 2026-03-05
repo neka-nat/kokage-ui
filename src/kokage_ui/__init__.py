@@ -163,6 +163,9 @@ from kokage_ui.datagrid import ColumnFilter, DataGrid, DataGridState
 from kokage_ui.crud import CRUDRouter, InMemoryStorage, Pagination, Storage
 from kokage_ui.storage import SQLModelStorage, create_tables
 
+# Sortable
+from kokage_ui.sortable import SortableList
+
 # Media
 from kokage_ui.media import AudioPlayer, ImageGallery, MediaCard, MediaField, VideoPlayer
 
@@ -317,6 +320,8 @@ __all__ = [
     # Notifications
     "Notifier",
     "NotificationStream",
+    # Sortable
+    "SortableList",
     # Media
     "MediaField",
     "VideoPlayer",

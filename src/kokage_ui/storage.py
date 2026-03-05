@@ -29,7 +29,14 @@ class SQLModelStorage(Storage[T]):
         id_field: Name of the primary key field (default: "id").
     """
 
-    def __init__(self, model: type[T], engine: Any, *, id_field: str = "id") -> None:
+    def __init__(
+        self,
+        model: type[T],
+        engine: Any,
+        *,
+        id_field: str = "id",
+        position_field: str = "position",
+    ) -> None:
         try:
             from sqlmodel import SQLModel as _SQLModel  # noqa: F401
         except ImportError:
@@ -41,6 +48,7 @@ class SQLModelStorage(Storage[T]):
         self._model = model
         self._engine = engine
         self._id_field = id_field
+        self._position_field = position_field
 
         # Detect PK type for str→int conversion
         field_info = model.model_fields.get(id_field)
@@ -55,6 +63,10 @@ class SQLModelStorage(Storage[T]):
         if self._id_type is int:
             return int(id)
         return id
+
+    def _has_position_field(self) -> bool:
+        """Check if the model has the configured position field."""
+        return self._position_field in self._model.model_fields
 
     async def list(
         self, *, skip: int = 0, limit: int = 20, search: str | None = None
@@ -78,6 +90,10 @@ class SQLModelStorage(Storage[T]):
                     search_filter = or_(*conditions)
                     stmt = stmt.where(search_filter)
                     count_stmt = count_stmt.where(search_filter)
+
+            if self._has_position_field():
+                pos_col = getattr(self._model, self._position_field)
+                stmt = stmt.order_by(pos_col)
 
             total = (await session.exec(count_stmt)).one()
             results = (await session.exec(stmt.offset(skip).limit(limit))).all()
@@ -144,6 +160,25 @@ class SQLModelStorage(Storage[T]):
             await session.delete(existing)
             await session.commit()
             return True
+
+
+    async def reorder(self, ids: list[str]) -> None:
+        if not self._has_position_field():
+            return
+
+        from sqlmodel import select
+        from sqlmodel.ext.asyncio.session import AsyncSession
+
+        async with AsyncSession(self._engine) as session:
+            pk_col = getattr(self._model, self._id_field)
+            for index, raw_id in enumerate(ids):
+                converted_id = self._convert_id(raw_id)
+                stmt = select(self._model).where(pk_col == converted_id)
+                item = (await session.exec(stmt)).first()
+                if item is not None:
+                    setattr(item, self._position_field, index)
+                    session.add(item)
+            await session.commit()
 
 
 async def create_tables(engine: Any) -> None:

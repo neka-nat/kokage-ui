@@ -20,6 +20,7 @@ CHARTJS_CDN = "https://cdn.jsdelivr.net/npm/chart.js@4"
 HIGHLIGHTJS_CDN = "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build"
 HIGHLIGHTJS_CSS = f"{HIGHLIGHTJS_CDN}/styles/github-dark.min.css"
 HIGHLIGHTJS_JS = f"{HIGHLIGHTJS_CDN}/highlight.min.js"
+SORTABLEJS_CDN = "https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"
 
 
 _TOAST_SCRIPT = """\
@@ -63,6 +64,7 @@ class Page:
         include_toast: Whether to include toast notification support.
         include_chartjs: Whether to load Chart.js from CDN.
         include_highlightjs: Whether to load Highlight.js from CDN.
+        include_sortablejs: Whether to load SortableJS from CDN.
     """
 
     def __init__(
@@ -76,6 +78,7 @@ class Page:
         include_toast: bool = False,
         include_chartjs: bool = False,
         include_highlightjs: bool = False,
+        include_sortablejs: bool = False,
     ) -> None:
         self.children = children
         self.title = title
@@ -86,6 +89,7 @@ class Page:
         self.include_toast = include_toast
         self.include_chartjs = include_chartjs
         self.include_highlightjs = include_highlightjs
+        self.include_sortablejs = include_sortablejs
 
     def render(self) -> str:
         """Generate full HTML document string."""
@@ -112,6 +116,9 @@ class Page:
                 'e.detail.elt.querySelectorAll("pre code").forEach(function(el){hljs.highlightElement(el);});'
                 '});</script>'
             )
+
+        if self.include_sortablejs:
+            head_parts.append(f'<script src="{SORTABLEJS_CDN}"></script>')
 
         for extra in self.head_extra:
             head_parts.append(_render_child(extra))
