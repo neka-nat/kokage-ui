@@ -210,10 +210,7 @@ def _field_to_component(
     if base_type is int:
         input_attrs = _numeric_attrs(constraints, step="1")
         input_attrs.update(common_attrs)
-        if value is not _SENTINEL:
-            input_attrs["value"] = str(value)
-        else:
-            _apply_default(input_attrs, field_info)
+        _apply_value_or_default(input_attrs, value, field_info)
         input_el = Input(
             type="number",
             cls=f"input input-bordered w-full{error_cls_suffix}",
@@ -225,10 +222,7 @@ def _field_to_component(
     if base_type is float:
         input_attrs = _numeric_attrs(constraints, step="any")
         input_attrs.update(common_attrs)
-        if value is not _SENTINEL:
-            input_attrs["value"] = str(value)
-        else:
-            _apply_default(input_attrs, field_info)
+        _apply_value_or_default(input_attrs, value, field_info)
         input_el = Input(
             type="number",
             cls=f"input input-bordered w-full{error_cls_suffix}",
@@ -244,10 +238,7 @@ def _field_to_component(
         if name_lower in _EMAIL_NAME_HINTS:
             input_attrs = _string_attrs(constraints)
             input_attrs.update(common_attrs)
-            if value is not _SENTINEL:
-                input_attrs["value"] = str(value)
-            else:
-                _apply_default(input_attrs, field_info)
+            _apply_value_or_default(input_attrs, value, field_info)
             input_el = Input(
                 type="email",
                 cls=f"input input-bordered w-full{error_cls_suffix}",
@@ -259,10 +250,7 @@ def _field_to_component(
         if name_lower in _PASSWORD_NAME_HINTS:
             input_attrs = _string_attrs(constraints)
             input_attrs.update(common_attrs)
-            if value is not _SENTINEL:
-                input_attrs["value"] = str(value)
-            else:
-                _apply_default(input_attrs, field_info)
+            _apply_value_or_default(input_attrs, value, field_info)
             input_el = Input(
                 type="password",
                 cls=f"input input-bordered w-full{error_cls_suffix}",
@@ -297,10 +285,7 @@ def _field_to_component(
         # fallback: text input
         input_attrs = _string_attrs(constraints)
         input_attrs.update(common_attrs)
-        if value is not _SENTINEL:
-            input_attrs["value"] = str(value)
-        else:
-            _apply_default(input_attrs, field_info)
+        _apply_value_or_default(input_attrs, value, field_info)
         input_el = Input(
             type="text",
             cls=f"input input-bordered w-full{error_cls_suffix}",
@@ -311,10 +296,7 @@ def _field_to_component(
     # --- fallback for unknown types → text input ---
     input_attrs = _string_attrs(constraints)
     input_attrs.update(common_attrs)
-    if value is not _SENTINEL:
-        input_attrs["value"] = str(value)
-    else:
-        _apply_default(input_attrs, field_info)
+    _apply_value_or_default(input_attrs, value, field_info)
     input_el = Input(
         type="text",
         cls=f"input input-bordered w-full{error_cls_suffix}",
@@ -354,6 +336,16 @@ def _apply_default(attrs: dict[str, Any], field_info: FieldInfo) -> None:
     default = field_info.default
     if default is not None and default is not PydanticUndefined:
         attrs["value"] = str(default)
+
+
+def _apply_value_or_default(
+    attrs: dict[str, Any], value: Any, field_info: FieldInfo
+) -> None:
+    """Apply explicit value or fall back to field default."""
+    if value is not _SENTINEL:
+        attrs["value"] = str(value)
+    else:
+        _apply_default(attrs, field_info)
 
 
 def _filter_fields(

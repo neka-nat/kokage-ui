@@ -15,10 +15,10 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, ValidationError
 
-from kokage_ui.components import Alert, Card
-from kokage_ui.elements import A, Button, Component, Div, H1, Input, Span
+from kokage_ui.components import Alert
+from kokage_ui.elements import A, Button, Component, Div, H1
 from kokage_ui.htmx import ConfirmDelete, SearchFilter
-from kokage_ui.models import ModelDetail, ModelForm, ModelTable
+from kokage_ui.models import ModelDetail, ModelForm, ModelTable, _resolve_annotation
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -160,8 +160,26 @@ class Pagination(Component):
             super().__init__(**attrs)
             return
 
+        # Show at most 7 page buttons: first, last, current, and neighbors
+        max_visible = 7
+        if total_pages <= max_visible:
+            visible = list(range(1, total_pages + 1))
+        else:
+            visible_set = {1, total_pages}
+            half = (max_visible - 2) // 2
+            start = max(2, current_page - half)
+            end = min(total_pages - 1, current_page + half)
+            # Adjust if near edges
+            if end - start < max_visible - 3:
+                if start == 2:
+                    end = min(total_pages - 1, start + max_visible - 3)
+                else:
+                    start = max(2, end - (max_visible - 3))
+            visible_set.update(range(start, end + 1))
+            visible = sorted(visible_set)
+
         buttons: list[Any] = []
-        for page_num in range(1, total_pages + 1):
+        for page_num in visible:
             url = f"{base_url}?page={page_num}"
             if search:
                 url += f"&q={search}"
@@ -186,11 +204,32 @@ class Pagination(Component):
 # ========================================
 
 
+_to_html_string_fn: Callable | None = None
+
+
 def _to_html_string_lazy(result: Any) -> str:
     """Convert to HTML string with lazy import to avoid circular imports."""
-    from kokage_ui.core import _to_html_string
+    global _to_html_string_fn
+    if _to_html_string_fn is None:
+        from kokage_ui.core import _to_html_string
 
-    return _to_html_string(result)
+        _to_html_string_fn = _to_html_string
+    return _to_html_string_fn(result)
+
+
+def _process_bool_fields(
+    model: type[BaseModel],
+    raw_data: dict[str, Any],
+    form_data: Any,
+    exclude: list[str],
+) -> None:
+    """Handle bool fields: unchecked checkboxes are absent from form data."""
+    for field_name, field_info in model.model_fields.items():
+        if field_name in exclude:
+            continue
+        base_type, _ = _resolve_annotation(field_info.annotation)
+        if base_type is bool:
+            raw_data[field_name] = field_name in form_data
 
 
 class CRUDRouter(Generic[T]):
@@ -234,19 +273,21 @@ class CRUDRouter(Generic[T]):
         self.id_field = id_field
         self.per_page = per_page
         self.title = title or f"{model.__name__}s"
-        self.exclude_fields = exclude_fields or []
-        self.table_exclude = table_exclude or []
-        self.form_exclude = form_exclude or []
         self.page_wrapper = page_wrapper
         self.theme = theme
+
+        # Cache computed exclude lists
+        _exclude = exclude_fields or []
+        self._table_exclude = list(set(_exclude + (table_exclude or [])))
+        self._form_exclude = list(set(_exclude + (form_exclude or []) + [id_field]))
 
         self._register_routes()
 
     def _get_table_exclude(self) -> list[str]:
-        return list(set(self.exclude_fields + self.table_exclude))
+        return self._table_exclude
 
     def _get_form_exclude(self) -> list[str]:
-        return list(set(self.exclude_fields + self.form_exclude + [self.id_field]))
+        return self._form_exclude
 
     def _wrap_page(self, content: Any, page_title: str) -> Any:
         if self.page_wrapper:
@@ -374,16 +415,7 @@ class CRUDRouter(Generic[T]):
         async def create_handler(request: Request) -> Response:
             form_data = await request.form()
             raw_data = dict(form_data)
-
-            # Handle bool fields: checkbox unchecked = missing from form data
-            for field_name, field_info in router.model.model_fields.items():
-                if field_name in router._get_form_exclude():
-                    continue
-                from kokage_ui.models import _resolve_annotation
-
-                base_type, _ = _resolve_annotation(field_info.annotation)
-                if base_type is bool:
-                    raw_data[field_name] = field_name in form_data
+            _process_bool_fields(router.model, raw_data, form_data, router._get_form_exclude())
 
             try:
                 instance = router.model.model_validate(raw_data)
@@ -537,16 +569,7 @@ class CRUDRouter(Generic[T]):
 
             form_data = await request.form()
             raw_data = dict(form_data)
-
-            # Handle bool fields
-            for field_name, field_info in router.model.model_fields.items():
-                if field_name in router._get_form_exclude():
-                    continue
-                from kokage_ui.models import _resolve_annotation
-
-                base_type, _ = _resolve_annotation(field_info.annotation)
-                if base_type is bool:
-                    raw_data[field_name] = field_name in form_data
+            _process_bool_fields(router.model, raw_data, form_data, router._get_form_exclude())
 
             # Preserve ID
             raw_data[router.id_field] = id
