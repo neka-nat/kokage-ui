@@ -139,6 +139,7 @@ class KokageUI:
         page_wrapper: Callable[..., Any] | None = None,
         layout: Any = None,
         theme: str = "light",
+        file_handler: Callable | None = None,
     ) -> None:
         """Register full CRUD routes for a Pydantic model.
 
@@ -155,6 +156,7 @@ class KokageUI:
             page_wrapper: Optional callable(content, title) → Page.
             layout: Optional Layout instance (used as page_wrapper if page_wrapper not set).
             theme: DaisyUI theme name.
+            file_handler: Async callback (field_name, UploadFile) → URL string.
         """
         from kokage_ui.crud import CRUDRouter
 
@@ -174,6 +176,7 @@ class KokageUI:
             form_exclude=form_exclude,
             page_wrapper=page_wrapper,
             theme=theme,
+            file_handler=file_handler,
         )
 
         if self.debug:
