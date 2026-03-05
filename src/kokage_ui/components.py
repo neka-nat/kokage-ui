@@ -1096,6 +1096,178 @@ _DROPDOWN_POSITIONS = {
 }
 
 
+class FileUpload(Component):
+    """DaisyUI file-input component with label.
+
+    Args:
+        name: Input name attribute.
+        label: Label text.
+        accept: Accepted file types (e.g., "image/*", ".pdf,.doc").
+        multiple: Allow multiple files.
+        color: DaisyUI color variant.
+        size: DaisyUI size variant (xs, sm, md, lg).
+        bordered: Use bordered style.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *,
+        name: str,
+        label: str | None = None,
+        accept: str | None = None,
+        multiple: bool = False,
+        color: str | None = None,
+        size: str | None = None,
+        bordered: bool = True,
+        **attrs: Any,
+    ) -> None:
+        cls_parts = ["file-input"]
+        if bordered:
+            cls_parts.append("file-input-bordered")
+        if color:
+            cls_parts.append(f"file-input-{color}")
+        if size:
+            cls_parts.append(f"file-input-{size}")
+        cls_parts.append("w-full")
+
+        input_attrs: dict[str, Any] = {
+            "type": "file",
+            "name": name,
+            "cls": " ".join(cls_parts),
+        }
+        if accept:
+            input_attrs["accept"] = accept
+        if multiple:
+            input_attrs["multiple"] = True
+
+        children: list[Any] = []
+        if label:
+            children.append(Label(Span(label, cls="label-text"), cls="label"))
+        children.append(Input(**input_attrs))
+
+        attrs["cls"] = _merge_cls("form-control w-full", attrs.get("cls"))
+        super().__init__(*children, **attrs)
+
+
+class DropZone(Component):
+    """Drag-and-drop file upload zone with htmx.
+
+    Renders a dashed-border drop area with a hidden file input.
+    Files trigger an htmx upload on change.
+
+    Args:
+        name: Input name attribute.
+        upload_url: URL to POST files to.
+        target: htmx target selector for the response.
+        accept: Accepted file types.
+        multiple: Allow multiple files.
+        text: Instructional text inside the drop zone.
+        swap: htmx swap method.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *,
+        name: str,
+        upload_url: str,
+        target: str = "",
+        accept: str | None = None,
+        multiple: bool = False,
+        text: str = "Drop files here or click to upload",
+        swap: str = "innerHTML",
+        **attrs: Any,
+    ) -> None:
+        input_attrs: dict[str, Any] = {
+            "type": "file",
+            "name": name,
+            "cls": "hidden",
+        }
+        if accept:
+            input_attrs["accept"] = accept
+        if multiple:
+            input_attrs["multiple"] = True
+
+        file_input = Input(**input_attrs)
+
+        zone_attrs: dict[str, Any] = {
+            "cls": _merge_cls(
+                "border-2 border-dashed border-base-300 rounded-lg p-8 "
+                "text-center cursor-pointer hover:border-primary transition-colors",
+                attrs.pop("cls", None),
+            ),
+            "hx_post": upload_url,
+            "hx_encoding": "multipart/form-data",
+            "hx_trigger": "change from:find input[type=file]",
+            "hx_swap": swap,
+            "onclick": "this.querySelector('input[type=file]').click()",
+        }
+        if target:
+            zone_attrs["hx_target"] = target
+
+        super().__init__(
+            Span(text, cls="text-base-content/60"),
+            file_input,
+            **zone_attrs,
+        )
+
+
+class DependentSelect(Component):
+    """Select whose options reload when a parent field changes.
+
+    Uses htmx to fetch new options from the server when the parent
+    field's value changes.
+
+    Args:
+        name: Select name attribute.
+        depends_on: Name of the parent field to watch.
+        url: URL to fetch options from.
+        label: Label text.
+        placeholder: Placeholder option text.
+        bordered: Use bordered style.
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *,
+        name: str,
+        depends_on: str,
+        url: str,
+        label: str | None = None,
+        placeholder: str = "Select...",
+        bordered: bool = True,
+        **attrs: Any,
+    ) -> None:
+        from kokage_ui.elements import Select as BaseSelect
+
+        select_cls_parts = ["select", "w-full"]
+        if bordered:
+            select_cls_parts.append("select-bordered")
+
+        select_el = BaseSelect(
+            Option(placeholder, value="", disabled=True, selected=True),
+            name=name,
+            cls=" ".join(select_cls_parts),
+            hx_get=url,
+            hx_trigger=f"change from:[name='{depends_on}']",
+            hx_include=f"[name='{depends_on}']",
+            hx_swap="innerHTML",
+        )
+
+        children: list[Any] = []
+        if label:
+            children.append(Label(Span(label, cls="label-text"), cls="label"))
+        children.append(select_el)
+
+        attrs["cls"] = _merge_cls("form-control w-full", attrs.get("cls"))
+        super().__init__(*children, **attrs)
+
+
 class Dropdown(Component):
     """DaisyUI Dropdown component.
 

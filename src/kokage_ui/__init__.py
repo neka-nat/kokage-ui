@@ -101,8 +101,11 @@ from kokage_ui.components import (
     DaisySelect,
     DaisyTable,
     DaisyTextarea,
+    DependentSelect,
     Drawer,
     Dropdown,
+    DropZone,
+    FileUpload,
     Hero,
     Layout,
     Modal,
@@ -117,17 +120,21 @@ from kokage_ui.components import (
 )
 
 # Pydantic model → UI auto-generation
-from kokage_ui.models import ModelDetail, ModelForm, ModelTable
+from kokage_ui.models import ModelDetail, ModelForm, ModelTable, ValidatedModelForm
 
 # htmx helpers
 from kokage_ui.htmx import (
     AutoRefresh,
     ConfirmDelete,
+    DependentField,
     HxSwapOOB,
     InfiniteScroll,
     SSEStream,
     SearchFilter,
 )
+
+# Multi-step forms
+from kokage_ui.forms import FormStep, MultiStepForm
 
 # CRUD auto-generation
 from kokage_ui.crud import CRUDRouter, InMemoryStorage, Pagination, Storage
@@ -225,6 +232,7 @@ __all__ = [
     "Dropdown",
     # Pydantic Model → UI
     "ModelForm",
+    "ValidatedModelForm",
     "ModelTable",
     "ModelDetail",
     # htmx Helpers
@@ -234,6 +242,14 @@ __all__ = [
     "InfiniteScroll",
     "SSEStream",
     "ConfirmDelete",
+    "DependentField",
+    # Components (new)
+    "FileUpload",
+    "DropZone",
+    "DependentSelect",
+    # Multi-step Forms
+    "FormStep",
+    "MultiStepForm",
     # CRUD
     "CRUDRouter",
     "Storage",

@@ -249,6 +249,7 @@ class CRUDRouter(Generic[T]):
         form_exclude: Fields to exclude from forms.
         page_wrapper: Optional callable(content, title) → Page for custom layout.
         theme: DaisyUI theme name.
+        realtime_validation: Enable per-field htmx validation.
     """
 
     def __init__(
@@ -266,6 +267,7 @@ class CRUDRouter(Generic[T]):
         form_exclude: list[str] | None = None,
         page_wrapper: Callable[..., Any] | None = None,
         theme: str = "light",
+        realtime_validation: bool = False,
     ) -> None:
         self.app = app
         self.prefix = prefix.rstrip("/")
@@ -276,6 +278,7 @@ class CRUDRouter(Generic[T]):
         self.title = title or f"{model.__name__}s"
         self.page_wrapper = page_wrapper
         self.theme = theme
+        self.realtime_validation = realtime_validation
 
         # Cache computed exclude lists
         _exclude = exclude_fields or []
@@ -283,12 +286,76 @@ class CRUDRouter(Generic[T]):
         self._form_exclude = list(set(_exclude + (form_exclude or []) + [id_field]))
 
         self._register_routes()
+        if self.realtime_validation:
+            self._register_validation_routes()
 
     def _get_table_exclude(self) -> list[str]:
         return self._table_exclude
 
     def _get_form_exclude(self) -> list[str]:
         return self._form_exclude
+
+    def _build_form(self, **kwargs: Any) -> Any:
+        """Build a ModelForm or ValidatedModelForm depending on config."""
+        if self.realtime_validation:
+            from kokage_ui.models import ValidatedModelForm
+
+            return ValidatedModelForm(
+                self.model,
+                validate_url=f"{self.prefix}/_validate",
+                **kwargs,
+            )
+        return ModelForm(self.model, **kwargs)
+
+    def _register_validation_routes(self) -> None:
+        """Register per-field validation endpoints."""
+        from pydantic import ValidationError as PydanticValidationError
+
+        from kokage_ui.models import _SENTINEL, _field_to_component, _filter_fields
+
+        fields = _filter_fields(self.model, include=None, exclude=self._get_form_exclude())
+        prefix = self.prefix
+
+        for field_name, field_info in fields:
+
+            def _make_handler(name: str, fi: Any) -> Any:
+                async def handler(request: Request) -> HTMLResponse:
+                    form_data = await request.form()
+                    raw_data = dict(form_data)
+
+                    error_msg = None
+                    try:
+                        self.model.model_validate(raw_data)
+                    except PydanticValidationError as e:
+                        for err in e.errors():
+                            loc = err.get("loc", ())
+                            if loc and str(loc[0]) == name:
+                                error_msg = err.get("msg", "Invalid value")
+                                break
+
+                    component = _field_to_component(
+                        name,
+                        fi,
+                        value=raw_data.get(name, _SENTINEL),
+                        error_message=error_msg,
+                        field_id=f"field-{name}",
+                        extra_input_attrs={
+                            "hx_post": f"{prefix}/_validate/{name}",
+                            "hx_trigger": "change delay:500ms",
+                            "hx_target": f"#field-{name}",
+                            "hx_swap": "outerHTML",
+                        },
+                    )
+                    return HTMLResponse(content=component.render())
+
+                return handler
+
+            self.app.add_api_route(
+                f"{prefix}/_validate/{field_name}",
+                _make_handler(field_name, field_info),
+                methods=["POST"],
+                response_class=HTMLResponse,
+            )
 
     def _wrap_page(self, content: Any, page_title: str) -> Any:
         if self.page_wrapper:
@@ -414,8 +481,7 @@ class CRUDRouter(Generic[T]):
 
         # --- GET {prefix}/new — Create form page ---
         async def create_page(request: Request) -> HTMLResponse:
-            form = ModelForm(
-                router.model,
+            form = router._build_form(
                 action=f"{prefix}/new",
                 method="post",
                 submit_text="Create",
@@ -461,8 +527,7 @@ class CRUDRouter(Generic[T]):
                 )
             except ValidationError as e:
                 error_list = e.errors()
-                form = ModelForm(
-                    router.model,
+                form = router._build_form(
                     action=f"{prefix}/new",
                     method="post",
                     submit_text="Create",
@@ -563,8 +628,7 @@ class CRUDRouter(Generic[T]):
                     content=_to_html_string_lazy(page_obj), status_code=404
                 )
 
-            form = ModelForm(
-                router.model,
+            form = router._build_form(
                 action=f"{prefix}/{id}/edit",
                 method="post",
                 submit_text="Update",
@@ -617,8 +681,7 @@ class CRUDRouter(Generic[T]):
                 )
             except ValidationError as e:
                 error_list = e.errors()
-                form = ModelForm(
-                    router.model,
+                form = router._build_form(
                     action=f"{prefix}/{id}/edit",
                     method="post",
                     submit_text="Update",

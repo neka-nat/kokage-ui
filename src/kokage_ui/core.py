@@ -164,6 +164,162 @@ class KokageUI:
             theme=theme,
         )
 
+    def validate(
+        self,
+        path: str,
+        model: type[BaseModel],
+        *,
+        exclude: set[str] | list[str] | None = None,
+        trigger: str = "change",
+        delay: int = 500,
+    ) -> None:
+        """Register per-field validation endpoints for a Pydantic model.
+
+        For each field, registers POST {path}/{field_name} that validates
+        the field value and returns the field wrapper HTML with error/success styling.
+
+        Args:
+            path: Base URL path (e.g., "/validate").
+            model: Pydantic BaseModel class.
+            exclude: Field names to exclude from validation.
+            trigger: htmx trigger event.
+            delay: Debounce delay in ms.
+        """
+        from pydantic import ValidationError
+        from pydantic.fields import FieldInfo
+
+        from kokage_ui.models import _SENTINEL, _field_to_component, _filter_fields
+
+        fields = _filter_fields(model, include=None, exclude=exclude)
+        trigger_str = f"{trigger} delay:{delay}ms" if delay > 0 else trigger
+
+        for field_name, field_info in fields:
+
+            def _make_handler(name: str, fi: FieldInfo) -> Any:
+                async def handler(request: Request) -> HTMLResponse:
+                    form_data = await request.form()
+                    raw_data = dict(form_data)
+
+                    error_msg = None
+                    try:
+                        model.model_validate(raw_data)
+                    except ValidationError as e:
+                        for err in e.errors():
+                            loc = err.get("loc", ())
+                            if loc and str(loc[0]) == name:
+                                error_msg = err.get("msg", "Invalid value")
+                                break
+
+                    component = _field_to_component(
+                        name,
+                        fi,
+                        value=raw_data.get(name, _SENTINEL),
+                        error_message=error_msg,
+                        field_id=f"field-{name}",
+                        extra_input_attrs={
+                            "hx_post": f"{path}/{name}",
+                            "hx_trigger": trigger_str,
+                            "hx_target": f"#field-{name}",
+                            "hx_swap": "outerHTML",
+                        },
+                    )
+                    return HTMLResponse(content=component.render())
+
+                return handler
+
+            self.app.add_api_route(
+                f"{path}/{field_name}",
+                _make_handler(field_name, field_info),
+                methods=["POST"],
+                response_class=HTMLResponse,
+            )
+
+    def multistep(
+        self,
+        path: str,
+        *,
+        model: type[BaseModel],
+        steps: list[Any],
+        action: str,
+    ) -> None:
+        """Register multi-step form navigation endpoints.
+
+        Registers:
+        - POST {path}/{step}: validate step and return next step form
+        - POST {path}/goto/{step}: go to step without validation
+
+        Args:
+            path: Base URL path (e.g., "/register/step").
+            model: Pydantic BaseModel class.
+            steps: List of FormStep instances.
+            action: Form action URL for final submission.
+        """
+        from pydantic import ValidationError
+
+        from kokage_ui.forms import MultiStepForm
+
+        async def validate_step(request: Request, step: int) -> HTMLResponse:
+            form_data = await request.form()
+            raw_data = dict(form_data)
+
+            current_fields = steps[step].fields
+            try:
+                model.model_validate(raw_data)
+            except ValidationError as e:
+                step_errors = [
+                    err
+                    for err in e.errors()
+                    if err.get("loc") and str(err["loc"][0]) in current_fields
+                ]
+                if step_errors:
+                    form = MultiStepForm(
+                        model,
+                        steps=steps,
+                        current_step=step,
+                        validate_url=path,
+                        action=action,
+                        values=raw_data,
+                        errors=step_errors,
+                    )
+                    return HTMLResponse(content=form.render())
+
+            next_step = min(step + 1, len(steps) - 1)
+            form = MultiStepForm(
+                model,
+                steps=steps,
+                current_step=next_step,
+                validate_url=path,
+                action=action,
+                values=raw_data,
+            )
+            return HTMLResponse(content=form.render())
+
+        async def goto_step(request: Request, step: int) -> HTMLResponse:
+            form_data = await request.form()
+            raw_data = dict(form_data)
+            form = MultiStepForm(
+                model,
+                steps=steps,
+                current_step=step,
+                validate_url=path,
+                action=action,
+                values=raw_data,
+            )
+            return HTMLResponse(content=form.render())
+
+        self.app.add_api_route(
+            f"{path}/{{step}}",
+            validate_step,
+            methods=["POST"],
+            response_class=HTMLResponse,
+        )
+        self.app.add_api_route(
+            f"{path}/goto/{{step}}",
+            goto_step,
+            methods=["POST"],
+            response_class=HTMLResponse,
+        )
+
     def fragment(
         self,
         path: str,

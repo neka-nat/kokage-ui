@@ -102,6 +102,7 @@ def _build_form_input(
     label_text: str,
     input_element: Component,
     error_message: str | None = None,
+    field_id: str | None = None,
 ) -> Component:
     """Build a DaisyUI-styled form-control wrapping an input element."""
     children: list[Any] = []
@@ -111,7 +112,10 @@ def _build_form_input(
     children.append(input_element)
     if error_message:
         children.append(Span(error_message, cls="text-error text-sm mt-1"))
-    return Div(*children, cls="form-control w-full")
+    wrapper_attrs: dict[str, Any] = {"cls": "form-control w-full"}
+    if field_id:
+        wrapper_attrs["id"] = field_id
+    return Div(*children, **wrapper_attrs)
 
 
 def _field_to_component(
@@ -120,6 +124,8 @@ def _field_to_component(
     *,
     value: Any = _SENTINEL,
     error_message: str | None = None,
+    extra_input_attrs: dict[str, Any] | None = None,
+    field_id: str | None = None,
 ) -> Component:
     """Convert a single Pydantic field to a form input component.
 
@@ -138,6 +144,8 @@ def _field_to_component(
     common_attrs: dict[str, Any] = {"name": name}
     if is_required:
         common_attrs["required"] = True
+    if extra_input_attrs:
+        common_attrs.update(extra_input_attrs)
 
     error_cls_suffix = " input-error" if error_message else ""
 
@@ -164,7 +172,10 @@ def _field_to_component(
         ]
         if error_message:
             children.append(Span(error_message, cls="text-error text-sm mt-1"))
-        return Div(*children, cls="form-control w-full")
+        bool_attrs: dict[str, Any] = {"cls": "form-control w-full"}
+        if field_id:
+            bool_attrs["id"] = field_id
+        return Div(*children, **bool_attrs)
 
     # --- Literal → select ---
     origin = get_origin(base_type)
@@ -185,7 +196,7 @@ def _field_to_component(
             cls=f"select select-bordered w-full{error_cls_suffix}",
             **common_attrs,
         )
-        return _build_form_input(label_text=label_text, input_element=select_el, error_message=error_message)
+        return _build_form_input(label_text=label_text, input_element=select_el, error_message=error_message, field_id=field_id)
 
     # --- Enum → select ---
     if isinstance(base_type, type) and issubclass(base_type, enum.Enum):
@@ -204,7 +215,7 @@ def _field_to_component(
             cls=f"select select-bordered w-full{error_cls_suffix}",
             **common_attrs,
         )
-        return _build_form_input(label_text=label_text, input_element=select_el, error_message=error_message)
+        return _build_form_input(label_text=label_text, input_element=select_el, error_message=error_message, field_id=field_id)
 
     # --- int → number input (step=1) ---
     if base_type is int:
@@ -216,7 +227,7 @@ def _field_to_component(
             cls=f"input input-bordered w-full{error_cls_suffix}",
             **input_attrs,
         )
-        return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
+        return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message, field_id=field_id)
 
     # --- float → number input (step=any) ---
     if base_type is float:
@@ -228,7 +239,7 @@ def _field_to_component(
             cls=f"input input-bordered w-full{error_cls_suffix}",
             **input_attrs,
         )
-        return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
+        return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message, field_id=field_id)
 
     # --- str (with heuristics) ---
     if base_type is str:
@@ -244,7 +255,7 @@ def _field_to_component(
                 cls=f"input input-bordered w-full{error_cls_suffix}",
                 **input_attrs,
             )
-            return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
+            return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message, field_id=field_id)
 
         # password heuristic
         if name_lower in _PASSWORD_NAME_HINTS:
@@ -256,7 +267,7 @@ def _field_to_component(
                 cls=f"input input-bordered w-full{error_cls_suffix}",
                 **input_attrs,
             )
-            return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
+            return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message, field_id=field_id)
 
         # textarea heuristic: long max_length or name hint
         is_textarea = (
@@ -280,7 +291,7 @@ def _field_to_component(
                     ta_children.append(str(default))
             ta_cls = f"textarea textarea-bordered w-full{' textarea-error' if error_message else ''}"
             ta_el = Textarea(*ta_children, cls=ta_cls, **ta_attrs)
-            return _build_form_input(label_text=label_text, input_element=ta_el, error_message=error_message)
+            return _build_form_input(label_text=label_text, input_element=ta_el, error_message=error_message, field_id=field_id)
 
         # fallback: text input
         input_attrs = _string_attrs(constraints)
@@ -291,7 +302,7 @@ def _field_to_component(
             cls=f"input input-bordered w-full{error_cls_suffix}",
             **input_attrs,
         )
-        return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message)
+        return _build_form_input(label_text=label_text, input_element=input_el, error_message=error_message, field_id=field_id)
 
     # --- fallback for unknown types → text input ---
     input_attrs = _string_attrs(constraints)
@@ -426,12 +437,18 @@ class ModelForm(Component):
             else:
                 val = _SENTINEL
 
+            field_attrs = self._build_field_attrs(name)
+            extra = field_attrs if field_attrs else None
+            fid = f"field-{name}" if field_attrs else None
+
             children.append(
                 _field_to_component(
                     name,
                     field_info,
                     value=val,
                     error_message=error_map.get(name),
+                    extra_input_attrs=extra,
+                    field_id=fid,
                 )
             )
 
@@ -442,6 +459,50 @@ class ModelForm(Component):
         attrs["action"] = action
         attrs["method"] = method
         super().__init__(*children, **attrs)
+
+    def _build_field_attrs(self, name: str) -> dict[str, Any] | None:
+        """Build extra input attributes for a field. Override in subclasses."""
+        return None
+
+
+class ValidatedModelForm(ModelForm):
+    """ModelForm with per-field htmx real-time validation.
+
+    Each field gets htmx attributes to POST to a validation endpoint
+    on change, receiving back the field wrapper with error/success styling.
+
+    Args:
+        model: Pydantic BaseModel class.
+        validate_url: Base URL for validation (e.g., "/validate").
+        validate_trigger: htmx trigger event (default: "change").
+        validate_delay: Debounce delay in ms (default: 500).
+        **kwargs: All other ModelForm arguments.
+    """
+
+    def __init__(
+        self,
+        model: type[BaseModel],
+        *,
+        validate_url: str,
+        validate_trigger: str = "change",
+        validate_delay: int = 500,
+        **kwargs: Any,
+    ) -> None:
+        self._validate_url = validate_url.rstrip("/")
+        self._validate_trigger = validate_trigger
+        self._validate_delay = validate_delay
+        super().__init__(model, **kwargs)
+
+    def _build_field_attrs(self, name: str) -> dict[str, Any] | None:
+        trigger = self._validate_trigger
+        if self._validate_delay > 0:
+            trigger = f"{trigger} delay:{self._validate_delay}ms"
+        return {
+            "hx_post": f"{self._validate_url}/{name}",
+            "hx_trigger": trigger,
+            "hx_target": f"#field-{name}",
+            "hx_swap": "outerHTML",
+        }
 
 
 def _render_value(value: Any) -> Any:

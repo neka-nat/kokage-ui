@@ -165,6 +165,39 @@ class SSEStream(Component):
         super().__init__(*children, **attrs)
 
 
+class DependentField(Component):
+    """Generic wrapper that reloads content when a parent field changes.
+
+    Any content inside is replaced via htmx when the watched field changes.
+
+    Args:
+        *children: Initial content (shown before first load).
+        depends_on: Name of the parent field to watch.
+        url: URL to fetch new content from.
+        swap: htmx swap method.
+        target: htmx target selector (default: self).
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *children: Any,
+        depends_on: str,
+        url: str,
+        swap: str = "innerHTML",
+        target: str | None = None,
+        **attrs: Any,
+    ) -> None:
+        attrs["hx_get"] = url
+        attrs["hx_trigger"] = f"change from:[name='{depends_on}']"
+        attrs["hx_include"] = f"[name='{depends_on}']"
+        attrs["hx_swap"] = swap
+        if target:
+            attrs["hx_target"] = target
+        super().__init__(*children, **attrs)
+
+
 class ConfirmDelete(Component):
     """Delete button with confirmation dialog.
 
