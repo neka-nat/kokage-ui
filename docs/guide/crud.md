@@ -165,6 +165,32 @@ Pagination(
 )
 ```
 
+## SQLModel Storage
+
+For database persistence, use `SQLModelStorage` instead of `InMemoryStorage`:
+
+```python
+from sqlalchemy.ext.asyncio import create_async_engine
+from kokage_ui import SQLModelStorage, create_tables
+from sqlmodel import SQLModel, Field
+
+class Todo(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    title: str = Field(min_length=1, max_length=200)
+    completed: bool = False
+
+engine = create_async_engine("sqlite+aiosqlite:///app.db")
+
+@app.on_event("startup")
+async def startup():
+    await create_tables(engine)
+
+storage = SQLModelStorage(Todo, engine)
+ui.crud("/todos", model=Todo, storage=storage)
+```
+
+See [SQL Storage](storage.md) for details.
+
 ## Features
 
 - **Search** — Built-in `SearchFilter` with debounce on the list page
@@ -173,3 +199,8 @@ Pagination(
 - **Toast notifications** — Success/error messages after create, update, delete
 - **Confirm delete** — JavaScript confirmation dialog before deletion
 - **htmx integration** — Form submissions and table updates use htmx for smooth UX
+
+## See Also
+
+- [DataGrid](datagrid.md) — Advanced table with sorting, filtering, bulk actions
+- [Admin Dashboard](admin.md) — Auto-generated admin panel using CRUD + DataGrid

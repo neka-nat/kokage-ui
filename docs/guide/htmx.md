@@ -222,3 +222,51 @@ def action(request: Request):
 | `swap` | str | Swap method (default: `"true"` = innerHTML) |
 
 This renders a `<div id="notification-count" hx-swap-oob="true">` that htmx will use to update the element with that ID, regardless of the main target.
+
+## DependentField
+
+A field that updates when another field changes, using htmx to fetch new options from the server.
+
+```python
+from kokage_ui import DependentField
+
+DependentField(
+    url="/api/cities",
+    trigger_name="country",
+    target="#city-select",
+)
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `url` | str | Endpoint to fetch updated content |
+| `trigger_name` | str | Name of the field that triggers the update |
+| `target` | str | CSS selector of the element to update |
+
+### Example: Country → City Cascade
+
+```python
+@ui.page("/")
+def form():
+    return Page(
+        Form(
+            DaisySelect(
+                "Country", name="country",
+                options=[("us", "US"), ("jp", "Japan")],
+                hx_get="/api/cities", hx_target="#city-select",
+            ),
+            Div(id="city-select"),
+        ),
+    )
+
+@ui.fragment("/api/cities")
+def cities(country: str = ""):
+    city_map = {"us": ["New York", "LA"], "jp": ["Tokyo", "Osaka"]}
+    options = [(c, c) for c in city_map.get(country, [])]
+    return DaisySelect("City", name="city", options=options)
+```
+
+## See Also
+
+- [Real-time Notifications](notifications.md) — SSE-based push notifications
+- [DataGrid](datagrid.md) — Advanced tables with htmx-powered sort, filter, and pagination

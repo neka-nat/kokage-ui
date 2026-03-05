@@ -16,6 +16,37 @@
 
 kokage-ui requires Python 3.11+ and installs FastAPI automatically.
 
+### Optional Dependencies
+
+```bash
+pip install kokage-ui[sql]       # SQLModel storage backend
+pip install kokage-ui[markdown]  # Markdown rendering
+```
+
+## CLI Scaffolding
+
+The fastest way to start a new project:
+
+```bash
+kokage-ui init myapp
+cd myapp
+uv sync
+uv run uvicorn app:app --reload
+```
+
+With CRUD template:
+
+```bash
+uvx kokage-ui init myapp --crud
+```
+
+Add pages and models to an existing project:
+
+```bash
+uvx kokage-ui add page dashboard      # Create pages/dashboard.py
+uvx kokage-ui add crud Product        # Create models/product.py
+```
+
 ## Your First App
 
 Create a file called `app.py`:
@@ -111,9 +142,20 @@ ui.crud("/todos", model=Todo, storage=storage)
 
 This creates list, create, detail, edit, and delete pages at `/todos`.
 
+For database persistence, use `SQLModelStorage`:
+
+```python
+from kokage_ui import SQLModelStorage, create_tables
+
+storage = SQLModelStorage(Todo, engine)
+```
+
 ## Next Steps
 
 - [HTML Elements](guide/elements.md) — Full component reference
 - [DaisyUI Components](guide/components.md) — Cards, alerts, navbars, and more
 - [Pages & Layout](guide/pages.md) — Page structure and layouts
 - [CRUD](guide/crud.md) — One-line CRUD generation
+- [DataGrid](guide/datagrid.md) — Advanced sortable/filterable tables
+- [Admin Dashboard](guide/admin.md) — Auto-generated admin panel
+- [Auth](guide/auth.md) — Login, register, route protection

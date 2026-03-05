@@ -39,11 +39,29 @@ uvicorn hello:app --reload
 ## Features
 
 - **50+ HTML Elements** — `Div`, `H1`, `Form`, `Input`, etc. as Python classes
-- **DaisyUI Components** — `Card`, `Hero`, `NavBar`, `Alert`, `Badge`, `Stats`, `Toast`, `Layout`
+- **25+ DaisyUI Components** — `Card`, `Hero`, `NavBar`, `Modal`, `Tabs`, `Accordion`, `Toast`, `Layout`, and more
 - **Pydantic → UI** — Auto-generate forms, tables, detail views from `BaseModel`
 - **One-line CRUD** — `ui.crud("/users", model=User, storage=storage)`
+- **DataGrid** — Sortable, filterable table with pagination, bulk actions, CSV export
+- **Admin Dashboard** — Django-like admin panel: `AdminSite(app).register(User, storage=s)`
+- **Auth UI** — `LoginForm`, `RegisterForm`, `UserMenu`, `RoleGuard`, `@protected` decorator
+- **Theme System** — `DarkModeToggle` and `ThemeSwitcher` with localStorage persistence
+- **Real-time Notifications** — SSE-based push notifications via `Notifier` + `NotificationStream`
+- **SQLModel Storage** — Async database persistence with `SQLModelStorage`
 - **htmx Patterns** — `AutoRefresh`, `SearchFilter`, `InfiniteScroll`, `SSEStream`, `ConfirmDelete`
+- **Charts & Markdown** — `Chart` (Chart.js), `CodeBlock` (Highlight.js), `Markdown`
+- **Multi-step Forms** — `MultiStepForm` with step validation
+- **CLI Scaffolding** — `kokage-ui init myapp` to generate project templates
 - **XSS Protection** — Output escaped via `markupsafe` by default
+
+## CLI
+
+```bash
+uvx kokage-ui init myapp            # Create new project
+uvx kokage-ui init myapp --crud     # Create with CRUD template
+uvx kokage-ui add page dashboard    # Add a new page
+uvx kokage-ui add crud Product      # Add CRUD model
+```
 
 ## Examples
 

@@ -6,7 +6,7 @@ Quick reference of all exports from `kokage_ui`.
 
 | Export | Module | Description |
 |--------|--------|-------------|
-| `KokageUI` | `core` | FastAPI integration — `page()`, `fragment()`, `crud()` decorators |
+| `KokageUI` | `core` | FastAPI integration — `page()`, `fragment()`, `crud()`, `validate()` decorators |
 | `Page` | `page` | Full `<!DOCTYPE html>` document generator |
 
 ## HTML Elements
@@ -100,14 +100,27 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `Collapse` | Expandable content section |
 | `Accordion` | Radio-linked collapse group |
 | `Dropdown` | Dropdown menu (click or hover) |
+| `FileUpload` | File upload input with styling |
+| `DropZone` | Drag-and-drop file upload area |
+| `DependentSelect` | Select that depends on another field |
 
 ## Pydantic Model → UI
 
 | Export | Description |
 |--------|-------------|
 | `ModelForm` | Auto-generate form from BaseModel |
+| `ValidatedModelForm` | Form with real-time field validation |
 | `ModelTable` | Auto-generate table from BaseModel + rows |
 | `ModelDetail` | Auto-generate detail card from model instance |
+| `SortableTable` | Table with sortable column headers |
+
+## DataGrid
+
+| Export | Description |
+|--------|-------------|
+| `DataGrid` | Advanced table with sort, filter, pagination, bulk actions, CSV export |
+| `DataGridState` | Parse grid state from request query parameters |
+| `ColumnFilter` | Per-column filter definition (text, select, number_range) |
 
 ## htmx Helpers
 
@@ -119,6 +132,14 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `SSEStream` | Server-Sent Events receiver (htmx SSE extension) |
 | `ConfirmDelete` | Delete button with confirmation (`hx-confirm` + `hx-delete`) |
 | `HxSwapOOB` | Out-of-Band swap (`hx-swap-oob`) |
+| `DependentField` | Field that updates based on another field's value |
+
+## Multi-step Forms
+
+| Export | Description |
+|--------|-------------|
+| `FormStep` | Step definition (title, fields, description) |
+| `MultiStepForm` | Multi-step form with progress and htmx navigation |
 
 ## CRUD
 
@@ -128,3 +149,44 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `Storage` | Abstract storage interface (ABC) |
 | `InMemoryStorage` | Dict-based in-memory storage |
 | `Pagination` | Pagination button group component |
+| `SQLModelStorage` | Async SQL storage via SQLModel (requires `kokage-ui[sql]`) |
+| `create_tables` | Create all SQLModel tables |
+
+## Admin Dashboard
+
+| Export | Description |
+|--------|-------------|
+| `AdminSite` | Auto-generate admin panel from registered models |
+| `ModelAdmin` | Model registration configuration (dataclass) |
+
+## Authentication & Authorization
+
+| Export | Description |
+|--------|-------------|
+| `LoginForm` | Pre-built login form card |
+| `RegisterForm` | Pre-built registration form card |
+| `UserMenu` | User dropdown menu for NavBar |
+| `RoleGuard` | Server-side role-based content guard |
+| `protected` | Route protection decorator (auth + role check) |
+
+## Theme
+
+| Export | Description |
+|--------|-------------|
+| `DarkModeToggle` | Light/dark theme toggle with sun/moon icons |
+| `ThemeSwitcher` | Theme selector dropdown with color previews |
+
+## Notifications
+
+| Export | Description |
+|--------|-------------|
+| `Notifier` | Server-side SSE notification dispatcher |
+| `NotificationStream` | Client-side SSE listener with toast display |
+
+## Data Display
+
+| Export | Description |
+|--------|-------------|
+| `Chart` | Chart.js chart (line, bar, pie, doughnut, radar, scatter) |
+| `CodeBlock` | Syntax-highlighted code block (Highlight.js) |
+| `Markdown` | Server-side Markdown rendering (requires `kokage-ui[markdown]`) |

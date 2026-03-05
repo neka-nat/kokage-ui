@@ -50,6 +50,12 @@ nav:
     - Pages & Layout: guide/pages.md
     - Pydantic Models: guide/models.md
     - CRUD: guide/crud.md
+    - SQL Storage: guide/storage.md
+    - DataGrid: guide/datagrid.md
+    - Admin Dashboard: guide/admin.md
+    - Auth: guide/auth.md
+    - Theme: guide/theme.md
+    - Notifications: guide/notifications.md
     - htmx Patterns: guide/htmx.md
   - Examples:
     - Hello World: examples/hello.md
