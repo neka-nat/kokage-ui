@@ -175,6 +175,17 @@ from kokage_ui.richtext import RichTextEditor, RichTextField
 # Admin dashboard
 from kokage_ui.admin import AdminSite, ModelAdmin
 
+# Testing helpers
+from kokage_ui.testing import (
+    HTMLAssertions,
+    ResponseAssertions,
+    assert_response,
+    make_app,
+    make_client,
+    render,
+    rendered,
+)
+
 __all__ = [
     # Core
     "KokageUI",
@@ -334,4 +345,12 @@ __all__ = [
     # Rich Text
     "RichTextEditor",
     "RichTextField",
+    # Testing
+    "render",
+    "rendered",
+    "HTMLAssertions",
+    "ResponseAssertions",
+    "assert_response",
+    "make_app",
+    "make_client",
 ]
