@@ -53,10 +53,16 @@ class KokageUI:
             return Page(H1("Hello"), title="Home")
     """
 
-    def __init__(self, app: FastAPI, prefix: str = "/_kokage") -> None:
+    def __init__(self, app: FastAPI, prefix: str = "/_kokage", debug: bool = False) -> None:
         self.app = app
         self.prefix = prefix
+        self.debug = debug
+        self._routes: list[dict] = []
         self._setup_static_files()
+        if self.debug:
+            from kokage_ui.toolbar import DevToolbarMiddleware
+
+            self.app.add_middleware(DevToolbarMiddleware, routes=self._routes)
 
     def _setup_static_files(self) -> None:
         """Mount htmx.min.js and other static files."""
@@ -105,6 +111,8 @@ class KokageUI:
                 html_str = _to_html_string(result)
                 return HTMLResponse(content=html_str)
 
+            if self.debug:
+                self._routes.append({"path": path, "methods": methods, "type": "page", "name": func.__name__})
             self.app.add_api_route(
                 path,
                 wrapper,
@@ -167,6 +175,20 @@ class KokageUI:
             page_wrapper=page_wrapper,
             theme=theme,
         )
+
+        if self.debug:
+            crud_routes = [
+                (["GET"], prefix, "list"),
+                (["GET"], f"{prefix}/_list", "list_fragment"),
+                (["GET"], f"{prefix}/new", "create_form"),
+                (["POST"], f"{prefix}/new", "create"),
+                (["GET"], f"{prefix}/{{id}}", "detail"),
+                (["GET"], f"{prefix}/{{id}}/edit", "edit_form"),
+                (["POST"], f"{prefix}/{{id}}/edit", "update"),
+                (["DELETE"], f"{prefix}/{{id}}", "delete"),
+            ]
+            for methods, p, name in crud_routes:
+                self._routes.append({"path": p, "methods": methods, "type": "crud", "name": name})
 
     def validate(
         self,
@@ -231,6 +253,8 @@ class KokageUI:
 
                 return handler
 
+            if self.debug:
+                self._routes.append({"path": f"{path}/{field_name}", "methods": ["POST"], "type": "validate", "name": field_name})
             self.app.add_api_route(
                 f"{path}/{field_name}",
                 _make_handler(field_name, field_info),
@@ -311,6 +335,9 @@ class KokageUI:
             )
             return HTMLResponse(content=form.render())
 
+        if self.debug:
+            self._routes.append({"path": f"{path}/{{step}}", "methods": ["POST"], "type": "multistep", "name": "validate_step"})
+            self._routes.append({"path": f"{path}/goto/{{step}}", "methods": ["POST"], "type": "multistep", "name": "goto_step"})
         self.app.add_api_route(
             f"{path}/{{step}}",
             validate_step,
@@ -371,6 +398,8 @@ class KokageUI:
                 html_str = _to_html_string(result)
                 return HTMLResponse(content=html_str)
 
+            if self.debug:
+                self._routes.append({"path": path, "methods": methods, "type": "fragment", "name": func.__name__})
             self.app.add_api_route(
                 path,
                 wrapper,
