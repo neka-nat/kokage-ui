@@ -146,6 +146,7 @@ from kokage_ui.auth import LoginForm, RegisterForm, RoleGuard, UserMenu, protect
 
 # CRUD auto-generation
 from kokage_ui.crud import CRUDRouter, InMemoryStorage, Pagination, Storage
+from kokage_ui.storage import SQLModelStorage, create_tables
 
 __all__ = [
     # Core
@@ -263,6 +264,8 @@ __all__ = [
     "Storage",
     "InMemoryStorage",
     "Pagination",
+    "SQLModelStorage",
+    "create_tables",
     # Data Display
     "Chart",
     "Markdown",
