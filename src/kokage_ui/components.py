@@ -633,6 +633,7 @@ class Layout:
         include_toast: Enable toast notification support.
         include_sse: Load htmx SSE extension.
         include_quill: Load Quill rich text editor from CDN.
+        include_flatpickr: Load flatpickr date picker from CDN.
         lang: HTML lang attribute.
     """
 
@@ -647,6 +648,7 @@ class Layout:
         include_toast: bool = False,
         include_sse: bool = False,
         include_quill: bool = False,
+        include_flatpickr: bool = False,
         lang: str = "ja",
     ) -> None:
         self.navbar = navbar
@@ -657,6 +659,7 @@ class Layout:
         self.include_toast = include_toast
         self.include_sse = include_sse
         self.include_quill = include_quill
+        self.include_flatpickr = include_flatpickr
         self.lang = lang
 
     def wrap(self, content: Any, title: str = "") -> Page:
@@ -688,6 +691,7 @@ class Layout:
             include_toast=self.include_toast,
             include_sse=self.include_sse,
             include_quill=self.include_quill,
+            include_flatpickr=self.include_flatpickr,
             lang=self.lang,
         )
 

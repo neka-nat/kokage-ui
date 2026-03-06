@@ -38,6 +38,9 @@ from kokage_ui.elements import (
     Tr,
     Video,
 )
+import datetime as dt
+
+from kokage_ui.fields.datetime import DateField, DateTimeField, DateTimePicker, TimeField
 from kokage_ui.fields.media import MediaField
 from kokage_ui.fields.repeater import RepeaterField, RepeaterInput
 from kokage_ui.fields.richtext import RichTextField, RichTextEditor
@@ -163,6 +166,14 @@ def _extract_repeater_field(field_info: FieldInfo) -> RepeaterField | None:
     return None
 
 
+def _extract_datetime_field(field_info: FieldInfo) -> DateField | TimeField | DateTimeField | None:
+    """Extract DateField/TimeField/DateTimeField from Pydantic field metadata."""
+    for m in field_info.metadata:
+        if isinstance(m, (DateField, TimeField, DateTimeField)):
+            return m
+    return None
+
+
 def _field_to_component(
     name: str,
     field_info: FieldInfo,
@@ -254,6 +265,32 @@ def _field_to_component(
                 max_items=repeater.max_items,
                 placeholder=repeater.placeholder,
                 add_label=repeater.add_label,
+            ),
+            error_message=error_message,
+            field_id=field_id,
+        )
+
+    # --- DateField / TimeField / DateTimeField → flatpickr ---
+    dt_field = _extract_datetime_field(field_info)
+    if dt_field is None and isinstance(base_type, type):
+        if issubclass(base_type, dt.datetime):
+            dt_field = DateTimeField()
+        elif issubclass(base_type, dt.date):
+            dt_field = DateField()
+        elif issubclass(base_type, dt.time):
+            dt_field = TimeField()
+    if dt_field is not None:
+        picker_value = ""
+        if value is not _SENTINEL and value is not None:
+            picker_value = str(value)
+        extra = extra_input_attrs or {}
+        return _build_form_input(
+            label_text=label_text,
+            input_element=DateTimePicker(
+                name=name,
+                value=picker_value,
+                field_config=dt_field,
+                **extra,
             ),
             error_message=error_message,
             field_id=field_id,

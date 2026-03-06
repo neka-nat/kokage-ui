@@ -21,7 +21,7 @@ from pydantic import BaseModel, ValidationError
 from kokage_ui.components import Alert
 from kokage_ui.elements import A, Button, Component, Div, H1
 from kokage_ui.htmx import ConfirmDelete, SearchFilter
-from kokage_ui.models import ModelDetail, ModelForm, ModelTable, _extract_media_field, _resolve_annotation
+from kokage_ui.models import ModelDetail, ModelForm, ModelTable, _extract_datetime_field, _extract_media_field, _resolve_annotation
 
 FileHandler = Callable[[str, Any], Awaitable[str]]
 
@@ -373,6 +373,18 @@ class CRUDRouter(Generic[T]):
                 return True
         return False
 
+    def _has_datetime_fields(self) -> bool:
+        """Check if the model has any DateField/TimeField/DateTimeField annotated fields."""
+        import datetime as dt_mod
+
+        for fi in self.model.model_fields.values():
+            if _extract_datetime_field(fi) is not None:
+                return True
+            base_type, _ = _resolve_annotation(fi.annotation)
+            if isinstance(base_type, type) and issubclass(base_type, (dt_mod.date, dt_mod.time)):
+                return True
+        return False
+
     def _build_form(self, **kwargs: Any) -> Any:
         """Build a ModelForm or ValidatedModelForm depending on config."""
         if self._has_media_fields():
@@ -448,6 +460,7 @@ class CRUDRouter(Generic[T]):
             theme=self.theme,
             include_toast=True,
             include_sortablejs=self.sortable,
+            include_flatpickr=self._has_datetime_fields(),
         )
 
     @staticmethod
