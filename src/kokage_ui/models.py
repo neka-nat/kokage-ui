@@ -44,6 +44,7 @@ from kokage_ui.fields.datetime import DateField, DateTimeField, DateTimePicker, 
 from kokage_ui.fields.media import MediaField
 from kokage_ui.fields.repeater import RepeaterField, RepeaterInput
 from kokage_ui.fields.richtext import RichTextField, RichTextEditor
+from kokage_ui.fields.tag import TagField, TagInput
 
 _SENTINEL = object()
 
@@ -166,6 +167,14 @@ def _extract_repeater_field(field_info: FieldInfo) -> RepeaterField | None:
     return None
 
 
+def _extract_tag_field(field_info: FieldInfo) -> TagField | None:
+    """Extract TagField from Pydantic field metadata."""
+    for m in field_info.metadata:
+        if isinstance(m, TagField):
+            return m
+    return None
+
+
 def _extract_datetime_field(field_info: FieldInfo) -> DateField | TimeField | DateTimeField | None:
     """Extract DateField/TimeField/DateTimeField from Pydantic field metadata."""
     for m in field_info.metadata:
@@ -265,6 +274,27 @@ def _field_to_component(
                 max_items=repeater.max_items,
                 placeholder=repeater.placeholder,
                 add_label=repeater.add_label,
+            ),
+            error_message=error_message,
+            field_id=field_id,
+        )
+
+    # --- TagField → chip-based tag input ---
+    tag_f = _extract_tag_field(field_info)
+    if tag_f is not None:
+        items: list[str] = []
+        if value is not _SENTINEL and isinstance(value, list):
+            items = [str(v) for v in value]
+        return _build_form_input(
+            label_text=label_text,
+            input_element=TagInput(
+                name=name,
+                values=items,
+                placeholder=tag_f.placeholder,
+                max_tags=tag_f.max_tags,
+                allow_duplicates=tag_f.allow_duplicates,
+                separator=tag_f.separator,
+                color=tag_f.color,
             ),
             error_message=error_message,
             field_id=field_id,

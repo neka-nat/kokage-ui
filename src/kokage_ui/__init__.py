@@ -175,6 +175,9 @@ from kokage_ui.fields.richtext import RichTextEditor, RichTextField
 # Repeater
 from kokage_ui.fields.repeater import RepeaterField, RepeaterInput
 
+# Tag
+from kokage_ui.fields.tag import TagField, TagInput
+
 # DateTime
 from kokage_ui.fields.datetime import DateField, DateTimeField, DateTimePicker, TimeField
 
@@ -354,6 +357,9 @@ __all__ = [
     # Repeater
     "RepeaterField",
     "RepeaterInput",
+    # Tag
+    "TagField",
+    "TagInput",
     # DateTime
     "DateField",
     "TimeField",
