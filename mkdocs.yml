@@ -41,6 +41,9 @@ markdown_extensions:
   - md_in_html
   - tables
 
+extra_javascript:
+  - catalog/iframe-resize.js
+
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
@@ -64,4 +67,12 @@ nav:
     - Admin Demo: examples/admin_demo.md
     - Blog App: examples/blog.md
     - Real-time: examples/realtime.md
+  - Component Catalog:
+    - Overview: catalog/index.md
+    - HTML Elements: catalog/elements.md
+    - DaisyUI Components: catalog/components.md
+    - Field Components: catalog/fields.md
+    - htmx Patterns: catalog/htmx.md
+    - Model Components: catalog/models.md
+    - Features: catalog/features.md
   - API Reference: api/reference.md

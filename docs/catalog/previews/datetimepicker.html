@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>body { padding: 1rem; background: transparent; }</style>
+</head>
+<body>
+<div><input type="text" id="kokage-fp-23e90afc" name="event_date" value="2025-01-01" placeholder="" class="input input-bordered w-full" /><script>(function(){if(typeof flatpickr==='undefined'){console.error('flatpickr not loaded');return;}flatpickr('#kokage-fp-23e90afc',{"dateFormat":"Y-m-d"});})()</script></div>
+<script>
+// Notify parent of content height for iframe auto-resize
+function notifyHeight() {
+  var h = document.documentElement.scrollHeight;
+  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+}
+window.addEventListener("load", notifyHeight);
+new ResizeObserver(notifyHeight).observe(document.body);
+</script>
+</body>
+</html>

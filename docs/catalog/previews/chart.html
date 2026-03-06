@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>body { padding: 1rem; background: transparent; }</style>
+</head>
+<body>
+<div style="width:100%;height:300px"><canvas id="kokage-chart-5b5314c9"></canvas><script>(function(){var canvas=document.getElementById('kokage-chart-5b5314c9');var existing=Chart.getChart(canvas);if(existing)existing.destroy();new Chart(canvas.getContext('2d'),{"type": "bar", "data": {"labels": ["Jan", "Feb", "Mar", "Apr"], "datasets": [{"label": "Sales", "data": [12, 19, 3, 5]}]}, "options": {"responsive": true}});})()</script></div>
+<script>
+// Notify parent of content height for iframe auto-resize
+function notifyHeight() {
+  var h = document.documentElement.scrollHeight;
+  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+}
+window.addEventListener("load", notifyHeight);
+new ResizeObserver(notifyHeight).observe(document.body);
+</script>
+</body>
+</html>

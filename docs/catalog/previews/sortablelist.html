@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>body { padding: 1rem; background: transparent; }</style>
+</head>
+<body>
+<div><ul id="kokage-sortable-34d6a296" class="list-none p-0"><li data-id="1" class="flex items-center p-2 border rounded mb-1 bg-base-100"><span class="sortable-handle cursor-grab mr-2 select-none">⠇</span><span>First item</span></li><li data-id="2" class="flex items-center p-2 border rounded mb-1 bg-base-100"><span class="sortable-handle cursor-grab mr-2 select-none">⠇</span><span>Second item</span></li><li data-id="3" class="flex items-center p-2 border rounded mb-1 bg-base-100"><span class="sortable-handle cursor-grab mr-2 select-none">⠇</span><span>Third item</span><span class="badge badge-ghost badge-sm ml-auto">New</span></li></ul><script>(function(){if(typeof Sortable==='undefined'){console.error('SortableJS not loaded');return;}var el=document.getElementById('kokage-sortable-34d6a296');Sortable.create(el,{handle:".sortable-handle",ghostClass:"opacity-50",animation:150,onEnd:function(){var ids=Array.from(el.children).map(function(li){return li.dataset.id;});htmx.ajax('POST','/api/reorder',{values:{ids:JSON.stringify(ids)},swap:'none'});}});})()</script></div>
+<script>
+// Notify parent of content height for iframe auto-resize
+function notifyHeight() {
+  var h = document.documentElement.scrollHeight;
+  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+}
+window.addEventListener("load", notifyHeight);
+new ResizeObserver(notifyHeight).observe(document.body);
+</script>
+</body>
+</html>
