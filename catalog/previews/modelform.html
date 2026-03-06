@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>body { padding: 1rem; background: transparent; }</style>
+</head>
+<body>
+<form action="/users" method="post"><div class="form-control w-full"><label class="label"><span class="label-text">Name</span></label><input type="text" class="input input-bordered w-full" name="name" required /></div><div class="form-control w-full"><label class="label"><span class="label-text">Email</span></label><input type="email" class="input input-bordered w-full" name="email" required /></div><div class="form-control w-full"><label class="label"><span class="label-text">Age</span></label><input type="number" class="input input-bordered w-full" step="1" min="0" max="150" name="age" value="20" /></div><button type="submit" class="btn btn-primary mt-4">Create User</button></form>
+<script>
+// Notify parent of content height for iframe auto-resize
+function notifyHeight() {
+  var h = document.documentElement.scrollHeight;
+  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+}
+window.addEventListener("load", notifyHeight);
+new ResizeObserver(notifyHeight).observe(document.body);
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>body { padding: 1rem; background: transparent; }</style>
+</head>
+<body>
+<div class="flex items-center justify-center min-h-screen"><div class="card bg-base-100 shadow-xl w-full max-w-sm"><div class="card-body"><h2 class="card-title justify-center text-2xl">Create Account</h2><form action="/register" method="post"><div class="form-control w-full"><label class="label"><span class="label-text">Username</span></label><input type="text" name="username" placeholder="Username" class="input input-bordered w-full" required /></div><div class="form-control w-full"><label class="label"><span class="label-text">Email</span></label><input type="email" name="email" placeholder="Email" class="input input-bordered w-full" required /></div><div class="form-control w-full"><label class="label"><span class="label-text">Password</span></label><input type="password" name="password" placeholder="Password" class="input input-bordered w-full" required /></div><div class="form-control w-full"><label class="label"><span class="label-text">Confirm Password</span></label><input type="password" name="password_confirm" placeholder="Confirm Password" class="input input-bordered w-full" required /></div><div class="form-control mt-4"><button type="submit" class="btn btn-primary w-full">Register</button></div></form><p class="text-center mt-2 text-sm"><a href="/login" class="link link-hover link-primary">Already have an account?</a></p></div></div></div>
+<script>
+// Notify parent of content height for iframe auto-resize
+function notifyHeight() {
+  var h = document.documentElement.scrollHeight;
+  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+}
+window.addEventListener("load", notifyHeight);
+new ResizeObserver(notifyHeight).observe(document.body);
+</script>
+</body>
+</html>

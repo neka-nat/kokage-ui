@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>body { padding: 1rem; background: transparent; }</style>
+</head>
+<body>
+<div class="relative" id="kokage-code-710d6e62"><pre><code class="language-python">def hello():
+    print(&#34;Hello, world!&#34;)</code></pre><button class="btn btn-ghost btn-xs absolute top-2 right-2" data-code-target="kokage-code-710d6e62" onclick="navigator.clipboard.writeText(document.getElementById('kokage-code-710d6e62').querySelector('code').textContent)">Copy</button><script>(function(){if(typeof hljs!=='undefined'){var el=document.getElementById('kokage-code-710d6e62').querySelector('code');hljs.highlightElement(el);}})()</script></div>
+<script>
+// Notify parent of content height for iframe auto-resize
+function notifyHeight() {
+  var h = document.documentElement.scrollHeight;
+  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+}
+window.addEventListener("load", notifyHeight);
+new ResizeObserver(notifyHeight).observe(document.body);
+</script>
+</body>
+</html>
