@@ -20,6 +20,7 @@ from pydantic import BaseModel, ValidationError
 
 from kokage_ui.components import Alert
 from kokage_ui.elements import A, Button, Component, Div, H1
+from kokage_ui.features.i18n import t
 from kokage_ui.htmx import ConfirmDelete, SearchFilter
 from kokage_ui.models import ModelDetail, ModelForm, ModelTable, _extract_datetime_field, _extract_media_field, _resolve_annotation
 
@@ -473,11 +474,11 @@ class CRUDRouter(Generic[T]):
         """Render Edit + Delete action buttons for a table row."""
         row_id = getattr(row, self.id_field)
         return Div(
-            A("Edit", href=f"{self.prefix}/{row_id}/edit", cls="btn btn-warning btn-xs"),
+            A(t("crud.edit"), href=f"{self.prefix}/{row_id}/edit", cls="btn btn-warning btn-xs"),
             ConfirmDelete(
-                "Delete",
+                t("crud.delete"),
                 url=f"{self.prefix}/{row_id}",
-                confirm_message=f"Delete this {self.model.__name__}?",
+                confirm_message=t("crud.confirm_delete", name=self.model.__name__),
                 target="body",
                 cls="btn btn-error btn-outline btn-xs ml-2",
             ),
@@ -526,7 +527,7 @@ class CRUDRouter(Generic[T]):
             exclude=table_exclude,
             zebra=True,
             cell_renderers=cell_renderers,
-            extra_columns={"Actions": self._render_actions},
+            extra_columns={t("common.actions"): self._render_actions},
         )
 
         pagination = Pagination(
@@ -555,14 +556,14 @@ class CRUDRouter(Generic[T]):
             search_input = SearchFilter(
                 url=f"{prefix}/_list",
                 target="#table-container",
-                placeholder=f"Search {router.title.lower()}...",
+                placeholder=t("crud.search_placeholder", title=router.title.lower()),
                 cls="input input-bordered w-full mb-4",
             )
 
             content = Div(
                 H1(router.title, cls="text-3xl font-bold mb-6"),
                 Div(
-                    A("New", href=f"{prefix}/new", cls="btn btn-primary btn-sm"),
+                    A(t("crud.new"), href=f"{prefix}/new", cls="btn btn-primary btn-sm"),
                     cls="mb-4",
                 ),
                 search_input,
@@ -603,20 +604,21 @@ class CRUDRouter(Generic[T]):
             form = router._build_form(
                 action=f"{prefix}/new",
                 method="post",
-                submit_text="Create",
+                submit_text=t("crud.create"),
                 submit_color="primary",
                 exclude=router._get_form_exclude(),
                 hx_post=f"{prefix}/new",
                 hx_target="#form-container",
             )
 
+            new_title = t("crud.new_title", name=router.model.__name__)
             content = Div(
-                H1(f"New {router.model.__name__}", cls="text-3xl font-bold mb-6"),
+                H1(new_title, cls="text-3xl font-bold mb-6"),
                 Div(form, id="form-container", cls="max-w-lg"),
                 cls="container mx-auto p-4",
             )
 
-            page_obj = router._wrap_page(content, f"New {router.model.__name__}")
+            page_obj = router._wrap_page(content, new_title)
             return HTMLResponse(content=_to_html_string_lazy(page_obj))
 
         # --- POST {prefix}/new — Create handler ---
@@ -632,7 +634,7 @@ class CRUDRouter(Generic[T]):
                 created = await router.storage.create(instance)
                 created_id = getattr(created, router.id_field)
                 redirect_url = router._toast_url(
-                    f"{prefix}/{created_id}", "Created successfully"
+                    f"{prefix}/{created_id}", t("crud.created")
                 )
 
                 # htmx request → HX-Redirect header
@@ -651,7 +653,7 @@ class CRUDRouter(Generic[T]):
                 form = router._build_form(
                     action=f"{prefix}/new",
                     method="post",
-                    submit_text="Create",
+                    submit_text=t("crud.create"),
                     submit_color="primary",
                     exclude=router._get_form_exclude(),
                     values=raw_data,
@@ -666,12 +668,13 @@ class CRUDRouter(Generic[T]):
                     return HTMLResponse(content=html, status_code=422)
 
                 # Normal request → full page with error form
+                new_title = t("crud.new_title", name=router.model.__name__)
                 content = Div(
-                    H1(f"New {router.model.__name__}", cls="text-3xl font-bold mb-6"),
+                    H1(new_title, cls="text-3xl font-bold mb-6"),
                     Div(form, id="form-container", cls="max-w-lg"),
                     cls="container mx-auto p-4",
                 )
-                page_obj = router._wrap_page(content, f"New {router.model.__name__}")
+                page_obj = router._wrap_page(content, new_title)
                 return HTMLResponse(
                     content=_to_html_string_lazy(page_obj), status_code=422
                 )
@@ -713,10 +716,10 @@ class CRUDRouter(Generic[T]):
             item = await router.storage.get(id)
             if item is None:
                 content = Div(
-                    Alert("Not found.", variant="error"),
+                    Alert(t("crud.not_found"), variant="error"),
                     cls="container mx-auto p-4",
                 )
-                page_obj = router._wrap_page(content, "Not Found")
+                page_obj = router._wrap_page(content, t("crud.not_found_title"))
                 return HTMLResponse(
                     content=_to_html_string_lazy(page_obj), status_code=404
                 )
@@ -724,28 +727,27 @@ class CRUDRouter(Generic[T]):
             detail = ModelDetail(item, title=str(getattr(item, router.id_field)))
 
             actions = Div(
-                A("Edit", href=f"{prefix}/{id}/edit", cls="btn btn-warning btn-sm"),
+                A(t("crud.edit"), href=f"{prefix}/{id}/edit", cls="btn btn-warning btn-sm"),
                 ConfirmDelete(
-                    "Delete",
+                    t("crud.delete"),
                     url=f"{prefix}/{id}",
-                    confirm_message=f"Delete this {router.model.__name__}?",
+                    confirm_message=t("crud.confirm_delete", name=router.model.__name__),
                     target="body",
                     cls="btn btn-error btn-outline btn-sm ml-2",
                 ),
-                A("Back to list", href=prefix, cls="btn btn-ghost btn-sm ml-2"),
+                A(t("crud.back_to_list"), href=prefix, cls="btn btn-ghost btn-sm ml-2"),
                 cls="mt-4",
             )
 
+            detail_title = t("crud.detail_title", name=router.model.__name__)
             content = Div(
-                H1(f"{router.model.__name__} Detail", cls="text-3xl font-bold mb-6"),
+                H1(detail_title, cls="text-3xl font-bold mb-6"),
                 detail,
                 actions,
                 cls="container mx-auto p-4",
             )
 
-            page_obj = router._wrap_page(
-                content, f"{router.model.__name__} Detail"
-            )
+            page_obj = router._wrap_page(content, detail_title)
             return HTMLResponse(content=_to_html_string_lazy(page_obj))
 
         app.add_api_route(
@@ -760,10 +762,10 @@ class CRUDRouter(Generic[T]):
             item = await router.storage.get(id)
             if item is None:
                 content = Div(
-                    Alert("Not found.", variant="error"),
+                    Alert(t("crud.not_found"), variant="error"),
                     cls="container mx-auto p-4",
                 )
-                page_obj = router._wrap_page(content, "Not Found")
+                page_obj = router._wrap_page(content, t("crud.not_found_title"))
                 return HTMLResponse(
                     content=_to_html_string_lazy(page_obj), status_code=404
                 )
@@ -771,7 +773,7 @@ class CRUDRouter(Generic[T]):
             form = router._build_form(
                 action=f"{prefix}/{id}/edit",
                 method="post",
-                submit_text="Update",
+                submit_text=t("crud.update"),
                 submit_color="warning",
                 exclude=router._get_form_exclude(),
                 instance=item,
@@ -779,22 +781,21 @@ class CRUDRouter(Generic[T]):
                 hx_target="#form-container",
             )
 
+            edit_title = t("crud.edit_title", name=router.model.__name__)
             content = Div(
-                H1(f"Edit {router.model.__name__}", cls="text-3xl font-bold mb-6"),
+                H1(edit_title, cls="text-3xl font-bold mb-6"),
                 Div(form, id="form-container", cls="max-w-lg"),
                 cls="container mx-auto p-4",
             )
 
-            page_obj = router._wrap_page(
-                content, f"Edit {router.model.__name__}"
-            )
+            page_obj = router._wrap_page(content, edit_title)
             return HTMLResponse(content=_to_html_string_lazy(page_obj))
 
         # --- POST {prefix}/{id}/edit — Update handler ---
         async def edit_handler(request: Request, id: str) -> Response:
             item = await router.storage.get(id)
             if item is None:
-                return HTMLResponse(content="Not found", status_code=404)
+                return HTMLResponse(content=t("crud.not_found"), status_code=404)
 
             form_data = await request.form()
             raw_data = dict(form_data)
@@ -809,7 +810,7 @@ class CRUDRouter(Generic[T]):
                 instance = router.model.model_validate(raw_data)
                 await router.storage.update(id, instance)
                 redirect_url = router._toast_url(
-                    f"{prefix}/{id}", "Updated successfully"
+                    f"{prefix}/{id}", t("crud.updated")
                 )
 
                 if request.headers.get("hx-request"):
@@ -826,7 +827,7 @@ class CRUDRouter(Generic[T]):
                 form = router._build_form(
                     action=f"{prefix}/{id}/edit",
                     method="post",
-                    submit_text="Update",
+                    submit_text=t("crud.update"),
                     submit_color="warning",
                     exclude=router._get_form_exclude(),
                     values=raw_data,
@@ -839,14 +840,13 @@ class CRUDRouter(Generic[T]):
                 if request.headers.get("hx-request"):
                     return HTMLResponse(content=html, status_code=422)
 
+                edit_title = t("crud.edit_title", name=router.model.__name__)
                 content = Div(
-                    H1(f"Edit {router.model.__name__}", cls="text-3xl font-bold mb-6"),
+                    H1(edit_title, cls="text-3xl font-bold mb-6"),
                     Div(form, id="form-container", cls="max-w-lg"),
                     cls="container mx-auto p-4",
                 )
-                page_obj = router._wrap_page(
-                    content, f"Edit {router.model.__name__}"
-                )
+                page_obj = router._wrap_page(content, edit_title)
                 return HTMLResponse(
                     content=_to_html_string_lazy(page_obj), status_code=422
                 )
@@ -867,9 +867,9 @@ class CRUDRouter(Generic[T]):
         async def delete_handler(request: Request, id: str) -> Response:
             deleted = await router.storage.delete(id)
             if not deleted:
-                return HTMLResponse(content="Not found", status_code=404)
+                return HTMLResponse(content=t("crud.not_found"), status_code=404)
 
-            redirect_url = router._toast_url(prefix, "Deleted successfully")
+            redirect_url = router._toast_url(prefix, t("crud.deleted"))
             if request.headers.get("hx-request"):
                 return Response(
                     status_code=200,

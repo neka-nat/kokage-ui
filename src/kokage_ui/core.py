@@ -53,12 +53,24 @@ class KokageUI:
             return Page(H1("Hello"), title="Home")
     """
 
-    def __init__(self, app: FastAPI, prefix: str = "/_kokage", debug: bool = False) -> None:
+    def __init__(
+        self,
+        app: FastAPI,
+        prefix: str = "/_kokage",
+        debug: bool = False,
+        locale: str | None = None,
+        translations: dict[str, dict[str, str]] | None = None,
+    ) -> None:
         self.app = app
         self.prefix = prefix
         self.debug = debug
         self._routes: list[dict] = []
         self._setup_static_files()
+        if locale is not None:
+            from kokage_ui.features.i18n import LocaleMiddleware, configure
+
+            configure(default_locale=locale, translations=translations)
+            self.app.add_middleware(LocaleMiddleware)
         if self.debug:
             from kokage_ui.dev.toolbar import DevToolbarMiddleware
 

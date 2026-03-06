@@ -181,6 +181,17 @@ from kokage_ui.fields.tag import TagField, TagInput
 # DateTime
 from kokage_ui.fields.datetime import DateField, DateTimeField, DateTimePicker, TimeField
 
+# i18n
+from kokage_ui.features.i18n import (
+    LanguageSwitcher,
+    LocaleMiddleware,
+    add_locale,
+    configure as configure_i18n,
+    get_locale,
+    set_locale,
+    t,
+)
+
 # Admin dashboard
 from kokage_ui.features.admin import AdminSite, ModelAdmin
 
@@ -343,6 +354,14 @@ __all__ = [
     # Notifications
     "Notifier",
     "NotificationStream",
+    # i18n
+    "t",
+    "configure_i18n",
+    "add_locale",
+    "get_locale",
+    "set_locale",
+    "LocaleMiddleware",
+    "LanguageSwitcher",
     # Sortable
     "SortableList",
     # Media
