@@ -380,6 +380,38 @@ Steps(
 | `color` | str | Color for completed steps (default: `"primary"`) |
 | `vertical` | bool | Vertical layout |
 
+## Timeline
+
+Display time-series data such as activity logs, project history, and changelogs.
+
+```python
+from kokage_ui import Timeline, TimelineItem
+
+Timeline(items=[
+    TimelineItem("プロジェクト開始", label="2024-01-01", color="primary"),
+    TimelineItem("v1.0 リリース", label="2024-03-15", color="success"),
+    TimelineItem("v2.0 開発中", label="2024-06-01"),
+])
+```
+
+### TimelineItem
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `content` | Any | (required) | Main content (displayed in timeline-end) |
+| `label` | str \| None | None | Label text (displayed in timeline-start, e.g. date) |
+| `color` | str \| None | None | DaisyUI color applied to hr and icon |
+| `icon` | Any \| None | None | Custom icon (default: checkmark SVG) |
+
+### Timeline
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `items` | list[TimelineItem] | (required) | List of timeline items |
+| `vertical` | bool | True | Vertical layout (False for horizontal) |
+| `compact` | bool | False | Compact mode (content on one side only) |
+| `use_box` | bool | True | Apply timeline-box style to content |
+
 ## Breadcrumb
 
 Navigation breadcrumb trail.

@@ -18,6 +18,7 @@ from kokage_ui.elements import (
     Form,
     H2,
     H3,
+    Hr,
     Img,
     Input,
     Label,
@@ -965,6 +966,119 @@ class Steps(Component):
             if step.data_content is not None:
                 li_attrs["data_content"] = step.data_content
             built.append(Li(step.label, **li_attrs))
+
+        super().__init__(*built, **attrs)
+
+
+# ========================================
+# Timeline
+# ========================================
+
+_TIMELINE_COLORS = {
+    "primary": "bg-primary",
+    "secondary": "bg-secondary",
+    "accent": "bg-accent",
+    "info": "bg-info",
+    "success": "bg-success",
+    "warning": "bg-warning",
+    "error": "bg-error",
+    "neutral": "bg-neutral",
+}
+
+_TIMELINE_CHECK_SVG = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"'
+    ' fill="currentColor" class="h-5 w-5">'
+    '<path fill-rule="evenodd"'
+    ' d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0'
+    " 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06"
+    ' 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"'
+    ' clip-rule="evenodd" /></svg>'
+)
+
+
+@dataclass
+class TimelineItem:
+    """Single item definition for Timeline component."""
+
+    content: Any
+    label: str | None = None
+    color: str | None = None
+    icon: Any | None = None
+
+
+class Timeline(Component):
+    """DaisyUI Timeline component.
+
+    Args:
+        items: List of TimelineItem instances.
+        vertical: Vertical layout (default True).
+        compact: Compact mode (timeline-compact, content on one side only).
+        use_box: Apply timeline-box class to content (default True).
+    """
+
+    tag = "ul"
+
+    def __init__(
+        self,
+        *,
+        items: list[TimelineItem],
+        vertical: bool = True,
+        compact: bool = False,
+        use_box: bool = True,
+        **attrs: Any,
+    ) -> None:
+        cls_parts = ["timeline"]
+        if vertical:
+            cls_parts.append("timeline-vertical")
+        else:
+            cls_parts.append("timeline-horizontal")
+        if compact:
+            cls_parts.append("timeline-compact")
+        attrs["cls"] = _merge_cls(" ".join(cls_parts), attrs.get("cls"))
+
+        built: list[Any] = []
+        for i, item in enumerate(items):
+            li_children: list[Any] = []
+
+            # Leading hr (skip for first item)
+            if i > 0:
+                hr_attrs: dict[str, Any] = {}
+                color_cls = _TIMELINE_COLORS.get(item.color or "")
+                if color_cls:
+                    hr_attrs["cls"] = color_cls
+                li_children.append(Hr(**hr_attrs))
+
+            # timeline-start (label)
+            if item.label is not None:
+                li_children.append(Div(item.label, cls="timeline-start"))
+
+            # timeline-middle (icon)
+            if item.icon is not None:
+                li_children.append(Div(item.icon, cls="timeline-middle"))
+            else:
+                icon_cls = "timeline-middle"
+                if item.color and item.color in _TIMELINE_COLORS:
+                    icon_svg = _TIMELINE_CHECK_SVG.replace(
+                        'class="h-5 w-5"',
+                        f'class="h-5 w-5 text-{item.color}"',
+                    )
+                else:
+                    icon_svg = _TIMELINE_CHECK_SVG
+                li_children.append(Div(Raw(icon_svg), cls=icon_cls))
+
+            # timeline-end (content)
+            end_cls = "timeline-end timeline-box" if use_box else "timeline-end"
+            li_children.append(Div(item.content, cls=end_cls))
+
+            # Trailing hr (skip for last item)
+            if i < len(items) - 1:
+                hr_attrs = {}
+                color_cls = _TIMELINE_COLORS.get(item.color or "")
+                if color_cls:
+                    hr_attrs["cls"] = color_cls
+                li_children.append(Hr(**hr_attrs))
+
+            built.append(Li(*li_children))
 
         super().__init__(*built, **attrs)
 

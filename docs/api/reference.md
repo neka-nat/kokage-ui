@@ -96,6 +96,8 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `Tabs` | Tabbed navigation (link or content mode) |
 | `Step` | Single step definition (dataclass) |
 | `Steps` | Progress step indicator |
+| `TimelineItem` | Single timeline item definition (dataclass) |
+| `Timeline` | Timeline component (vertical/horizontal) |
 | `Breadcrumb` | Navigation breadcrumb trail |
 | `Collapse` | Expandable content section |
 | `Accordion` | Radio-linked collapse group |
