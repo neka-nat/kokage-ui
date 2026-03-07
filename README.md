@@ -41,6 +41,30 @@ Please open [http://localhost:8000](http://localhost:8000) in your browser.
 ![](assets/hello_world.png)
 
 
+## CRUD in 10 Lines
+
+Define a Pydantic model and get full CRUD UI automatically:
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel, Field
+from kokage_ui import KokageUI, InMemoryStorage
+
+app = FastAPI()
+ui = KokageUI(app)
+
+class Todo(BaseModel):
+    id: str = ""
+    title: str = Field(min_length=1)
+    done: bool = False
+
+ui.crud("/todos", model=Todo, storage=InMemoryStorage(Todo))
+```
+
+This single `ui.crud()` call generates list, create, detail, edit, and delete pages with search and pagination — all styled with DaisyUI.
+
+
+
 ## Features
 
 - **50+ HTML Elements** — `Div`, `H1`, `Form`, `Input`, etc. as Python classes
