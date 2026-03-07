@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://neka-nat.github.io/kokage-ui/catalog/htmx/">
+        <link rel="canonical" href="https://neka-nat.github.io/kokage-ui/guide/chat/">
       
       
-        <link rel="prev" href="../fields/">
+        <link rel="prev" href="../htmx/">
       
       
-        <link rel="next" href="../models/">
+        <link rel="next" href="../../examples/hello/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>htmx Patterns - kokage-ui</title>
+        <title>Streaming Chat - kokage-ui</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#htmx-patterns" class="md-skip">
+        <a href="#streaming-chat-ui" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              htmx Patterns
+              Streaming Chat
             
           </span>
         </div>
@@ -261,11 +261,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../guide/elements/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../elements/" class="md-tabs__link">
           
   
   
@@ -301,13 +303,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../catalog/" class="md-tabs__link">
           
   
   
@@ -441,28 +441,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -480,7 +483,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -498,7 +501,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/elements/" class="md-nav__link">
+      <a href="../elements/" class="md-nav__link">
         
   
   
@@ -526,7 +529,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/components/" class="md-nav__link">
+      <a href="../components/" class="md-nav__link">
         
   
   
@@ -554,7 +557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/pages/" class="md-nav__link">
+      <a href="../pages/" class="md-nav__link">
         
   
   
@@ -582,7 +585,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/models/" class="md-nav__link">
+      <a href="../models/" class="md-nav__link">
         
   
   
@@ -610,7 +613,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/crud/" class="md-nav__link">
+      <a href="../crud/" class="md-nav__link">
         
   
   
@@ -638,7 +641,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/storage/" class="md-nav__link">
+      <a href="../storage/" class="md-nav__link">
         
   
   
@@ -666,7 +669,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/datagrid/" class="md-nav__link">
+      <a href="../datagrid/" class="md-nav__link">
         
   
   
@@ -694,7 +697,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/admin/" class="md-nav__link">
+      <a href="../admin/" class="md-nav__link">
         
   
   
@@ -722,7 +725,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/auth/" class="md-nav__link">
+      <a href="../auth/" class="md-nav__link">
         
   
   
@@ -750,7 +753,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/theme/" class="md-nav__link">
+      <a href="../theme/" class="md-nav__link">
         
   
   
@@ -778,7 +781,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/notifications/" class="md-nav__link">
+      <a href="../notifications/" class="md-nav__link">
         
   
   
@@ -806,7 +809,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guide/htmx/" class="md-nav__link">
+      <a href="../htmx/" class="md-nav__link">
         
   
   
@@ -831,10 +834,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../guide/chat/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming Chat
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -850,6 +880,159 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chatview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ChatView
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ChatView">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat-bubble-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chat Bubble Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chatmessage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ChatMessage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chat_stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        chat_stream
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#markdown-code-highlighting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Markdown &amp; Code Highlighting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-side-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-Side Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Server-Side Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1123,31 +1306,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -1165,7 +1345,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1183,7 +1363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../catalog/" class="md-nav__link">
         
   
   
@@ -1211,7 +1391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../elements/" class="md-nav__link">
+      <a href="../../catalog/elements/" class="md-nav__link">
         
   
   
@@ -1239,7 +1419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../components/" class="md-nav__link">
+      <a href="../../catalog/components/" class="md-nav__link">
         
   
   
@@ -1267,7 +1447,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fields/" class="md-nav__link">
+      <a href="../../catalog/fields/" class="md-nav__link">
         
   
   
@@ -1292,37 +1472,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    htmx Patterns
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../catalog/htmx/" class="md-nav__link">
         
   
   
@@ -1338,226 +1491,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#searchfilter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SearchFilter
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="SearchFilter">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#preview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Preview
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#autorefresh" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AutoRefresh
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="AutoRefresh">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#preview_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Preview
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parameters_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#confirmdelete" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ConfirmDelete
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ConfirmDelete">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#preview_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Preview
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parameters_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#infinitescroll" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        InfiniteScroll
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="InfiniteScroll">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#preview_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Preview
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parameters_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1570,7 +1503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/" class="md-nav__link">
+      <a href="../../catalog/models/" class="md-nav__link">
         
   
   
@@ -1598,7 +1531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../features/" class="md-nav__link">
+      <a href="../../catalog/features/" class="md-nav__link">
         
   
   
@@ -1680,38 +1613,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#searchfilter" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SearchFilter
+        Quick Start
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="SearchFilter">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chatview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ChatView
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ChatView">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#preview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Preview
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#parameters" class="md-nav__link">
@@ -1724,50 +1646,11 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#autorefresh" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AutoRefresh
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="AutoRefresh">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
-  <a href="#preview_1" class="md-nav__link">
+  <a href="#chat-bubble-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preview
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parameters_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        Chat Bubble Layout
       
     </span>
   </a>
@@ -1780,22 +1663,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confirmdelete" class="md-nav__link">
+  <a href="#chatmessage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ConfirmDelete
+        ChatMessage
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ConfirmDelete">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chat_stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        chat_stream
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#markdown-code-highlighting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Markdown &amp; Code Highlighting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-side-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-Side Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Server-Side Endpoint">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#preview_2" class="md-nav__link">
+  <a href="#request-format" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preview
+        Request Format
       
     </span>
   </a>
@@ -1803,21 +1719,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#code_2" class="md-nav__link">
+  <a href="#response-format" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Code
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parameters_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        Response Format
       
     </span>
   </a>
@@ -1830,52 +1735,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#infinitescroll" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        InfiniteScroll
+        How It Works
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="InfiniteScroll">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#preview_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Preview
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parameters_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1899,20 +1765,46 @@
   
 
 
-<h1 id="htmx-patterns">htmx Patterns</h1>
-<p>Ready-made htmx interaction patterns. These generate the correct <code>hx-*</code> attributes for common dynamic UI patterns. Note: previews show the static HTML output only.</p>
-<h2 id="searchfilter">SearchFilter</h2>
-<p>Live search input with debounced htmx requests.</p>
-<h3 id="preview">Preview</h3>
-<iframe src="../previews/searchfilter.html" style="width:100%;border:1px solid #e0e0e0;border-radius:8px;" loading="lazy"></iframe>
-
-<h3 id="code">Code</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">SearchFilter</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/search&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;#results&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Search users...&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">delay</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
+<h1 id="streaming-chat-ui">Streaming Chat UI</h1>
+<p>kokage-ui provides a <code>ChatView</code> component for building LLM chat interfaces with SSE streaming, DaisyUI chat bubbles, Markdown rendering, and code highlighting.</p>
+<h2 id="quick-start">Quick Start</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">Request</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokageUI</span><span class="p">,</span> <span class="n">Page</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatView</span><span class="p">,</span> <span class="n">ChatMessage</span><span class="p">,</span> <span class="n">chat_stream</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">ui</span> <span class="o">=</span> <span class="n">KokageUI</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nd">@ui</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;/chat&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">chat_page</span><span class="p">():</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">return</span> <span class="n">Page</span><span class="p">(</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="n">ChatView</span><span class="p">(</span><span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">),</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;AI Chat&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="n">include_marked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="n">include_highlightjs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">():</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="k">async</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">your_llm</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]):</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>            <span class="k">yield</span> <span class="n">token</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="k">return</span> <span class="n">chat_stream</span><span class="p">(</span><span class="n">generate</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="chatview">ChatView</h2>
+<p>The main chat UI component. Renders a message area with DaisyUI chat bubbles, an input form, and inline JavaScript for fetch-based SSE streaming.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">ChatView</span><span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello! How can I help?&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="p">],</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">assistant_name</span><span class="o">=</span><span class="s2">&quot;AI&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">user_name</span><span class="o">=</span><span class="s2">&quot;You&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">height</span><span class="o">=</span><span class="s2">&quot;500px&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">)</span>
 </code></pre></div>
 <h3 id="parameters">Parameters</h3>
 <table>
@@ -1925,164 +1817,146 @@
 </thead>
 <tbody>
 <tr>
-<td><code>url</code></td>
-<td><code>str</code></td>
-<td>Search endpoint</td>
+<td><code>send_url</code></td>
+<td>str</td>
+<td>POST endpoint URL for sending messages (required)</td>
 </tr>
 <tr>
-<td><code>target</code></td>
-<td><code>str</code></td>
-<td>Result target selector</td>
+<td><code>messages</code></td>
+<td>list[ChatMessage] | None</td>
+<td>Initial messages to display</td>
 </tr>
 <tr>
 <td><code>placeholder</code></td>
-<td><code>str</code></td>
-<td>Input placeholder</td>
+<td>str</td>
+<td>Input placeholder text (default: <code>"メッセージを入力..."</code>)</td>
 </tr>
 <tr>
-<td><code>delay</code></td>
-<td><code>int</code></td>
-<td>Debounce in ms (default: 300)</td>
+<td><code>send_label</code></td>
+<td>str</td>
+<td>Submit button label (default: <code>"送信"</code>)</td>
+</tr>
+<tr>
+<td><code>assistant_name</code></td>
+<td>str</td>
+<td>Display name for assistant bubbles (default: <code>"Assistant"</code>)</td>
+</tr>
+<tr>
+<td><code>user_name</code></td>
+<td>str</td>
+<td>Display name for user bubbles (default: <code>"You"</code>)</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>str</td>
+<td>CSS height for the chat container (default: <code>"600px"</code>)</td>
+</tr>
+<tr>
+<td><code>chat_id</code></td>
+<td>str | None</td>
+<td>Unique ID prefix; auto-generated if omitted</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="autorefresh">AutoRefresh</h2>
-<p>Periodically polls an endpoint to update content.</p>
-<h3 id="preview_1">Preview</h3>
-<iframe src="../previews/autorefresh.html" style="width:100%;border:1px solid #e0e0e0;border-radius:8px;" loading="lazy"></iframe>
-
-<h3 id="code_1">Code</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">AutoRefresh</span><span class="p">(</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">P</span><span class="p">(</span><span class="s2">&quot;Live data will appear here.&quot;</span><span class="p">),</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/status&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">interval</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
+<h3 id="chat-bubble-layout">Chat Bubble Layout</h3>
+<ul>
+<li><strong>User messages</strong> — aligned right with <code>chat-bubble-primary</code> styling</li>
+<li><strong>Assistant messages</strong> — aligned left with <code>prose</code> class for Markdown content</li>
+</ul>
+<h2 id="chatmessage">ChatMessage</h2>
+<p>A dataclass representing a single chat message.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatMessage</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello!&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hi there!&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Bot&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="parameters_1">Parameters</h3>
 <table>
 <thead>
 <tr>
-<th>Parameter</th>
+<th>Field</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>url</code></td>
-<td><code>str</code></td>
-<td>Poll endpoint</td>
+<td><code>role</code></td>
+<td>str</td>
+<td><code>"user"</code>, <code>"assistant"</code>, or <code>"system"</code></td>
 </tr>
 <tr>
-<td><code>interval</code></td>
-<td><code>int</code></td>
-<td>Seconds between polls (default: 5)</td>
+<td><code>content</code></td>
+<td>str</td>
+<td>Message text content</td>
 </tr>
 <tr>
-<td><code>target</code></td>
-<td><code>str | None</code></td>
-<td>Target selector</td>
-</tr>
-<tr>
-<td><code>swap</code></td>
-<td><code>str</code></td>
-<td>Swap method (default: "innerHTML")</td>
+<td><code>name</code></td>
+<td>str | None</td>
+<td>Optional display name override</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="confirmdelete">ConfirmDelete</h2>
-<p>Delete button with browser confirmation dialog.</p>
-<h3 id="preview_2">Preview</h3>
-<iframe src="../previews/confirmdelete.html" style="width:100%;border:1px solid #e0e0e0;border-radius:8px;" loading="lazy"></iframe>
-
-<h3 id="code_2">Code</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">ConfirmDelete</span><span class="p">(</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;Delete Item&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/items/1&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">confirm_message</span><span class="o">=</span><span class="s2">&quot;Are you sure you want to delete this?&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;#item-1&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
+<h2 id="chat_stream">chat_stream</h2>
+<p>Helper function that converts an async token generator to an SSE <code>StreamingResponse</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">chat_stream</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">():</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="k">yield</span> <span class="s2">&quot;Hello&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="k">yield</span> <span class="s2">&quot; world&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">return</span> <span class="n">chat_stream</span><span class="p">(</span><span class="n">generate</span><span class="p">())</span>
 </code></pre></div>
-<h3 id="parameters_2">Parameters</h3>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>url</code></td>
-<td><code>str</code></td>
-<td>DELETE endpoint</td>
-</tr>
-<tr>
-<td><code>confirm_message</code></td>
-<td><code>str</code></td>
-<td>Confirmation dialog text</td>
-</tr>
-<tr>
-<td><code>target</code></td>
-<td><code>str | None</code></td>
-<td>Target selector</td>
-</tr>
-<tr>
-<td><code>swap</code></td>
-<td><code>str</code></td>
-<td>Swap method (default: "outerHTML")</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="infinitescroll">InfiniteScroll</h2>
-<p>Load more content when scrolling to the bottom.</p>
-<h3 id="preview_3">Preview</h3>
-<iframe src="../previews/infinitescroll.html" style="width:100%;border:1px solid #e0e0e0;border-radius:8px;" loading="lazy"></iframe>
-
-<h3 id="code_3">Code</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">InfiniteScroll</span><span class="p">(</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/items?page=2&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;#item-list&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">swap</span><span class="o">=</span><span class="s2">&quot;beforeend&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">)</span>
+<p>Each token is sent as a Server-Sent Event:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>data: {&quot;token&quot;: &quot;Hello&quot;}
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>data: {&quot;token&quot;: &quot; world&quot;}
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>data: {&quot;done&quot;: true}
 </code></pre></div>
-<h3 id="parameters_3">Parameters</h3>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>url</code></td>
-<td><code>str</code></td>
-<td>Next page endpoint</td>
-</tr>
-<tr>
-<td><code>target</code></td>
-<td><code>str | None</code></td>
-<td>Insert target</td>
-</tr>
-<tr>
-<td><code>swap</code></td>
-<td><code>str</code></td>
-<td>Swap method (default: "beforeend")</td>
-</tr>
-<tr>
-<td><code>indicator</code></td>
-<td><code>Any</code></td>
-<td>Loading indicator</td>
-</tr>
-</tbody>
-</table>
-<hr />
+<p>The response has <code>Content-Type: text/event-stream</code> with <code>Cache-Control: no-cache</code>.</p>
+<h2 id="markdown-code-highlighting">Markdown &amp; Code Highlighting</h2>
+<p><code>ChatView</code> automatically uses <code>marked.js</code> for Markdown rendering and <code>highlight.js</code> for code blocks when they are loaded on the page.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">Page</span><span class="p">(</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">ChatView</span><span class="p">(</span><span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">),</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">include_marked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>        <span class="c1"># Enable Markdown rendering</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">include_highlightjs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>   <span class="c1"># Enable code syntax highlighting</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">)</span>
+</code></pre></div>
+<p>If <code>marked.js</code> is not loaded, assistant messages are displayed as plain text with HTML escaping.</p>
+<h2 id="server-side-endpoint">Server-Side Endpoint</h2>
+<p>The POST endpoint receives JSON with a <code>message</code> field and should return a <code>chat_stream()</code> response:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">user_message</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">():</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="c1"># Use any LLM provider</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="k">async</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">call_llm</span><span class="p">(</span><span class="n">user_message</span><span class="p">):</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>            <span class="k">yield</span> <span class="n">token</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="k">return</span> <span class="n">chat_stream</span><span class="p">(</span><span class="n">generate</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="request-format">Request Format</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&#39;s input text&quot;</span><span class="p">}</span>
+</code></pre></div>
+<h3 id="response-format">Response Format</h3>
+<p>SSE stream where each event is a JSON object:</p>
+<ul>
+<li><code>{"token": "..."}</code> — a text token to append</li>
+<li><code>{"done": true}</code> — stream complete</li>
+</ul>
+<h2 id="how-it-works">How It Works</h2>
+<ol>
+<li>User submits message via the input form</li>
+<li>JavaScript adds a user chat bubble and an empty assistant bubble</li>
+<li><code>fetch()</code> sends a POST request to <code>send_url</code> with <code>{message: "..."}</code></li>
+<li>The response body is read as a stream using <code>ReadableStream</code></li>
+<li>Each SSE <code>data:</code> line is parsed; tokens are accumulated and rendered as Markdown</li>
+<li>On <code>done</code>, code blocks are highlighted with <code>hljs</code> if available</li>
+<li>The message area auto-scrolls to the latest message</li>
+<li>During streaming, the send button shows a loading state</li>
+</ol>
 
 
 
@@ -2137,7 +2011,7 @@
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../iframe-resize.js"></script>
+        <script src="../../catalog/iframe-resize.js"></script>
       
     
   </body>

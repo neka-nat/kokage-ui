@@ -825,6 +825,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1041,6 +1069,34 @@
     
   
     Real-time
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/chat_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat Demo
   
 
     
@@ -1527,6 +1583,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ai-chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Chat
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1698,6 +1765,17 @@
     <span class="md-ellipsis">
       
         Data Display
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Chat
       
     </span>
   </a>
@@ -2415,6 +2493,29 @@
 <tr>
 <td><code>Markdown</code></td>
 <td>Server-side Markdown rendering (requires <code>kokage-ui[markdown]</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ai-chat">AI Chat</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ChatView</code></td>
+<td>Streaming chat UI with DaisyUI chat bubbles</td>
+</tr>
+<tr>
+<td><code>ChatMessage</code></td>
+<td>Chat message dataclass (role, content, name)</td>
+</tr>
+<tr>
+<td><code>chat_stream</code></td>
+<td>Convert async token generator to SSE StreamingResponse</td>
 </tr>
 </tbody>
 </table>
