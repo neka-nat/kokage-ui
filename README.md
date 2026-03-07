@@ -99,6 +99,8 @@ async def chat(request: Request):
 
 `ChatView` renders DaisyUI chat bubbles with real-time SSE streaming, Markdown rendering, and code highlighting.
 
+https://github.com/user-attachments/assets/d14d487c-a694-4159-9486-24caccb77a9b
+
 ## Features
 
 - **50+ HTML Elements** — `Div`, `H1`, `Form`, `Input`, etc. as Python classes
