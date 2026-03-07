@@ -60,6 +60,7 @@ nav:
     - Theme: guide/theme.md
     - Notifications: guide/notifications.md
     - htmx Patterns: guide/htmx.md
+    - Streaming Chat: guide/chat.md
   - Examples:
     - Hello World: examples/hello.md
     - Todo App: examples/todo.md
@@ -67,6 +68,7 @@ nav:
     - Admin Demo: examples/admin_demo.md
     - Blog App: examples/blog.md
     - Real-time: examples/realtime.md
+    - Chat Demo: examples/chat_demo.md
   - Component Catalog:
     - Overview: catalog/index.md
     - HTML Elements: catalog/elements.md

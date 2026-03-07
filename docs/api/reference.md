@@ -190,3 +190,11 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `Chart` | Chart.js chart (line, bar, pie, doughnut, radar, scatter) |
 | `CodeBlock` | Syntax-highlighted code block (Highlight.js) |
 | `Markdown` | Server-side Markdown rendering (requires `kokage-ui[markdown]`) |
+
+## AI Chat
+
+| Export | Description |
+|--------|-------------|
+| `ChatView` | Streaming chat UI with DaisyUI chat bubbles |
+| `ChatMessage` | Chat message dataclass (role, content, name) |
+| `chat_stream` | Convert async token generator to SSE StreamingResponse |

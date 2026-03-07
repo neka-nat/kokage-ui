@@ -30,6 +30,12 @@ Page(
 | `lang` | str | HTML `lang` attribute (default: `"ja"`) |
 | `include_sse` | bool | Load htmx SSE extension |
 | `include_toast` | bool | Enable toast notification support |
+| `include_chartjs` | bool | Load Chart.js from CDN |
+| `include_highlightjs` | bool | Load Highlight.js from CDN |
+| `include_sortablejs` | bool | Load SortableJS from CDN |
+| `include_quill` | bool | Load Quill rich text editor from CDN |
+| `include_flatpickr` | bool | Load flatpickr date picker from CDN |
+| `include_marked` | bool | Load marked.js Markdown parser from CDN |
 
 ### Adding Custom Head Elements
 
