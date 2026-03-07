@@ -192,6 +192,9 @@ from kokage_ui.features.i18n import (
     t,
 )
 
+# AI chat
+from kokage_ui.ai import ChatMessage, ChatView, chat_stream
+
 # Admin dashboard
 from kokage_ui.features.admin import AdminSite, ModelAdmin
 
@@ -384,6 +387,10 @@ __all__ = [
     "TimeField",
     "DateTimeField",
     "DateTimePicker",
+    # AI
+    "ChatMessage",
+    "ChatView",
+    "chat_stream",
     # Testing
     "render",
     "rendered",

@@ -634,6 +634,7 @@ class Layout:
         include_sse: Load htmx SSE extension.
         include_quill: Load Quill rich text editor from CDN.
         include_flatpickr: Load flatpickr date picker from CDN.
+        include_marked: Load marked.js Markdown parser from CDN.
         lang: HTML lang attribute.
     """
 
@@ -649,6 +650,7 @@ class Layout:
         include_sse: bool = False,
         include_quill: bool = False,
         include_flatpickr: bool = False,
+        include_marked: bool = False,
         lang: str = "ja",
     ) -> None:
         self.navbar = navbar
@@ -660,6 +662,7 @@ class Layout:
         self.include_sse = include_sse
         self.include_quill = include_quill
         self.include_flatpickr = include_flatpickr
+        self.include_marked = include_marked
         self.lang = lang
 
     def wrap(self, content: Any, title: str = "") -> Page:
@@ -692,6 +695,7 @@ class Layout:
             include_sse=self.include_sse,
             include_quill=self.include_quill,
             include_flatpickr=self.include_flatpickr,
+            include_marked=self.include_marked,
             lang=self.lang,
         )
 

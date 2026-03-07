@@ -25,6 +25,7 @@ QUILL_CSS_CDN = "https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css"
 QUILL_JS_CDN = "https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"
 FLATPICKR_CSS_CDN = "https://cdn.jsdelivr.net/npm/flatpickr@4/dist/flatpickr.min.css"
 FLATPICKR_JS_CDN = "https://cdn.jsdelivr.net/npm/flatpickr@4/dist/flatpickr.min.js"
+MARKED_JS_CDN = "https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"
 
 
 _TOAST_SCRIPT = """\
@@ -71,6 +72,7 @@ class Page:
         include_sortablejs: Whether to load SortableJS from CDN.
         include_quill: Whether to load Quill rich text editor from CDN.
         include_flatpickr: Whether to load flatpickr date picker from CDN.
+        include_marked: Whether to load marked.js Markdown parser from CDN.
     """
 
     def __init__(
@@ -87,6 +89,7 @@ class Page:
         include_sortablejs: bool = False,
         include_quill: bool = False,
         include_flatpickr: bool = False,
+        include_marked: bool = False,
     ) -> None:
         self.children = children
         self.title = title
@@ -100,6 +103,7 @@ class Page:
         self.include_sortablejs = include_sortablejs
         self.include_quill = include_quill
         self.include_flatpickr = include_flatpickr
+        self.include_marked = include_marked
 
     def render(self) -> str:
         """Generate full HTML document string."""
@@ -137,6 +141,9 @@ class Page:
         if self.include_flatpickr:
             head_parts.append(f'<link rel="stylesheet" href="{FLATPICKR_CSS_CDN}" />')
             head_parts.append(f'<script src="{FLATPICKR_JS_CDN}"></script>')
+
+        if self.include_marked:
+            head_parts.append(f'<script src="{MARKED_JS_CDN}"></script>')
 
         for extra in self.head_extra:
             head_parts.append(_render_child(extra))
