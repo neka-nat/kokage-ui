@@ -63,7 +63,7 @@ ui.crud("/todos", model=Todo, storage=InMemoryStorage(Todo))
 
 This single `ui.crud()` call generates list, create, detail, edit, and delete pages with search and pagination — all styled with DaisyUI.
 
-
+https://github.com/user-attachments/assets/4c4ad3be-664d-432e-9c2e-23e80755b461
 
 ## Features
 
