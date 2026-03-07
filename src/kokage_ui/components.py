@@ -5,6 +5,7 @@ Abstracts DaisyUI class structure so you can build UI with Python args alone.
 
 from __future__ import annotations
 
+import uuid
 from typing import TYPE_CHECKING, Any
 
 from dataclasses import dataclass, field
@@ -22,6 +23,8 @@ from kokage_ui.elements import (
     Label,
     Li,
     Option,
+    Raw,
+    Script,
     Span,
     Tbody,
     Td,
@@ -1335,3 +1338,179 @@ class Dropdown(Component):
             dropdown_content = []
 
         super().__init__(trigger_el, *dropdown_content, **attrs)
+
+
+# ========================================
+# Autocomplete
+# ========================================
+
+
+class Autocomplete(Component):
+    """Server-side search autocomplete (combobox) component.
+
+    Renders a text input that sends htmx GET requests on keystroke,
+    displays results in a dropdown listbox, and stores the selected
+    value in a hidden input for form submission.
+
+    Args:
+        name: Hidden input name (form submission value).
+        search_url: htmx GET endpoint for search.
+        label: Label text.
+        placeholder: Placeholder text.
+        display_name: Display input name (default: ``{name}_display``).
+        value: Hidden input initial value.
+        display_value: Display input initial value.
+        delay: Debounce delay in ms.
+        min_chars: Minimum characters to trigger search.
+        bordered: Use DaisyUI bordered style.
+        autocomplete_id: ID prefix (auto-generated if omitted).
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *,
+        name: str,
+        search_url: str,
+        label: str | None = None,
+        placeholder: str = "",
+        display_name: str | None = None,
+        value: str = "",
+        display_value: str = "",
+        delay: int = 300,
+        min_chars: int = 1,
+        bordered: bool = True,
+        autocomplete_id: str | None = None,
+        **attrs: Any,
+    ) -> None:
+        ac_id = autocomplete_id or f"ac-{uuid.uuid4().hex[:8]}"
+        disp_name = display_name or f"{name}_display"
+        listbox_id = f"{ac_id}-listbox"
+
+        input_cls = "input w-full"
+        if bordered:
+            input_cls += " input-bordered"
+
+        # Build hx-trigger filter
+        if min_chars > 0:
+            hx_trigger = (
+                f"input changed delay:{delay}ms"
+                f"[this.value.length >= {min_chars}]"
+            )
+        else:
+            hx_trigger = f"input changed delay:{delay}ms"
+
+        display_input = Input(
+            type="text",
+            name=disp_name,
+            cls=input_cls,
+            role="combobox",
+            aria_autocomplete="list",
+            aria_expanded="false",
+            aria_controls=listbox_id,
+            hx_get=search_url,
+            hx_trigger=hx_trigger,
+            hx_target=f"#{listbox_id}",
+            hx_swap="innerHTML",
+            hx_name="q",
+            autocomplete="off",
+            placeholder=placeholder,
+            value=display_value if display_value else None,
+        )
+
+        hidden_input = Input(
+            type="hidden",
+            name=name,
+            value=value if value else None,
+        )
+
+        listbox = Ul(
+            id=listbox_id,
+            cls="dropdown-content menu bg-base-200 rounded-box z-10 "
+            "w-full max-h-80 overflow-y-auto flex-nowrap p-2 shadow-lg",
+            role="listbox",
+            style="display:none",
+        )
+
+        js = f"""\
+(function(){{
+  var root=document.getElementById("{ac_id}");
+  var input=root.querySelector('input[role="combobox"]');
+  var hidden=root.querySelector('input[type="hidden"]');
+  var listbox=document.getElementById("{listbox_id}");
+
+  function selectOption(li){{
+    hidden.value=li.getAttribute("data-value")||"";
+    input.value=li.textContent.trim();
+    listbox.innerHTML="";
+  }}
+
+  listbox.addEventListener("click",function(e){{
+    var li=e.target.closest("li[data-value]");
+    if(li)selectOption(li);
+  }});
+
+  input.addEventListener("keydown",function(e){{
+    var items=listbox.querySelectorAll("li[data-value]");
+    if(!items.length)return;
+    var idx=-1;
+    items.forEach(function(it,i){{if(it.classList.contains("active"))idx=i;}});
+    if(e.key==="ArrowDown"){{
+      e.preventDefault();
+      if(idx>=0)items[idx].classList.remove("active");
+      idx=(idx+1)%items.length;
+      items[idx].classList.add("active");
+      items[idx].scrollIntoView({{block:"nearest"}});
+    }}else if(e.key==="ArrowUp"){{
+      e.preventDefault();
+      if(idx>=0)items[idx].classList.remove("active");
+      idx=(idx-1+items.length)%items.length;
+      items[idx].classList.add("active");
+      items[idx].scrollIntoView({{block:"nearest"}});
+    }}else if(e.key==="Enter"){{
+      if(idx>=0){{e.preventDefault();selectOption(items[idx]);}}
+    }}else if(e.key==="Escape"){{
+      listbox.innerHTML="";
+    }}
+  }});
+
+  new MutationObserver(function(){{
+    var hasItems=listbox.children.length>0;
+    listbox.style.display=hasItems?"":"none";
+    input.setAttribute("aria-expanded",hasItems?"true":"false");
+  }}).observe(listbox,{{childList:true}});
+}})();"""
+
+        dropdown_wrapper = Div(
+            display_input,
+            hidden_input,
+            listbox,
+            cls="dropdown dropdown-open w-full",
+        )
+
+        children: list[Any] = []
+        if label:
+            children.append(Label(Span(label, cls="label-text"), cls="label"))
+        children.append(dropdown_wrapper)
+        children.append(Script(Raw(js)))
+
+        attrs["id"] = ac_id
+        attrs["cls"] = _merge_cls("form-control w-full", attrs.get("cls"))
+        super().__init__(*children, **attrs)
+
+
+def autocomplete_option(value: str, label: str, **attrs: Any) -> Li:
+    """Create a single autocomplete option for server response.
+
+    Returns an ``<li>`` element suitable for htmx innerHTML swap
+    into the autocomplete listbox.
+
+    Args:
+        value: The option value (stored in ``data-value``).
+        label: Display text.
+        **attrs: Extra attributes forwarded to ``<li>``.
+    """
+    attrs["role"] = "option"
+    attrs["data_value"] = value
+    return Li(A(label), **attrs)

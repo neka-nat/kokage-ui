@@ -103,6 +103,8 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `FileUpload` | File upload input with styling |
 | `DropZone` | Drag-and-drop file upload area |
 | `DependentSelect` | Select that depends on another field |
+| `Autocomplete` | Server-side search autocomplete (combobox) |
+| `autocomplete_option` | Helper to create autocomplete option `<li>` |
 
 ## Pydantic Model → UI
 

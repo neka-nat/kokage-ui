@@ -98,6 +98,7 @@ from kokage_ui.elements import (
 from kokage_ui.components import (
     Accordion,
     Alert,
+    Autocomplete,
     Badge,
     Breadcrumb,
     Card,
@@ -123,6 +124,7 @@ from kokage_ui.components import (
     Tab,
     Tabs,
     Toast,
+    autocomplete_option,
 )
 
 # Pydantic model → UI auto-generation
@@ -306,6 +308,8 @@ __all__ = [
     "Collapse",
     "Accordion",
     "Dropdown",
+    "Autocomplete",
+    "autocomplete_option",
     # Pydantic Model → UI
     "ModelForm",
     "ValidatedModelForm",

@@ -466,6 +466,62 @@ Dropdown(
 | `hover` | bool | Open on hover |
 | `align_end` | bool | Align dropdown to the end |
 
+## Autocomplete
+
+A server-side search autocomplete (combobox) component. The text input sends htmx GET requests on keystroke, displays matching results in a dropdown, and stores the selected value in a hidden input for form submission.
+
+```python
+from kokage_ui import Autocomplete, autocomplete_option
+
+# In your page
+Autocomplete(
+    name="user_id",
+    search_url="/api/users/search",
+    label="User",
+    placeholder="Search users...",
+    min_chars=2,
+)
+```
+
+Server endpoint returns a list of `autocomplete_option` elements:
+
+```python
+@ui.fragment("/api/users/search")
+def search_users(q: str = ""):
+    results = db.search_users(q)
+    return [autocomplete_option(str(u.id), u.name) for u in results]
+```
+
+### Autocomplete
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `name` | str | (required) | Hidden input name (form submission value) |
+| `search_url` | str | (required) | htmx GET endpoint for search |
+| `label` | str \| None | None | Label text |
+| `placeholder` | str | `""` | Placeholder text |
+| `display_name` | str \| None | None | Display input name (default: `{name}_display`) |
+| `value` | str | `""` | Hidden input initial value |
+| `display_value` | str | `""` | Display input initial value |
+| `delay` | int | `300` | Debounce delay in ms |
+| `min_chars` | int | `1` | Minimum characters to trigger search |
+| `bordered` | bool | True | Use DaisyUI bordered style |
+| `autocomplete_id` | str \| None | None | ID prefix (auto-generated if omitted) |
+
+### autocomplete_option
+
+Helper function that returns an `<li>` element for the server response.
+
+```python
+autocomplete_option(value="42", label="Alice Smith")
+# renders: <li role="option" data-value="42"><a>Alice Smith</a></li>
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `value` | str | The option value (stored in `data-value`) |
+| `label` | str | Display text |
+
 ## Layout
 
 A reusable page layout builder (not a Component). Wraps content in a consistent `Page` with navbar, sidebar, footer, and theme.
