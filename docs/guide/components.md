@@ -532,7 +532,7 @@ def search_users(request: Request, q: str = ""):
 | `search_url` | str | (required) | htmx GET endpoint for search |
 | `label` | str \| None | None | Label text |
 | `placeholder` | str | `""` | Placeholder text |
-| `display_name` | str \| None | None | Display input name (default: `{name}_display`) |
+| `query_name` | str | `"q"` | Query parameter name sent to search endpoint |
 | `value` | str | `""` | Hidden input initial value |
 | `display_value` | str | `""` | Display input initial value |
 | `delay` | int | `300` | Debounce delay in ms |

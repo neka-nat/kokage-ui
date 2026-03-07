@@ -24,16 +24,16 @@ class TestAutocomplete:
         assert 'type="hidden"' in result
         assert 'name="user_id"' in result
 
-    def test_display_input(self):
+    def test_display_input_default_name(self):
         result = str(Autocomplete(name="user_id", search_url="/s"))
-        assert 'name="user_id_display"' in result
+        assert 'name="q"' in result
         assert 'type="text"' in result
 
-    def test_custom_display_name(self):
+    def test_custom_query_name(self):
         result = str(
-            Autocomplete(name="uid", search_url="/s", display_name="user_search")
+            Autocomplete(name="uid", search_url="/s", query_name="search")
         )
-        assert 'name="user_search"' in result
+        assert 'name="search"' in result
 
     def test_initial_value(self):
         result = str(Autocomplete(name="x", search_url="/s", value="42"))
@@ -71,6 +71,12 @@ class TestAutocomplete:
     def test_min_chars_zero(self):
         result = str(Autocomplete(name="x", search_url="/s", min_chars=0))
         assert "[this.value.length" not in result
+
+    def test_min_chars_filter_before_modifiers(self):
+        """Filter must come right after event name, before changed/delay."""
+        result = str(Autocomplete(name="x", search_url="/s", min_chars=2))
+        # Filter [this.value.length >= 2] should appear before "changed delay:"
+        assert "input[this.value.length" in result
 
     def test_bordered(self):
         result = str(Autocomplete(name="x", search_url="/s", bordered=True))
@@ -149,15 +155,11 @@ class TestAutocomplete:
         result = str(Autocomplete(name="x", search_url="/s"))
         assert 'style="display:none"' in result
 
-    def test_hx_params_none(self):
+    def test_no_hx_params_or_hx_vals(self):
+        """htmx sends query_name natively; no hx-params/hx-vals needed."""
         result = str(Autocomplete(name="x", search_url="/s"))
-        assert 'hx-params="none"' in result
-
-    def test_hx_vals_q(self):
-        result = str(Autocomplete(name="x", search_url="/s"))
-        assert "hx-vals" in result
-        # Quotes in attribute values are HTML-escaped
-        assert "&#34;q&#34;" in result
+        assert "hx-params" not in result
+        assert "hx-vals" not in result
 
 
 class TestAutocompleteOption:

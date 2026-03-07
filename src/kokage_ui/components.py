@@ -1471,7 +1471,7 @@ class Autocomplete(Component):
         search_url: htmx GET endpoint for search.
         label: Label text.
         placeholder: Placeholder text.
-        display_name: Display input name (default: ``{name}_display``).
+        query_name: Query parameter name sent to search_url (default: ``"q"``).
         value: Hidden input initial value.
         display_value: Display input initial value.
         delay: Debounce delay in ms.
@@ -1489,7 +1489,7 @@ class Autocomplete(Component):
         search_url: str,
         label: str | None = None,
         placeholder: str = "",
-        display_name: str | None = None,
+        query_name: str = "q",
         value: str = "",
         display_value: str = "",
         delay: int = 300,
@@ -1499,25 +1499,24 @@ class Autocomplete(Component):
         **attrs: Any,
     ) -> None:
         ac_id = autocomplete_id or f"ac-{uuid.uuid4().hex[:8]}"
-        disp_name = display_name or f"{name}_display"
         listbox_id = f"{ac_id}-listbox"
 
         input_cls = "input w-full"
         if bordered:
             input_cls += " input-bordered"
 
-        # Build hx-trigger filter
+        # Build hx-trigger — filter must come right after event name
         if min_chars > 0:
             hx_trigger = (
-                f"input changed delay:{delay}ms"
-                f"[this.value.length >= {min_chars}]"
+                f"input[this.value.length >= {min_chars}]"
+                f" changed delay:{delay}ms"
             )
         else:
             hx_trigger = f"input changed delay:{delay}ms"
 
         display_input = Input(
             type="text",
-            name=disp_name,
+            name=query_name,
             cls=input_cls,
             role="combobox",
             aria_autocomplete="list",
@@ -1527,8 +1526,6 @@ class Autocomplete(Component):
             hx_trigger=hx_trigger,
             hx_target=f"#{listbox_id}",
             hx_swap="innerHTML",
-            hx_params="none",
-            hx_vals='js:{"q": this.value}',
             autocomplete="off",
             placeholder=placeholder,
             value=display_value if display_value else None,

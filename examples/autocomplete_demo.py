@@ -51,7 +51,7 @@ def home():
                     min_chars=1,
                 ),
                 DaisyButton("Submit", color="primary", type="submit", cls="mt-4"),
-                method="post",
+                method="get",
                 action="/submit",
             ),
             title="User Search",
