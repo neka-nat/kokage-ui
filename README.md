@@ -65,6 +65,40 @@ This single `ui.crud()` call generates list, create, detail, edit, and delete pa
 
 https://github.com/user-attachments/assets/4c4ad3be-664d-432e-9c2e-23e80755b461
 
+## Streaming Chat UI
+
+Build an LLM chat interface with SSE streaming in a few lines:
+
+```python
+from fastapi import FastAPI, Request
+from kokage_ui import KokageUI, Page
+from kokage_ui.ai import ChatView, ChatMessage, chat_stream
+
+app = FastAPI()
+ui = KokageUI(app)
+
+@ui.page("/chat")
+def chat_page():
+    return Page(
+        ChatView(send_url="/api/chat"),
+        title="AI Chat",
+        include_marked=True,
+        include_highlightjs=True,
+    )
+
+@app.post("/api/chat")
+async def chat(request: Request):
+    data = await request.json()
+
+    async def generate():
+        async for token in your_llm(data["message"]):  # OpenAI, Anthropic, etc.
+            yield token
+
+    return chat_stream(generate())
+```
+
+`ChatView` renders DaisyUI chat bubbles with real-time SSE streaming, Markdown rendering, and code highlighting.
+
 ## Features
 
 - **50+ HTML Elements** — `Div`, `H1`, `Form`, `Input`, etc. as Python classes
@@ -102,6 +136,7 @@ uvx kokage-ui add crud Product      # Add CRUD model
 | [admin_demo.py](examples/admin_demo.py) | Admin panel + Auth | `uvicorn examples.admin_demo:app` |
 | [blog.py](examples/blog.py) | Markdown + Charts + Tabs | `uvicorn examples.blog:app` |
 | [realtime.py](examples/realtime.py) | SSE notifications | `uvicorn examples.realtime:app` |
+| [chat_demo.py](examples/chat_demo.py) | Streaming chat UI | `uvicorn examples.chat_demo:app` |
 
 ## Documentation
 
