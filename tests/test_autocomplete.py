@@ -149,6 +149,16 @@ class TestAutocomplete:
         result = str(Autocomplete(name="x", search_url="/s"))
         assert 'style="display:none"' in result
 
+    def test_hx_params_none(self):
+        result = str(Autocomplete(name="x", search_url="/s"))
+        assert 'hx-params="none"' in result
+
+    def test_hx_vals_q(self):
+        result = str(Autocomplete(name="x", search_url="/s"))
+        assert "hx-vals" in result
+        # Quotes in attribute values are HTML-escaped
+        assert "&#34;q&#34;" in result
+
 
 class TestAutocompleteOption:
     def test_basic_option(self):

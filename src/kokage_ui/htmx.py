@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from kokage_ui.elements import Component, Span
+from kokage_ui.elements import Button, Component, Form, Input, Span
 
 
 class HxSwapOOB(Component):
@@ -229,3 +229,83 @@ class ConfirmDelete(Component):
             attrs["hx_target"] = target
         attrs.setdefault("cls", "btn btn-error btn-outline")
         super().__init__(*children, **attrs)
+
+
+class InlineEdit(Component):
+    """Inline click-to-edit component (display mode).
+
+    Shows a value with a hover-revealed edit button. Clicking the button
+    fetches an edit form via hx-get.
+
+    Args:
+        *children: Display content (the current value).
+        edit_url: GET URL to fetch the edit form.
+        name: Field name (for identification).
+        edit_label: Edit button label (default: pencil emoji).
+    """
+
+    tag = "div"
+
+    def __init__(
+        self,
+        *children: Any,
+        edit_url: str,
+        name: str,
+        edit_label: str = "\u270f\ufe0f",
+        **attrs: Any,
+    ) -> None:
+        attrs.setdefault("cls", "inline-flex items-center gap-2 group")
+        edit_btn = Button(
+            edit_label,
+            cls="btn btn-ghost btn-xs opacity-0 group-hover:opacity-100",
+            hx_get=edit_url,
+            hx_target="closest div",
+            hx_swap="outerHTML",
+        )
+        super().__init__(Span(*children), edit_btn, **attrs)
+
+    @classmethod
+    def form(
+        cls,
+        *,
+        value: str = "",
+        name: str,
+        save_url: str,
+        cancel_url: str,
+        input_type: str = "text",
+        save_label: str = "\u2713",
+        cancel_label: str = "\u2715",
+    ) -> Form:
+        """Return an inline edit form (edit mode).
+
+        Args:
+            value: Current field value.
+            name: Field name (used as input name).
+            save_url: PATCH URL to save the value.
+            cancel_url: GET URL to return to display mode.
+            input_type: Input type attribute (default: "text").
+            save_label: Save button label.
+            cancel_label: Cancel button label.
+        """
+        return Form(
+            Input(type="hidden", name="_field", value=name),
+            Input(
+                type=input_type,
+                name=name,
+                value=value,
+                cls="input input-bordered input-sm",
+            ),
+            Button(save_label, type="submit", cls="btn btn-success btn-xs"),
+            Button(
+                cancel_label,
+                type="button",
+                cls="btn btn-ghost btn-xs",
+                hx_get=cancel_url,
+                hx_target="closest form",
+                hx_swap="outerHTML",
+            ),
+            cls="inline-flex items-center gap-2",
+            hx_patch=save_url,
+            hx_target="this",
+            hx_swap="outerHTML",
+        )

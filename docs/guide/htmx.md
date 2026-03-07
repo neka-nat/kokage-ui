@@ -266,6 +266,121 @@ def cities(country: str = ""):
     return DaisySelect("City", name="city", options=options)
 ```
 
+## InlineEdit
+
+Click-to-edit pattern — click a value to switch to an inline edit form, save with htmx PATCH, or cancel to return to display mode.
+
+### Display Mode
+
+```python
+from kokage_ui.htmx import InlineEdit
+
+InlineEdit("Alice", edit_url="/users/1/edit/name", name="name")
+```
+
+This renders a `<div>` with the value and a hover-revealed edit button. Clicking the button fetches the edit form via `hx-get`.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `*children` | Any | (required) | Display content (the current value) |
+| `edit_url` | str | (required) | GET URL to fetch the edit form |
+| `name` | str | (required) | Field name (for identification) |
+| `edit_label` | str | `"✏️"` | Edit button label |
+
+### Edit Mode
+
+```python
+InlineEdit.form(
+    value="Alice",
+    name="name",
+    save_url="/users/1",
+    cancel_url="/users/1/view/name",
+)
+```
+
+Returns a `<form>` with the input field, save button (`hx-patch`), and cancel button (`hx-get`).
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `value` | str | `""` | Current field value |
+| `name` | str | (required) | Field name (input name) |
+| `save_url` | str | (required) | PATCH URL to save the value |
+| `cancel_url` | str | (required) | GET URL to return to display mode |
+| `input_type` | str | `"text"` | Input type attribute |
+| `save_label` | str | `"✓"` | Save button label |
+| `cancel_label` | str | `"✕"` | Cancel button label |
+
+### Example: Editable User Table
+
+```python
+from fastapi import FastAPI, Request
+from kokage_ui import KokageUI, Page, Div
+from kokage_ui.components import DaisyTable
+from kokage_ui.htmx import InlineEdit
+
+app = FastAPI()
+ui = KokageUI(app)
+
+users = {"1": {"name": "Alice", "email": "alice@example.com"}}
+
+@ui.page("/")
+def index():
+    rows = [
+        [
+            InlineEdit(u["name"], edit_url=f"/users/{uid}/edit/name", name="name"),
+            InlineEdit(u["email"], edit_url=f"/users/{uid}/edit/email", name="email"),
+        ]
+        for uid, u in users.items()
+    ]
+    return Page(DaisyTable(headers=["Name", "Email"], rows=rows), title="Users")
+
+@ui.fragment("/users/{user_id}/edit/{field}")
+def edit_field(user_id: str, field: str):
+    return InlineEdit.form(
+        value=users[user_id][field],
+        name=field,
+        save_url=f"/users/{user_id}",
+        cancel_url=f"/users/{user_id}/view/{field}",
+    )
+
+@app.patch("/users/{user_id}")
+async def update_user(user_id: str, request: Request):
+    data = await request.form()
+    field = str(data["_field"])
+    users[user_id][field] = str(data[field])
+    return InlineEdit(
+        users[user_id][field],
+        edit_url=f"/users/{user_id}/edit/{field}",
+        name=field,
+    )
+
+@ui.fragment("/users/{user_id}/view/{field}")
+def view_field(user_id: str, field: str):
+    return InlineEdit(
+        users[user_id][field],
+        edit_url=f"/users/{user_id}/edit/{field}",
+        name=field,
+    )
+```
+
+### Using with DataGrid
+
+```python
+from kokage_ui.data.datagrid import DataGrid
+
+DataGrid(
+    model=User,
+    rows=users,
+    cell_renderers={
+        "name": lambda val, row: InlineEdit(
+            val,
+            edit_url=f"/users/{row.id}/edit/name",
+            name="name",
+        ),
+    },
+)
+```
+
 ## See Also
 
 - [Real-time Notifications](notifications.md) — SSE-based push notifications

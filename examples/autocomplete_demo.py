@@ -6,13 +6,12 @@ Run:
 Open http://localhost:8000 in your browser.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 from kokage_ui import (
     Autocomplete,
     Card,
     DaisyButton,
-    Div,
     Form,
     H1,
     KokageUI,
@@ -61,12 +60,12 @@ def home():
     )
 
 
-@ui.fragment("/api/users/search")
-def search_users(q: str = ""):
+@ui.fragment("/api/users/search", htmx_only=False)
+def search_users(request: Request, q: str = ""):
     if not q:
-        return []
+        return ""
     matches = [u for u in USERS if q.lower() in u["name"].lower()]
-    return Div(*[autocomplete_option(str(u["id"]), u["name"]) for u in matches])
+    return [autocomplete_option(str(u["id"]), u["name"]) for u in matches]
 
 
 @ui.page("/submit")

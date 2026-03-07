@@ -144,6 +144,7 @@ from kokage_ui.htmx import (
     DependentField,
     HxSwapOOB,
     InfiniteScroll,
+    InlineEdit,
     SSEStream,
     SearchFilter,
 )
@@ -327,6 +328,7 @@ __all__ = [
     "SSEStream",
     "ConfirmDelete",
     "DependentField",
+    "InlineEdit",
     # Components (new)
     "FileUpload",
     "DropZone",

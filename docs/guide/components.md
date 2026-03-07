@@ -519,7 +519,7 @@ Server endpoint returns a list of `autocomplete_option` elements:
 
 ```python
 @ui.fragment("/api/users/search")
-def search_users(q: str = ""):
+def search_users(request: Request, q: str = ""):
     results = db.search_users(q)
     return [autocomplete_option(str(u.id), u.name) for u in results]
 ```

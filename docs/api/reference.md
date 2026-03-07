@@ -137,6 +137,7 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `ConfirmDelete` | Delete button with confirmation (`hx-confirm` + `hx-delete`) |
 | `HxSwapOOB` | Out-of-Band swap (`hx-swap-oob`) |
 | `DependentField` | Field that updates based on another field's value |
+| `InlineEdit` | Click-to-edit inline editing (`hx-get` display → `hx-patch` form) |
 
 ## Multi-step Forms
 
