@@ -203,3 +203,13 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `ChatView` | Streaming chat UI with DaisyUI chat bubbles |
 | `ChatMessage` | Chat message dataclass (role, content, name) |
 | `chat_stream` | Convert async token generator to SSE StreamingResponse |
+
+## AI Agent
+
+| Export | Description |
+|--------|-------------|
+| `AgentView` | Agent dashboard with tool call visualization, status/metrics bars |
+| `AgentEvent` | Framework-agnostic SSE event (text, tool_call, tool_result, status, error, done) |
+| `AgentMessage` | Agent message dataclass with optional tool_calls |
+| `ToolCall` | Tool call record (name, input, result, call_id) |
+| `agent_stream` | Convert async AgentEvent generator to SSE StreamingResponse |

@@ -200,6 +200,9 @@ from kokage_ui.features.i18n import (
 # AI chat
 from kokage_ui.ai import ChatMessage, ChatView, chat_stream
 
+# AI agent
+from kokage_ui.ai import AgentEvent, AgentMessage, AgentView, ToolCall, agent_stream
+
 # Admin dashboard
 from kokage_ui.features.admin import AdminSite, ModelAdmin
 
@@ -401,6 +404,11 @@ __all__ = [
     "ChatMessage",
     "ChatView",
     "chat_stream",
+    "AgentEvent",
+    "AgentMessage",
+    "AgentView",
+    "ToolCall",
+    "agent_stream",
     # Testing
     "render",
     "rendered",
