@@ -8,7 +8,7 @@ from __future__ import annotations
 import uuid
 from typing import TYPE_CHECKING, Any
 
-from dataclasses import dataclass, field
+from pydantic import BaseModel, ConfigDict
 
 from kokage_ui.elements import (
     A,
@@ -806,9 +806,10 @@ class Drawer(Component):
 # ========================================
 
 
-@dataclass
-class Tab:
+class Tab(BaseModel):
     """Single tab definition for Tabs component."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     label: str
     content: Any = None
@@ -919,8 +920,7 @@ _STEP_COLORS = {
 }
 
 
-@dataclass
-class Step:
+class Step(BaseModel):
     """Single step definition for Steps component."""
 
     label: str
@@ -996,9 +996,10 @@ _TIMELINE_CHECK_SVG = (
 )
 
 
-@dataclass
-class TimelineItem:
+class TimelineItem(BaseModel):
     """Single item definition for Timeline component."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     content: Any
     label: str | None = None

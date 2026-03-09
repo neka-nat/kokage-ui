@@ -6,8 +6,9 @@ and high-level DaisyUI-styled media display components.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Any, Literal
+
+from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from kokage_ui.elements import Component, Div, Img, Source
 
@@ -34,15 +35,15 @@ def _get_audio_cls() -> type[Component]:
     return _Audio
 
 
-@dataclass(frozen=True)
+@pydantic_dataclass(frozen=True)
 class MediaField:
     """Annotated marker for media fields in Pydantic models.
 
     Usage:
         class Product(BaseModel):
             image: Annotated[str, MediaField()] = ""
-            video: Annotated[str, MediaField("video")] = ""
-            audio: Annotated[str, MediaField("audio")] = ""
+            video: Annotated[str, MediaField(media_type="video")] = ""
+            audio: Annotated[str, MediaField(media_type="audio")] = ""
     """
 
     media_type: Literal["image", "video", "audio"] = "image"

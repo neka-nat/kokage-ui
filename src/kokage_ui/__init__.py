@@ -133,7 +133,7 @@ from kokage_ui.components import (
 from kokage_ui.models import ModelDetail, ModelForm, ModelTable, SortableTable, ValidatedModelForm
 
 # Data display
-from kokage_ui.features.charts import Chart
+from kokage_ui.features.charts import Chart, ChartData, ChartOptions, Dataset
 from kokage_ui.features.code import CodeBlock
 from kokage_ui.features.markdown import Markdown
 
@@ -348,6 +348,9 @@ __all__ = [
     "create_tables",
     # Data Display
     "Chart",
+    "ChartData",
+    "ChartOptions",
+    "Dataset",
     "Markdown",
     "CodeBlock",
     "SortableTable",

@@ -5,11 +5,10 @@ Server-side rendered via htmx. All state is managed through URL query parameters
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 from typing import Any, Callable
 from urllib.parse import urlencode
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from kokage_ui.components import _merge_cls
 from kokage_ui.elements import (
@@ -33,8 +32,7 @@ from kokage_ui.elements import (
 from kokage_ui.models import _filter_fields, _render_value
 
 
-@dataclass
-class ColumnFilter:
+class ColumnFilter(BaseModel):
     """Column filter definition.
 
     Args:
@@ -48,8 +46,7 @@ class ColumnFilter:
     placeholder: str = ""
 
 
-@dataclass
-class DataGridState:
+class DataGridState(BaseModel):
     """Parse grid state from request query parameters.
 
     Query params:
@@ -63,7 +60,7 @@ class DataGridState:
     sort_field: str | None = None
     sort_order: str = "asc"
     page: int = 1
-    filter_values: dict[str, str] = field(default_factory=dict)
+    filter_values: dict[str, str] = Field(default_factory=dict)
     visible_columns: list[str] | None = None
 
     @classmethod

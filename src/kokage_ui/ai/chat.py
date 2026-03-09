@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import uuid
 from collections.abc import AsyncIterator
-from dataclasses import dataclass, field
+from pydantic import BaseModel
 from typing import Any
 
 from markupsafe import escape
@@ -19,8 +19,7 @@ from starlette.responses import StreamingResponse
 from kokage_ui.elements import Component, Div, Raw
 
 
-@dataclass
-class ChatMessage:
+class ChatMessage(BaseModel):
     """A single chat message.
 
     Args:

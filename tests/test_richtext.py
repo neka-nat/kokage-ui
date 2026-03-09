@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import dataclasses
 from typing import Annotated
 
 import pytest
+import dataclasses
+
 from pydantic import BaseModel
-from pydantic.fields import FieldInfo
 
 from kokage_ui.models import (
     ModelDetail,

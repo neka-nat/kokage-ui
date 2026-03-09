@@ -6,6 +6,8 @@ from typing import Annotated, Any
 from unittest.mock import MagicMock
 
 import pytest
+import dataclasses
+
 from pydantic import BaseModel
 
 from kokage_ui.models import (
@@ -50,7 +52,7 @@ class TestRepeaterField:
 
     def test_frozen(self) -> None:
         rf = RepeaterField()
-        with pytest.raises(AttributeError):
+        with pytest.raises(dataclasses.FrozenInstanceError):
             rf.min_items = 5  # type: ignore[misc]
 
     def test_custom_values(self) -> None:

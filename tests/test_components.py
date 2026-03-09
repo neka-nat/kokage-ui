@@ -365,8 +365,8 @@ class TestDrawer:
 class TestTabs:
     def test_link_tabs(self):
         result = str(Tabs(tabs=[
-            Tab("Tab 1", href="/t1"),
-            Tab("Tab 2", href="/t2"),
+            Tab(label="Tab 1", href="/t1"),
+            Tab(label="Tab 2", href="/t2"),
         ]))
         assert "tabs" in result
         assert "Tab 1" in result
@@ -374,46 +374,46 @@ class TestTabs:
 
     def test_active_tab(self):
         result = str(Tabs(tabs=[
-            Tab("A", href="/a", active=True),
-            Tab("B", href="/b"),
+            Tab(label="A", href="/a", active=True),
+            Tab(label="B", href="/b"),
         ]))
         assert "tab-active" in result
 
     def test_disabled_tab(self):
         result = str(Tabs(tabs=[
-            Tab("A", href="/a"),
-            Tab("B", href="/b", disabled=True),
+            Tab(label="A", href="/a"),
+            Tab(label="B", href="/b", disabled=True),
         ]))
         assert "tab-disabled" in result
 
     def test_content_tabs(self):
         result = str(Tabs(tabs=[
-            Tab("Tab 1", content="Content 1", active=True),
-            Tab("Tab 2", content="Content 2"),
+            Tab(label="Tab 1", content="Content 1", active=True),
+            Tab(label="Tab 2", content="Content 2"),
         ]))
         assert 'type="radio"' in result
         assert "tab-content" in result
         assert "Content 1" in result
 
     def test_tabs_variant(self):
-        result = str(Tabs(tabs=[Tab("A", href="/a")], variant="bordered"))
+        result = str(Tabs(tabs=[Tab(label="A", href="/a")], variant="bordered"))
         assert "tabs-bordered" in result
 
     def test_tabs_size(self):
-        result = str(Tabs(tabs=[Tab("A", href="/a")], size="lg"))
+        result = str(Tabs(tabs=[Tab(label="A", href="/a")], size="lg"))
         assert "tabs-lg" in result
 
     def test_tabs_boxed(self):
-        result = str(Tabs(tabs=[Tab("A", href="/a")], variant="boxed"))
+        result = str(Tabs(tabs=[Tab(label="A", href="/a")], variant="boxed"))
         assert "tabs-boxed" in result
 
 
 class TestSteps:
     def test_basic_steps(self):
         result = str(Steps(steps=[
-            Step("Register"),
-            Step("Choose"),
-            Step("Pay"),
+            Step(label="Register"),
+            Step(label="Choose"),
+            Step(label="Pay"),
         ], current=1))
         assert "steps" in result
         assert "Register" in result
@@ -421,29 +421,29 @@ class TestSteps:
 
     def test_steps_current(self):
         result = str(Steps(steps=[
-            Step("A"),
-            Step("B"),
-            Step("C"),
+            Step(label="A"),
+            Step(label="B"),
+            Step(label="C"),
         ], current=0))
         # Only first step should have color
         assert result.count("step-primary") == 1
 
     def test_steps_vertical(self):
-        result = str(Steps(steps=[Step("A")], vertical=True))
+        result = str(Steps(steps=[Step(label="A")], vertical=True))
         assert "steps-vertical" in result
 
     def test_steps_color(self):
-        result = str(Steps(steps=[Step("A")], current=0, color="accent"))
+        result = str(Steps(steps=[Step(label="A")], current=0, color="accent"))
         assert "step-accent" in result
 
     def test_step_data_content(self):
-        result = str(Steps(steps=[Step("A", data_content="★")], current=0))
+        result = str(Steps(steps=[Step(label="A", data_content="★")], current=0))
         assert "data-content" in result
 
     def test_step_per_step_color(self):
         result = str(Steps(steps=[
-            Step("A", color="error"),
-            Step("B"),
+            Step(label="A", color="error"),
+            Step(label="B"),
         ], current=1))
         assert "step-error" in result
         assert "step-primary" in result

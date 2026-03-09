@@ -6,6 +6,8 @@ from typing import Annotated, Any
 from unittest.mock import MagicMock
 
 import pytest
+import dataclasses
+
 from pydantic import BaseModel
 
 from kokage_ui.models import (
@@ -66,7 +68,7 @@ class TestTagField:
 
     def test_frozen(self) -> None:
         tf = TagField()
-        with pytest.raises(AttributeError):
+        with pytest.raises(dataclasses.FrozenInstanceError):
             tf.placeholder = "new"  # type: ignore[misc]
 
 

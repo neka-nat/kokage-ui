@@ -8,10 +8,9 @@ from __future__ import annotations
 
 import enum
 import types
-from dataclasses import dataclass, field
 from typing import Annotated, Any, Callable, Literal, Union, get_args, get_origin
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
@@ -87,9 +86,10 @@ def _resolve_annotation(annotation: Any) -> tuple[Any, bool]:
     return annotation, False
 
 
-@dataclass
-class FieldConstraints:
+class FieldConstraints(BaseModel):
     """Extracted constraints from Pydantic field metadata."""
+
+    model_config = ConfigDict(validate_assignment=True)
 
     min_length: int | None = None
     max_length: int | None = None

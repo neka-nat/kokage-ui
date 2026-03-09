@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-import dataclasses
 import datetime as dt
 from typing import Annotated
 
 import pytest
+import dataclasses
+
 from pydantic import BaseModel
 
 from kokage_ui.fields.datetime import DateField, DateTimeField, DateTimePicker, TimeField

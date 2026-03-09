@@ -9,8 +9,9 @@ from __future__ import annotations
 
 import json
 import uuid
-from dataclasses import dataclass
 from typing import Any
+
+from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from markupsafe import Markup, escape
 
@@ -37,7 +38,7 @@ _TOOLBAR_PRESETS: dict[str, list[Any]] = {
 }
 
 
-@dataclass(frozen=True)
+@pydantic_dataclass(frozen=True)
 class RichTextField:
     """Annotated marker for rich text fields.
 

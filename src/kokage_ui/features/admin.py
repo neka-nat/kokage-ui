@@ -11,12 +11,11 @@ import inspect
 import io
 import math
 import urllib.parse
-from dataclasses import dataclass, field
 from typing import Any, Callable
 
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse, StreamingResponse
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ConfigDict, ValidationError
 from starlette.responses import RedirectResponse
 
 from kokage_ui.components import Alert, Breadcrumb, Card, NavBar, Stat, Stats
@@ -43,8 +42,7 @@ def _toast_url(base_url: str, message: str, toast_type: str = "success") -> str:
     return f"{base_url}{sep}_toast={urllib.parse.quote(message)}&_toast_type={toast_type}"
 
 
-@dataclass
-class ModelAdmin:
+class ModelAdmin(BaseModel):
     """Configuration for a registered model in AdminSite.
 
     Args:
@@ -61,6 +59,8 @@ class ModelAdmin:
         id_field: Name of the ID field.
     """
 
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     model: type[BaseModel]
     storage: Storage
     name: str = ""
@@ -73,7 +73,7 @@ class ModelAdmin:
     per_page: int = 20
     id_field: str = "id"
 
-    def __post_init__(self) -> None:
+    def model_post_init(self, __context: Any) -> None:
         if not self.name:
             self.name = self.model.__name__.lower()
         if not self.title:

@@ -6,6 +6,8 @@ from typing import Annotated, Optional
 from unittest.mock import AsyncMock
 
 import pytest
+import dataclasses
+
 from pydantic import BaseModel
 
 from kokage_ui.elements import Audio, Canvas, Component, Picture, Source, Track, Video
@@ -33,22 +35,22 @@ class TestMediaField:
         assert mf.accept_str == "image/*"
 
     def test_video(self):
-        mf = MediaField("video")
+        mf = MediaField(media_type="video")
         assert mf.media_type == "video"
         assert mf.accept_str == "video/*"
 
     def test_audio(self):
-        mf = MediaField("audio")
+        mf = MediaField(media_type="audio")
         assert mf.media_type == "audio"
         assert mf.accept_str == "audio/*"
 
     def test_custom_accept(self):
-        mf = MediaField("image", accept=".png,.jpg")
+        mf = MediaField(media_type="image", accept=".png,.jpg")
         assert mf.accept_str == ".png,.jpg"
 
     def test_frozen(self):
         mf = MediaField()
-        with pytest.raises(AttributeError):
+        with pytest.raises(dataclasses.FrozenInstanceError):
             mf.media_type = "video"  # type: ignore[misc]
 
 
@@ -103,7 +105,7 @@ class TestExtractMediaField:
 
     def test_video_field(self):
         class M(BaseModel):
-            clip: Annotated[str, MediaField("video")] = ""
+            clip: Annotated[str, MediaField(media_type="video")] = ""
 
         fi = M.model_fields["clip"]
         mf = _extract_media_field(fi)
@@ -130,7 +132,7 @@ class TestFieldToComponent:
 
     def test_video_file_input(self):
         class M(BaseModel):
-            video: Annotated[str, MediaField("video")] = ""
+            video: Annotated[str, MediaField(media_type="video")] = ""
 
         fi = M.model_fields["video"]
         comp = _field_to_component("video", fi)
@@ -140,7 +142,7 @@ class TestFieldToComponent:
 
     def test_audio_file_input(self):
         class M(BaseModel):
-            audio: Annotated[str, MediaField("audio")] = ""
+            audio: Annotated[str, MediaField(media_type="audio")] = ""
 
         fi = M.model_fields["audio"]
         comp = _field_to_component("audio", fi)
@@ -161,7 +163,7 @@ class TestFieldToComponent:
 
     def test_edit_mode_video_preview(self):
         class M(BaseModel):
-            clip: Annotated[str, MediaField("video")] = ""
+            clip: Annotated[str, MediaField(media_type="video")] = ""
 
         fi = M.model_fields["clip"]
         comp = _field_to_component("clip", fi, value="/vid/test.mp4")
@@ -171,7 +173,7 @@ class TestFieldToComponent:
 
     def test_edit_mode_audio_preview(self):
         class M(BaseModel):
-            sound: Annotated[str, MediaField("audio")] = ""
+            sound: Annotated[str, MediaField(media_type="audio")] = ""
 
         fi = M.model_fields["sound"]
         comp = _field_to_component("sound", fi, value="/audio/test.mp3")
@@ -408,7 +410,7 @@ class TestModelTableMediaRendering:
 
     def test_video_badge_in_table(self):
         class M(BaseModel):
-            clip: Annotated[str, MediaField("video")] = ""
+            clip: Annotated[str, MediaField(media_type="video")] = ""
 
         row = M(clip="/vid/test.mp4")
         table = ModelTable(M, rows=[row])

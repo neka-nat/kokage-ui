@@ -8,15 +8,16 @@ with the same name attribute for list field handling.
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass
 from typing import Any
+
+from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from markupsafe import Markup, escape
 
 from kokage_ui.elements import Component
 
 
-@dataclass(frozen=True)
+@pydantic_dataclass(frozen=True)
 class RepeaterField:
     """Annotated marker for repeater (dynamic list) fields.
 

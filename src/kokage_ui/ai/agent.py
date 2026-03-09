@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import uuid
 from collections.abc import AsyncIterator
-from dataclasses import dataclass
+from pydantic import BaseModel
 from typing import Any
 
 from markupsafe import escape
@@ -19,8 +19,7 @@ from starlette.responses import StreamingResponse
 from kokage_ui.elements import Component, _render_attrs
 
 
-@dataclass
-class ToolCall:
+class ToolCall(BaseModel):
     """A single tool call record.
 
     Args:
@@ -36,8 +35,7 @@ class ToolCall:
     call_id: str = ""
 
 
-@dataclass
-class AgentMessage:
+class AgentMessage(BaseModel):
     """A message in the agent conversation.
 
     Args:
@@ -53,8 +51,7 @@ class AgentMessage:
     name: str | None = None
 
 
-@dataclass
-class AgentEvent:
+class AgentEvent(BaseModel):
     """SSE event for agent streaming.
 
     Args:

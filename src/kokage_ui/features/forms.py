@@ -6,7 +6,6 @@ that split model fields across multiple steps with htmx navigation.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 from typing import Any
 
 from pydantic import BaseModel
@@ -16,8 +15,7 @@ from kokage_ui.elements import Button, Component, Div, Form, Input, P
 from kokage_ui.models import _SENTINEL, _field_to_component
 
 
-@dataclass
-class FormStep:
+class FormStep(BaseModel):
     """Definition of a single step in a multi-step form.
 
     Args:

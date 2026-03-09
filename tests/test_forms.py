@@ -414,9 +414,9 @@ class TestMultiStepForm:
 
     def _make_steps(self):
         return [
-            FormStep("Account", ["username", "email"]),
-            FormStep("Profile", ["age", "bio"]),
-            FormStep("Plan", ["plan", "accept_terms"]),
+            FormStep(title="Account", fields=["username", "email"]),
+            FormStep(title="Profile", fields=["age", "bio"]),
+            FormStep(title="Plan", fields=["plan", "accept_terms"]),
         ]
 
     def test_renders_progress(self):
@@ -559,8 +559,8 @@ class TestMultiStepForm:
 
     def test_step_description(self):
         steps = [
-            FormStep("Account", ["username", "email"], description="Create your account"),
-            FormStep("Profile", ["age", "bio"]),
+            FormStep(title="Account", fields=["username", "email"], description="Create your account"),
+            FormStep(title="Profile", fields=["age", "bio"]),
         ]
         form = MultiStepForm(
             RegistrationModel,
@@ -633,8 +633,8 @@ class TestKokageUIMultistep:
         ui = KokageUI(app)
 
         steps = [
-            FormStep("Account", ["username", "email"]),
-            FormStep("Profile", ["age"]),
+            FormStep(title="Account", fields=["username", "email"]),
+            FormStep(title="Profile", fields=["age"]),
         ]
         ui.multistep(
             "/register/step",

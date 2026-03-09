@@ -8,15 +8,16 @@ from __future__ import annotations
 
 import json
 import uuid
-from dataclasses import dataclass
 from typing import Any
+
+from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 from markupsafe import Markup, escape
 
 from kokage_ui.elements import Component
 
 
-@dataclass(frozen=True)
+@pydantic_dataclass(frozen=True)
 class DateField:
     """Annotated marker for date fields.
 
@@ -31,7 +32,7 @@ class DateField:
     placeholder: str = ""
 
 
-@dataclass(frozen=True)
+@pydantic_dataclass(frozen=True)
 class TimeField:
     """Annotated marker for time fields.
 
@@ -46,7 +47,7 @@ class TimeField:
     placeholder: str = ""
 
 
-@dataclass(frozen=True)
+@pydantic_dataclass(frozen=True)
 class DateTimeField:
     """Annotated marker for datetime fields.
 

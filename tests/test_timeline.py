@@ -8,14 +8,14 @@ from kokage_ui.elements import Span
 
 class TestTimelineItem:
     def test_defaults(self):
-        item = TimelineItem("Hello")
+        item = TimelineItem(content="Hello")
         assert item.content == "Hello"
         assert item.label is None
         assert item.color is None
         assert item.icon is None
 
     def test_all_fields(self):
-        item = TimelineItem("Content", label="2024", color="primary", icon="★")
+        item = TimelineItem(content="Content", label="2024", color="primary", icon="★")
         assert item.content == "Content"
         assert item.label == "2024"
         assert item.color == "primary"
@@ -24,66 +24,66 @@ class TestTimelineItem:
 
 class TestTimeline:
     def test_basic_render(self):
-        result = str(Timeline(items=[TimelineItem("A")]))
+        result = str(Timeline(items=[TimelineItem(content="A")]))
         assert "<ul" in result
         assert "timeline" in result
 
     def test_vertical_default(self):
-        result = str(Timeline(items=[TimelineItem("A")]))
+        result = str(Timeline(items=[TimelineItem(content="A")]))
         assert "timeline-vertical" in result
 
     def test_horizontal(self):
-        result = str(Timeline(items=[TimelineItem("A")], vertical=False))
+        result = str(Timeline(items=[TimelineItem(content="A")], vertical=False))
         assert "timeline-horizontal" in result
         assert "timeline-vertical" not in result
 
     def test_compact(self):
-        result = str(Timeline(items=[TimelineItem("A")], compact=True))
+        result = str(Timeline(items=[TimelineItem(content="A")], compact=True))
         assert "timeline-compact" in result
 
     def test_use_box_default(self):
-        result = str(Timeline(items=[TimelineItem("A")]))
+        result = str(Timeline(items=[TimelineItem(content="A")]))
         assert "timeline-box" in result
 
     def test_use_box_false(self):
-        result = str(Timeline(items=[TimelineItem("A")], use_box=False))
+        result = str(Timeline(items=[TimelineItem(content="A")], use_box=False))
         assert "timeline-box" not in result
         assert "timeline-end" in result
 
     def test_label_in_timeline_start(self):
-        result = str(Timeline(items=[TimelineItem("Content", label="2024-01")]))
+        result = str(Timeline(items=[TimelineItem(content="Content", label="2024-01")]))
         assert "timeline-start" in result
         assert "2024-01" in result
 
     def test_no_label(self):
-        result = str(Timeline(items=[TimelineItem("Content")]))
+        result = str(Timeline(items=[TimelineItem(content="Content")]))
         assert "timeline-start" not in result
 
     def test_content_in_timeline_end(self):
-        result = str(Timeline(items=[TimelineItem("My Content")]))
+        result = str(Timeline(items=[TimelineItem(content="My Content")]))
         assert "timeline-end" in result
         assert "My Content" in result
 
     def test_timeline_middle_has_svg(self):
-        result = str(Timeline(items=[TimelineItem("A")]))
+        result = str(Timeline(items=[TimelineItem(content="A")]))
         assert "timeline-middle" in result
         assert "<svg" in result
 
     def test_color_on_hr(self):
         result = str(Timeline(items=[
-            TimelineItem("A", color="primary"),
-            TimelineItem("B"),
+            TimelineItem(content="A", color="primary"),
+            TimelineItem(content="B"),
         ]))
         assert "bg-primary" in result
 
     def test_color_on_icon(self):
-        result = str(Timeline(items=[TimelineItem("A", color="success")]))
+        result = str(Timeline(items=[TimelineItem(content="A", color="success")]))
         assert "text-success" in result
 
     def test_first_item_no_leading_hr(self):
         result = str(Timeline(items=[
-            TimelineItem("First"),
-            TimelineItem("Second"),
+            TimelineItem(content="First"),
+            TimelineItem(content="Second"),
         ]))
         # The first <li> should not start with <hr
         # Find the first <li> content
@@ -95,8 +95,8 @@ class TestTimeline:
 
     def test_last_item_no_trailing_hr(self):
         result = str(Timeline(items=[
-            TimelineItem("First"),
-            TimelineItem("Last"),
+            TimelineItem(content="First"),
+            TimelineItem(content="Last"),
         ]))
         # Find the last </li> and check what precedes it
         last_li_end = result.rindex("</li>")
@@ -107,9 +107,9 @@ class TestTimeline:
 
     def test_middle_item_has_both_hr(self):
         result = str(Timeline(items=[
-            TimelineItem("A"),
-            TimelineItem("B"),
-            TimelineItem("C"),
+            TimelineItem(content="A"),
+            TimelineItem(content="B"),
+            TimelineItem(content="C"),
         ]))
         # Count <hr elements - should be:
         # A: trailing hr (1)
@@ -119,12 +119,12 @@ class TestTimeline:
         assert result.count("<hr") == 4
 
     def test_single_item_no_hr(self):
-        result = str(Timeline(items=[TimelineItem("Only")]))
+        result = str(Timeline(items=[TimelineItem(content="Only")]))
         assert "<hr" not in result
 
     def test_xss_escape(self):
         result = str(Timeline(items=[
-            TimelineItem("<script>alert(1)</script>", label="<b>bad</b>"),
+            TimelineItem(content="<script>alert(1)</script>", label="<b>bad</b>"),
         ]))
         assert "<script>" not in result
         assert "&lt;script&gt;" in result
@@ -133,7 +133,7 @@ class TestTimeline:
 
     def test_custom_icon(self):
         result = str(Timeline(items=[
-            TimelineItem("A", icon=Span("★", cls="text-xl")),
+            TimelineItem(content="A", icon=Span("★", cls="text-xl")),
         ]))
         assert "★" in result
         # Should not contain the default SVG checkmark
@@ -145,13 +145,13 @@ class TestTimeline:
         assert "<li>" not in result
 
     def test_extra_attrs(self):
-        result = str(Timeline(items=[TimelineItem("A")], id="my-timeline"))
+        result = str(Timeline(items=[TimelineItem(content="A")], id="my-timeline"))
         assert 'id="my-timeline"' in result
 
     def test_all_colors(self):
         for color in ["primary", "secondary", "accent", "info", "success", "warning", "error", "neutral"]:
             result = str(Timeline(items=[
-                TimelineItem("A", color=color),
-                TimelineItem("B"),
+                TimelineItem(content="A", color=color),
+                TimelineItem(content="B"),
             ]))
             assert f"bg-{color}" in result
