@@ -42,6 +42,13 @@ from kokage_ui import (
 app = FastAPI()
 ui = KokageUI(app)
 
+
+@app.get("/")
+def root():
+    from starlette.responses import RedirectResponse
+
+    return RedirectResponse("/gallery")
+
 # --- Upload directory ---
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)

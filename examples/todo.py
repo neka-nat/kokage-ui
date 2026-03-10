@@ -11,10 +11,17 @@ from typing import Literal
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
+from starlette.responses import RedirectResponse
+
 from kokage_ui import A, InMemoryStorage, KokageUI, Layout, NavBar
 
 app = FastAPI()
 ui = KokageUI(app)
+
+
+@app.get("/")
+def root():
+    return RedirectResponse("/todos")
 
 
 class Todo(BaseModel):

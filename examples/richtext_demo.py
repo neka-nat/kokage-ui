@@ -19,6 +19,13 @@ app = FastAPI()
 ui = KokageUI(app)
 
 
+@app.get("/")
+def root():
+    from starlette.responses import RedirectResponse
+
+    return RedirectResponse("/articles")
+
+
 class Article(BaseModel):
     id: str = ""
     title: str = Field(min_length=1, max_length=200)

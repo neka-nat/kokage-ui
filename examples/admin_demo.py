@@ -1,4 +1,4 @@
-"""kokage-ui: Admin dashboard demo.
+"""kokage-ui: Admin dashboard demo with SQLite storage.
 
 Run:
     uv run uvicorn examples.admin_demo:app --reload
@@ -7,14 +7,18 @@ Open http://localhost:8000 in your browser.
 
 Features demonstrated:
     - AdminSite (auto-generated admin panel)
+    - SQLModelStorage with SQLite (aiosqlite)
     - Dashboard charts and activity log
     - Custom dashboard widgets
     - Column filters and custom bulk actions
-    - InMemoryStorage with multiple models
 """
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
-from pydantic import BaseModel, Field
+from starlette.responses import RedirectResponse
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlmodel import Field, SQLModel
 
 from kokage_ui import (
     AdminSite,
@@ -23,66 +27,98 @@ from kokage_ui import (
     ChartData,
     ColumnFilter,
     Dataset,
-    InMemoryStorage,
+    SQLModelStorage,
+    create_tables,
 )
 
-app = FastAPI()
+# ---------- Database ----------
+
+engine = create_async_engine("sqlite+aiosqlite:///admin_demo.db")
+
 
 # ---------- Models ----------
 
 
-class User(BaseModel):
-    id: str = ""
+class User(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     name: str = Field(min_length=1, max_length=100)
     email: str = ""
     role: str = "viewer"
     is_active: bool = True
 
 
-class Product(BaseModel):
-    id: str = ""
+class Product(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     name: str = Field(min_length=1, max_length=200)
     price: float = Field(ge=0, default=0)
     category: str = ""
     in_stock: bool = True
 
 
-class Order(BaseModel):
-    id: str = ""
+class Order(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     product: str = ""
     quantity: int = Field(ge=1, default=1)
     status: str = "pending"
 
 
-# ---------- Sample Data ----------
+# ---------- Storage ----------
 
-user_storage = InMemoryStorage(
-    User,
-    initial=[
-        User(id="1", name="Admin User", email="admin@example.com", role="admin"),
-        User(id="2", name="Tanaka Taro", email="tanaka@example.com", role="editor"),
-        User(id="3", name="Suzuki Hanako", email="suzuki@example.com", role="viewer"),
-    ],
-)
+user_storage = SQLModelStorage(User, engine)
+product_storage = SQLModelStorage(Product, engine)
+order_storage = SQLModelStorage(Order, engine)
 
-product_storage = InMemoryStorage(
-    Product,
-    initial=[
-        Product(id="1", name="Laptop", price=999.99, category="Electronics"),
-        Product(id="2", name="Desk Chair", price=249.50, category="Furniture"),
-        Product(id="3", name="Python Book", price=39.99, category="Books", in_stock=False),
-        Product(id="4", name="Monitor", price=449.00, category="Electronics"),
-    ],
-)
 
-order_storage = InMemoryStorage(
-    Order,
-    initial=[
-        Order(id="1", product="Laptop", quantity=2, status="shipped"),
-        Order(id="2", product="Desk Chair", quantity=1, status="pending"),
-        Order(id="3", product="Python Book", quantity=5, status="delivered"),
-    ],
-)
+# ---------- Seed Data ----------
+
+SEED_USERS = [
+    User(name="Admin User", email="admin@example.com", role="admin"),
+    User(name="Tanaka Taro", email="tanaka@example.com", role="editor"),
+    User(name="Suzuki Hanako", email="suzuki@example.com", role="viewer"),
+]
+
+SEED_PRODUCTS = [
+    Product(name="Laptop", price=999.99, category="Electronics"),
+    Product(name="Desk Chair", price=249.50, category="Furniture"),
+    Product(name="Python Book", price=39.99, category="Books", in_stock=False),
+    Product(name="Monitor", price=449.00, category="Electronics"),
+]
+
+SEED_ORDERS = [
+    Order(product="Laptop", quantity=2, status="shipped"),
+    Order(product="Desk Chair", quantity=1, status="pending"),
+    Order(product="Python Book", quantity=5, status="delivered"),
+]
+
+
+async def seed_data():
+    """Insert sample data if tables are empty."""
+    users, total = await user_storage.list()
+    if total == 0:
+        for u in SEED_USERS:
+            await user_storage.create(u)
+        for p in SEED_PRODUCTS:
+            await product_storage.create(p)
+        for o in SEED_ORDERS:
+            await order_storage.create(o)
+
+
+# ---------- App ----------
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await create_tables(engine)
+    await seed_data()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/")
+def root():
+    return RedirectResponse("/admin/")
 
 
 # ---------- Custom Dashboard Widgets ----------
@@ -153,8 +189,8 @@ async def deactivate_users(selected_ids, storage):
     for uid in selected_ids:
         item = await storage.get(uid)
         if item:
-            updated = item.model_copy(update={"is_active": False})
-            await storage.update(uid, updated)
+            item.is_active = False
+            await storage.update(uid, item)
 
 
 async def mark_shipped(selected_ids, storage):
@@ -162,8 +198,8 @@ async def mark_shipped(selected_ids, storage):
     for oid in selected_ids:
         item = await storage.get(oid)
         if item:
-            updated = item.model_copy(update={"status": "shipped"})
-            await storage.update(oid, updated)
+            item.status = "shipped"
+            await storage.update(oid, item)
 
 
 # ---------- Admin Site ----------
