@@ -849,6 +849,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Timeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timelineitem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TimelineItem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeline_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#breadcrumb" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -906,6 +945,45 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autocomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autocomplete
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Autocomplete">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#autocomplete_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autocomplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autocomplete_option" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        autocomplete_option
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1237,6 +1315,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1481,6 +1587,62 @@
     
   
     Chat Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/agent_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/chart_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chart Demo
   
 
     
@@ -2072,6 +2234,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Timeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timelineitem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TimelineItem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeline_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#breadcrumb" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2129,6 +2330,45 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autocomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autocomplete
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Autocomplete">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#autocomplete_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autocomplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autocomplete_option" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        autocomplete_option
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2940,15 +3180,99 @@
 </tr>
 </tbody>
 </table>
+<h2 id="timeline">Timeline</h2>
+<p>Display time-series data such as activity logs, project history, and changelogs.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Timeline</span><span class="p">,</span> <span class="n">TimelineItem</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">Timeline</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">TimelineItem</span><span class="p">(</span><span class="s2">&quot;プロジェクト開始&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">),</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="n">TimelineItem</span><span class="p">(</span><span class="s2">&quot;v1.0 リリース&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;2024-03-15&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">),</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="n">TimelineItem</span><span class="p">(</span><span class="s2">&quot;v2.0 開発中&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;2024-06-01&quot;</span><span class="p">),</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">])</span>
+</code></pre></div>
+<h3 id="timelineitem">TimelineItem</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>content</code></td>
+<td>Any</td>
+<td>(required)</td>
+<td>Main content (displayed in timeline-end)</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td>str | None</td>
+<td>None</td>
+<td>Label text (displayed in timeline-start, e.g. date)</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>str | None</td>
+<td>None</td>
+<td>DaisyUI color applied to hr and icon</td>
+</tr>
+<tr>
+<td><code>icon</code></td>
+<td>Any | None</td>
+<td>None</td>
+<td>Custom icon (default: checkmark SVG)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="timeline_1">Timeline</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>items</code></td>
+<td>list[TimelineItem]</td>
+<td>(required)</td>
+<td>List of timeline items</td>
+</tr>
+<tr>
+<td><code>vertical</code></td>
+<td>bool</td>
+<td>True</td>
+<td>Vertical layout (False for horizontal)</td>
+</tr>
+<tr>
+<td><code>compact</code></td>
+<td>bool</td>
+<td>False</td>
+<td>Compact mode (content on one side only)</td>
+</tr>
+<tr>
+<td><code>use_box</code></td>
+<td>bool</td>
+<td>True</td>
+<td>Apply timeline-box style to content</td>
+</tr>
+</tbody>
+</table>
 <h2 id="breadcrumb">Breadcrumb</h2>
 <p>Navigation breadcrumb trail.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Breadcrumb</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">Breadcrumb</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="p">[</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="p">(</span><span class="s2">&quot;Home&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">),</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="p">(</span><span class="s2">&quot;Users&quot;</span><span class="p">,</span> <span class="s2">&quot;/users&quot;</span><span class="p">),</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="p">(</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>  <span class="c1"># current page, no link</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">])</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Breadcrumb</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">Breadcrumb</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="p">(</span><span class="s2">&quot;Home&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">),</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="p">(</span><span class="s2">&quot;Users&quot;</span><span class="p">,</span> <span class="s2">&quot;/users&quot;</span><span class="p">),</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="p">(</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>  <span class="c1"># current page, no link</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="p">])</span>
 </code></pre></div>
 <table>
 <thead>
@@ -2968,17 +3292,17 @@
 </table>
 <h2 id="collapse-accordion">Collapse / Accordion</h2>
 <p>Expandable content sections.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Collapse</span><span class="p">,</span> <span class="n">Accordion</span><span class="p">,</span> <span class="n">P</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># Single collapse</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="n">Collapse</span><span class="p">(</span><span class="s2">&quot;Click to open&quot;</span><span class="p">,</span> <span class="n">P</span><span class="p">(</span><span class="s2">&quot;Hidden content&quot;</span><span class="p">),</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;arrow&quot;</span><span class="p">,</span> <span class="nb">open</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># Accordion (radio-linked group)</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="n">Accordion</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="p">[</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    <span class="p">(</span><span class="s2">&quot;Section 1&quot;</span><span class="p">,</span> <span class="n">P</span><span class="p">(</span><span class="s2">&quot;Content 1&quot;</span><span class="p">)),</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    <span class="p">(</span><span class="s2">&quot;Section 2&quot;</span><span class="p">,</span> <span class="n">P</span><span class="p">(</span><span class="s2">&quot;Content 2&quot;</span><span class="p">)),</span>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    <span class="p">(</span><span class="s2">&quot;Section 3&quot;</span><span class="p">,</span> <span class="n">P</span><span class="p">(</span><span class="s2">&quot;Content 3&quot;</span><span class="p">)),</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="p">],</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;arrow&quot;</span><span class="p">,</span> <span class="n">default_open</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Collapse</span><span class="p">,</span> <span class="n">Accordion</span><span class="p">,</span> <span class="n">P</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Single collapse</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="n">Collapse</span><span class="p">(</span><span class="s2">&quot;Click to open&quot;</span><span class="p">,</span> <span class="n">P</span><span class="p">(</span><span class="s2">&quot;Hidden content&quot;</span><span class="p">),</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;arrow&quot;</span><span class="p">,</span> <span class="nb">open</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># Accordion (radio-linked group)</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="n">Accordion</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="p">(</span><span class="s2">&quot;Section 1&quot;</span><span class="p">,</span> <span class="n">P</span><span class="p">(</span><span class="s2">&quot;Content 1&quot;</span><span class="p">)),</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    <span class="p">(</span><span class="s2">&quot;Section 2&quot;</span><span class="p">,</span> <span class="n">P</span><span class="p">(</span><span class="s2">&quot;Content 2&quot;</span><span class="p">)),</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="p">(</span><span class="s2">&quot;Section 3&quot;</span><span class="p">,</span> <span class="n">P</span><span class="p">(</span><span class="s2">&quot;Content 3&quot;</span><span class="p">)),</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="p">],</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;arrow&quot;</span><span class="p">,</span> <span class="n">default_open</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="collapse">Collapse</h3>
 <table>
@@ -3051,21 +3375,21 @@
 </table>
 <h2 id="dropdown">Dropdown</h2>
 <p>A dropdown menu triggered by click or hover.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dropdown</span><span class="p">,</span> <span class="n">DaisyButton</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Simple item list</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="n">Dropdown</span><span class="p">(</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="s2">&quot;Options&quot;</span><span class="p">,</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="n">items</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Edit&quot;</span><span class="p">,</span> <span class="s2">&quot;/edit&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Delete&quot;</span><span class="p">,</span> <span class="s2">&quot;/delete&quot;</span><span class="p">)],</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>    <span class="n">position</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="p">)</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Custom trigger</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="n">Dropdown</span><span class="p">(</span>
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>    <span class="n">DaisyButton</span><span class="p">(</span><span class="s2">&quot;Menu&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;ghost&quot;</span><span class="p">),</span>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>    <span class="n">items</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Profile&quot;</span><span class="p">,</span> <span class="s2">&quot;/profile&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="s2">&quot;/settings&quot;</span><span class="p">)],</span>
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>    <span class="n">hover</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dropdown</span><span class="p">,</span> <span class="n">DaisyButton</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># Simple item list</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">Dropdown</span><span class="p">(</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="s2">&quot;Options&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="n">items</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Edit&quot;</span><span class="p">,</span> <span class="s2">&quot;/edit&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Delete&quot;</span><span class="p">,</span> <span class="s2">&quot;/delete&quot;</span><span class="p">)],</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="n">position</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="p">)</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Custom trigger</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="n">Dropdown</span><span class="p">(</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    <span class="n">DaisyButton</span><span class="p">(</span><span class="s2">&quot;Menu&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;ghost&quot;</span><span class="p">),</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>    <span class="n">items</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Profile&quot;</span><span class="p">,</span> <span class="s2">&quot;/profile&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="s2">&quot;/settings&quot;</span><span class="p">)],</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>    <span class="n">hover</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="p">)</span>
 </code></pre></div>
 <table>
 <thead>
@@ -3108,25 +3432,149 @@
 </tr>
 </tbody>
 </table>
+<h2 id="autocomplete">Autocomplete</h2>
+<p>A server-side search autocomplete (combobox) component. The text input sends htmx GET requests on keystroke, displays matching results in a dropdown, and stores the selected value in a hidden input for form submission.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Autocomplete</span><span class="p">,</span> <span class="n">autocomplete_option</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># In your page</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="n">Autocomplete</span><span class="p">(</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="n">search_url</span><span class="o">=</span><span class="s2">&quot;/api/users/search&quot;</span><span class="p">,</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;User&quot;</span><span class="p">,</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Search users...&quot;</span><span class="p">,</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>    <span class="n">min_chars</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="p">)</span>
+</code></pre></div>
+<p>Server endpoint returns a list of <code>autocomplete_option</code> elements:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nd">@ui</span><span class="o">.</span><span class="n">fragment</span><span class="p">(</span><span class="s2">&quot;/api/users/search&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">search_users</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span> <span class="n">q</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">search_users</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">autocomplete_option</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">),</span> <span class="n">u</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+</code></pre></div>
+<h3 id="autocomplete_1">Autocomplete</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>str</td>
+<td>(required)</td>
+<td>Hidden input name (form submission value)</td>
+</tr>
+<tr>
+<td><code>search_url</code></td>
+<td>str</td>
+<td>(required)</td>
+<td>htmx GET endpoint for search</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td>str | None</td>
+<td>None</td>
+<td>Label text</td>
+</tr>
+<tr>
+<td><code>placeholder</code></td>
+<td>str</td>
+<td><code>""</code></td>
+<td>Placeholder text</td>
+</tr>
+<tr>
+<td><code>query_name</code></td>
+<td>str</td>
+<td><code>"q"</code></td>
+<td>Query parameter name sent to search endpoint</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>str</td>
+<td><code>""</code></td>
+<td>Hidden input initial value</td>
+</tr>
+<tr>
+<td><code>display_value</code></td>
+<td>str</td>
+<td><code>""</code></td>
+<td>Display input initial value</td>
+</tr>
+<tr>
+<td><code>delay</code></td>
+<td>int</td>
+<td><code>300</code></td>
+<td>Debounce delay in ms</td>
+</tr>
+<tr>
+<td><code>min_chars</code></td>
+<td>int</td>
+<td><code>1</code></td>
+<td>Minimum characters to trigger search</td>
+</tr>
+<tr>
+<td><code>bordered</code></td>
+<td>bool</td>
+<td>True</td>
+<td>Use DaisyUI bordered style</td>
+</tr>
+<tr>
+<td><code>autocomplete_id</code></td>
+<td>str | None</td>
+<td>None</td>
+<td>ID prefix (auto-generated if omitted)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="autocomplete_option">autocomplete_option</h3>
+<p>Helper function that returns an <code>&lt;li&gt;</code> element for the server response.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">autocomplete_option</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;42&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Alice Smith&quot;</span><span class="p">)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># renders: &lt;li role=&quot;option&quot; data-value=&quot;42&quot;&gt;&lt;a&gt;Alice Smith&lt;/a&gt;&lt;/li&gt;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>value</code></td>
+<td>str</td>
+<td>The option value (stored in <code>data-value</code>)</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td>str</td>
+<td>Display text</td>
+</tr>
+</tbody>
+</table>
 <h2 id="layout">Layout</h2>
 <p>A reusable page layout builder (not a Component). Wraps content in a consistent <code>Page</code> with navbar, sidebar, footer, and theme.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Layout</span><span class="p">,</span> <span class="n">NavBar</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">Footer</span><span class="p">,</span> <span class="n">P</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">layout</span> <span class="o">=</span> <span class="n">Layout</span><span class="p">(</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">navbar</span><span class="o">=</span><span class="n">NavBar</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">A</span><span class="p">(</span><span class="s2">&quot;My App&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="s2">&quot;btn btn-ghost text-xl&quot;</span><span class="p">)),</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="n">footer</span><span class="o">=</span><span class="n">Footer</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s2">&quot;Footer content&quot;</span><span class="p">),</span> <span class="bp">cls</span><span class="o">=</span><span class="s2">&quot;p-4&quot;</span><span class="p">),</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;light&quot;</span><span class="p">,</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="n">title_suffix</span><span class="o">=</span><span class="s2">&quot; - My App&quot;</span><span class="p">,</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="n">include_toast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">Layout</span><span class="p">,</span> <span class="n">NavBar</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">Footer</span><span class="p">,</span> <span class="n">P</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">layout</span> <span class="o">=</span> <span class="n">Layout</span><span class="p">(</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>    <span class="n">navbar</span><span class="o">=</span><span class="n">NavBar</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">A</span><span class="p">(</span><span class="s2">&quot;My App&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="s2">&quot;btn btn-ghost text-xl&quot;</span><span class="p">)),</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>    <span class="n">footer</span><span class="o">=</span><span class="n">Footer</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s2">&quot;Footer content&quot;</span><span class="p">),</span> <span class="bp">cls</span><span class="o">=</span><span class="s2">&quot;p-4&quot;</span><span class="p">),</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    <span class="n">theme</span><span class="o">=</span><span class="s2">&quot;light&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>    <span class="n">title_suffix</span><span class="o">=</span><span class="s2">&quot; - My App&quot;</span><span class="p">,</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>    <span class="n">include_toast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="p">)</span>
 </code></pre></div>
 <p>Use with <code>@ui.page()</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nd">@ui</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Home&quot;</span><span class="p">)</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="k">return</span> <span class="n">Div</span><span class="p">(</span><span class="s2">&quot;Page content here&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nd">@ui</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Home&quot;</span><span class="p">)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>    <span class="k">return</span> <span class="n">Div</span><span class="p">(</span><span class="s2">&quot;Page content here&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Or with <code>ui.crud()</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">ui</span><span class="o">.</span><span class="n">crud</span><span class="p">(</span><span class="s2">&quot;/items&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Item</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="n">storage</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">ui</span><span class="o">.</span><span class="n">crud</span><span class="p">(</span><span class="s2">&quot;/items&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Item</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="n">storage</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
 </code></pre></div>
 <table>
 <thead>

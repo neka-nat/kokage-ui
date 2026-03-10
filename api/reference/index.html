@@ -853,6 +853,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1097,6 +1125,62 @@
     
   
     Chat Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/agent_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/chart_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chart Demo
   
 
     
@@ -1594,6 +1678,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ai-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Agent
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1776,6 +1871,17 @@
     <span class="md-ellipsis">
       
         AI Chat
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Agent
       
     </span>
   </a>
@@ -2194,7 +2300,7 @@
 </tr>
 <tr>
 <td><code>Tab</code></td>
-<td>Single tab definition (dataclass)</td>
+<td>Single tab definition (BaseModel)</td>
 </tr>
 <tr>
 <td><code>Tabs</code></td>
@@ -2202,11 +2308,19 @@
 </tr>
 <tr>
 <td><code>Step</code></td>
-<td>Single step definition (dataclass)</td>
+<td>Single step definition (BaseModel)</td>
 </tr>
 <tr>
 <td><code>Steps</code></td>
 <td>Progress step indicator</td>
+</tr>
+<tr>
+<td><code>TimelineItem</code></td>
+<td>Single timeline item definition (BaseModel)</td>
+</tr>
+<tr>
+<td><code>Timeline</code></td>
+<td>Timeline component (vertical/horizontal)</td>
 </tr>
 <tr>
 <td><code>Breadcrumb</code></td>
@@ -2235,6 +2349,14 @@
 <tr>
 <td><code>DependentSelect</code></td>
 <td>Select that depends on another field</td>
+</tr>
+<tr>
+<td><code>Autocomplete</code></td>
+<td>Server-side search autocomplete (combobox)</td>
+</tr>
+<tr>
+<td><code>autocomplete_option</code></td>
+<td>Helper to create autocomplete option <code>&lt;li&gt;</code></td>
 </tr>
 </tbody>
 </table>
@@ -2329,6 +2451,10 @@
 <td><code>DependentField</code></td>
 <td>Field that updates based on another field's value</td>
 </tr>
+<tr>
+<td><code>InlineEdit</code></td>
+<td>Click-to-edit inline editing (<code>hx-get</code> display → <code>hx-patch</code> form)</td>
+</tr>
 </tbody>
 </table>
 <h2 id="multi-step-forms">Multi-step Forms</h2>
@@ -2400,7 +2526,7 @@
 </tr>
 <tr>
 <td><code>ModelAdmin</code></td>
-<td>Model registration configuration (dataclass)</td>
+<td>Model registration configuration (BaseModel)</td>
 </tr>
 </tbody>
 </table>
@@ -2487,6 +2613,18 @@
 <td>Chart.js chart (line, bar, pie, doughnut, radar, scatter)</td>
 </tr>
 <tr>
+<td><code>Dataset</code></td>
+<td>Typed Chart.js dataset (BaseModel, <code>extra="allow"</code>)</td>
+</tr>
+<tr>
+<td><code>ChartData</code></td>
+<td>Typed Chart.js data config (labels + datasets)</td>
+</tr>
+<tr>
+<td><code>ChartOptions</code></td>
+<td>Typed Chart.js options config (BaseModel, <code>extra="allow"</code>)</td>
+</tr>
+<tr>
 <td><code>CodeBlock</code></td>
 <td>Syntax-highlighted code block (Highlight.js)</td>
 </tr>
@@ -2511,11 +2649,42 @@
 </tr>
 <tr>
 <td><code>ChatMessage</code></td>
-<td>Chat message dataclass (role, content, name)</td>
+<td>Chat message model (role, content, name)</td>
 </tr>
 <tr>
 <td><code>chat_stream</code></td>
 <td>Convert async token generator to SSE StreamingResponse</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ai-agent">AI Agent</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AgentView</code></td>
+<td>Agent dashboard with tool call visualization, status/metrics bars</td>
+</tr>
+<tr>
+<td><code>AgentEvent</code></td>
+<td>Framework-agnostic SSE event (text, tool_call, tool_result, status, error, done)</td>
+</tr>
+<tr>
+<td><code>AgentMessage</code></td>
+<td>Agent message model with optional tool_calls</td>
+</tr>
+<tr>
+<td><code>ToolCall</code></td>
+<td>Tool call record (name, input, result, call_id)</td>
+</tr>
+<tr>
+<td><code>agent_stream</code></td>
+<td>Convert async AgentEvent generator to SSE StreamingResponse</td>
 </tr>
 </tbody>
 </table>

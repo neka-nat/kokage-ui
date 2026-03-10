@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://neka-nat.github.io/kokage-ui/guide/chat/">
+        <link rel="canonical" href="https://neka-nat.github.io/kokage-ui/guide/agent/">
       
       
-        <link rel="prev" href="../htmx/">
+        <link rel="prev" href="../chat/">
       
       
-        <link rel="next" href="../agent/">
+        <link rel="next" href="../../examples/hello/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Streaming Chat - kokage-ui</title>
+        <title>Agent View - kokage-ui</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#streaming-chat-ui" class="md-skip">
+        <a href="#agent-view" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Streaming Chat
+              Agent View
             
           </span>
         </div>
@@ -834,6 +834,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -853,7 +881,7 @@
   <span class="md-ellipsis">
     
   
-    Streaming Chat
+    Agent View
   
 
     
@@ -871,7 +899,7 @@
   <span class="md-ellipsis">
     
   
-    Streaming Chat
+    Agent View
   
 
     
@@ -908,15 +936,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#chatview" class="md-nav__link">
+  <a href="#agentview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ChatView
+        AgentView
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ChatView">
+    <nav class="md-nav" aria-label="AgentView">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -930,72 +958,28 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#chat-bubble-layout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Chat Bubble Layout
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#chatmessage" class="md-nav__link">
+  <a href="#agentevent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ChatMessage
+        AgentEvent
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#chat_stream" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        chat_stream
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#markdown-code-highlighting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Markdown &amp; Code Highlighting
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#server-side-endpoint" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Server-Side Endpoint
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Server-Side Endpoint">
+    <nav class="md-nav" aria-label="AgentEvent">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request-format" class="md-nav__link">
+  <a href="#event-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Request Format
+        Event Types
       
     </span>
   </a>
@@ -1003,10 +987,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response-format" class="md-nav__link">
+  <a href="#metrics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Response Format
+        Metrics
       
     </span>
   </a>
@@ -1019,10 +1003,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#agentmessage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
+        AgentMessage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent_stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        agent_stream
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#framework-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Framework Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Framework Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#anthropic-claude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anthropic Claude
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI Layout
       
     </span>
   </a>
@@ -1033,34 +1078,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../agent/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Agent View
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1708,15 +1725,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#chatview" class="md-nav__link">
+  <a href="#agentview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ChatView
+        AgentView
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ChatView">
+    <nav class="md-nav" aria-label="AgentView">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1730,72 +1747,28 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#chat-bubble-layout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Chat Bubble Layout
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#chatmessage" class="md-nav__link">
+  <a href="#agentevent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ChatMessage
+        AgentEvent
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#chat_stream" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        chat_stream
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#markdown-code-highlighting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Markdown &amp; Code Highlighting
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#server-side-endpoint" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Server-Side Endpoint
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Server-Side Endpoint">
+    <nav class="md-nav" aria-label="AgentEvent">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request-format" class="md-nav__link">
+  <a href="#event-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Request Format
+        Event Types
       
     </span>
   </a>
@@ -1803,10 +1776,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response-format" class="md-nav__link">
+  <a href="#metrics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Response Format
+        Metrics
       
     </span>
   </a>
@@ -1819,10 +1792,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#agentmessage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
+        AgentMessage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent_stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        agent_stream
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#framework-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Framework Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Framework Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#anthropic-claude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anthropic Claude
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenAI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI Layout
       
     </span>
   </a>
@@ -1849,53 +1883,50 @@
   
 
 
-<h1 id="streaming-chat-ui">Streaming Chat UI</h1>
-<p>kokage-ui provides a <code>ChatView</code> component for building LLM chat interfaces with SSE streaming, DaisyUI chat bubbles, Markdown rendering, and code highlighting.</p>
+<h1 id="agent-view">Agent View</h1>
+<p>kokage-ui provides an <code>AgentView</code> component for building AI agent dashboards with SSE streaming, tool call visualization, status bar, and metrics display.</p>
 <h2 id="quick-start">Quick Start</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">Request</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokageUI</span><span class="p">,</span> <span class="n">Page</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatView</span><span class="p">,</span> <span class="n">ChatMessage</span><span class="p">,</span> <span class="n">chat_stream</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentView</span><span class="p">,</span> <span class="n">AgentEvent</span><span class="p">,</span> <span class="n">AgentMessage</span><span class="p">,</span> <span class="n">agent_stream</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">ui</span> <span class="o">=</span> <span class="n">KokageUI</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nd">@ui</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;/chat&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">chat_page</span><span class="p">():</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nd">@ui</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">agent_page</span><span class="p">():</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">return</span> <span class="n">Page</span><span class="p">(</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="n">ChatView</span><span class="p">(</span><span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">),</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;AI Chat&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="n">AgentView</span><span class="p">(</span><span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/agent&quot;</span><span class="p">,</span> <span class="n">agent_name</span><span class="o">=</span><span class="s2">&quot;Agent&quot;</span><span class="p">),</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agent&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="n">include_marked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="n">include_highlightjs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="p">)</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/agent&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">agent</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">():</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="k">async</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">your_llm</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]):</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>            <span class="k">yield</span> <span class="n">token</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="k">return</span> <span class="n">chat_stream</span><span class="p">(</span><span class="n">generate</span><span class="p">())</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">():</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Thinking...&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;tool_call&quot;</span><span class="p">,</span> <span class="n">call_id</span><span class="o">=</span><span class="s2">&quot;tc1&quot;</span><span class="p">,</span> <span class="n">tool_name</span><span class="o">=</span><span class="s2">&quot;search&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                         <span class="n">tool_input</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]})</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">do_search</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;tool_result&quot;</span><span class="p">,</span> <span class="n">call_id</span><span class="o">=</span><span class="s2">&quot;tc1&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="k">async</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">call_llm</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">],</span> <span class="n">result</span><span class="p">):</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>            <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;done&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tokens&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span> <span class="s2">&quot;duration_ms&quot;</span><span class="p">:</span> <span class="mi">2500</span><span class="p">,</span> <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="k">return</span> <span class="n">agent_stream</span><span class="p">(</span><span class="n">run</span><span class="p">())</span>
 </code></pre></div>
-<h2 id="chatview">ChatView</h2>
-<p>The main chat UI component. Renders a message area with DaisyUI chat bubbles, an input form, and inline JavaScript for fetch-based SSE streaming.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">ChatView</span><span class="p">(</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello! How can I help?&quot;</span><span class="p">),</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="p">],</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">assistant_name</span><span class="o">=</span><span class="s2">&quot;AI&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">user_name</span><span class="o">=</span><span class="s2">&quot;You&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">height</span><span class="o">=</span><span class="s2">&quot;500px&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">)</span>
-</code></pre></div>
+<h2 id="agentview">AgentView</h2>
+<p>The main agent dashboard component. Renders a status bar, message area with tool call panels, metrics bar, input form, and inline JavaScript for SSE streaming.</p>
 <h3 id="parameters">Parameters</h3>
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
 <th>Type</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -1903,144 +1934,214 @@
 <tr>
 <td><code>send_url</code></td>
 <td>str</td>
-<td>POST endpoint URL for sending messages (required)</td>
+<td>(required)</td>
+<td>POST endpoint URL</td>
 </tr>
 <tr>
 <td><code>messages</code></td>
-<td>list[ChatMessage] | None</td>
-<td>Initial messages to display</td>
+<td>list[AgentMessage] | None</td>
+<td>None</td>
+<td>Initial messages</td>
 </tr>
 <tr>
 <td><code>placeholder</code></td>
 <td>str</td>
-<td>Input placeholder text (default: <code>"メッセージを入力..."</code>)</td>
+<td><code>"メッセージを入力..."</code></td>
+<td>Input placeholder</td>
 </tr>
 <tr>
 <td><code>send_label</code></td>
 <td>str</td>
-<td>Submit button label (default: <code>"送信"</code>)</td>
+<td><code>"送信"</code></td>
+<td>Submit button label</td>
 </tr>
 <tr>
-<td><code>assistant_name</code></td>
+<td><code>agent_name</code></td>
 <td>str</td>
-<td>Display name for assistant bubbles (default: <code>"Assistant"</code>)</td>
+<td><code>"Agent"</code></td>
+<td>Agent display name</td>
 </tr>
 <tr>
 <td><code>user_name</code></td>
 <td>str</td>
-<td>Display name for user bubbles (default: <code>"You"</code>)</td>
+<td><code>"You"</code></td>
+<td>User display name</td>
 </tr>
 <tr>
 <td><code>height</code></td>
 <td>str</td>
-<td>CSS height for the chat container (default: <code>"600px"</code>)</td>
+<td><code>"700px"</code></td>
+<td>Container CSS height</td>
 </tr>
 <tr>
-<td><code>chat_id</code></td>
+<td><code>show_metrics</code></td>
+<td>bool</td>
+<td>True</td>
+<td>Show metrics bar</td>
+</tr>
+<tr>
+<td><code>show_status</code></td>
+<td>bool</td>
+<td>True</td>
+<td>Show status bar</td>
+</tr>
+<tr>
+<td><code>tool_expanded</code></td>
+<td>bool</td>
+<td>False</td>
+<td>Default tool panel state</td>
+</tr>
+<tr>
+<td><code>agent_id</code></td>
 <td>str | None</td>
-<td>Unique ID prefix; auto-generated if omitted</td>
+<td>None</td>
+<td>Auto-generated if omitted</td>
 </tr>
 </tbody>
 </table>
-<h3 id="chat-bubble-layout">Chat Bubble Layout</h3>
-<ul>
-<li><strong>User messages</strong> — aligned right with <code>chat-bubble-primary</code> styling</li>
-<li><strong>Assistant messages</strong> — aligned left with <code>prose</code> class for Markdown content</li>
-</ul>
-<h2 id="chatmessage">ChatMessage</h2>
-<p>A Pydantic BaseModel representing a single chat message.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatMessage</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello!&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hi there!&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Bot&quot;</span><span class="p">)</span>
-</code></pre></div>
+<h2 id="agentevent">AgentEvent</h2>
+<p>Framework-agnostic SSE event for agent streaming. Works with any LLM framework (Anthropic, OpenAI, LangChain, etc.).</p>
+<h3 id="event-types">Event Types</h3>
 <table>
 <thead>
 <tr>
-<th>Field</th>
 <th>Type</th>
+<th>Fields</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>role</code></td>
-<td>str</td>
-<td><code>"user"</code>, <code>"assistant"</code>, or <code>"system"</code></td>
-</tr>
-<tr>
+<td><code>"text"</code></td>
 <td><code>content</code></td>
-<td>str</td>
-<td>Message text content</td>
+<td>Streaming text token</td>
 </tr>
 <tr>
-<td><code>name</code></td>
-<td>str | None</td>
-<td>Optional display name override</td>
+<td><code>"tool_call"</code></td>
+<td><code>call_id</code>, <code>tool_name</code>, <code>tool_input</code></td>
+<td>Tool invocation started</td>
+</tr>
+<tr>
+<td><code>"tool_result"</code></td>
+<td><code>call_id</code>, <code>result</code></td>
+<td>Tool execution completed</td>
+</tr>
+<tr>
+<td><code>"status"</code></td>
+<td><code>content</code></td>
+<td>Status bar update</td>
+</tr>
+<tr>
+<td><code>"error"</code></td>
+<td><code>content</code></td>
+<td>Error message</td>
+</tr>
+<tr>
+<td><code>"done"</code></td>
+<td><code>metrics</code></td>
+<td>Stream complete</td>
 </tr>
 </tbody>
 </table>
-<h2 id="chat_stream">chat_stream</h2>
-<p>Helper function that converts an async token generator to an SSE <code>StreamingResponse</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">chat_stream</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">():</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="k">yield</span> <span class="s2">&quot;Hello&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="k">yield</span> <span class="s2">&quot; world&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">return</span> <span class="n">chat_stream</span><span class="p">(</span><span class="n">generate</span><span class="p">())</span>
-</code></pre></div>
-<p>Each token is sent as a Server-Sent Event:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>data: {&quot;token&quot;: &quot;Hello&quot;}
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>data: {&quot;token&quot;: &quot; world&quot;}
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>data: {&quot;done&quot;: true}
-</code></pre></div>
-<p>The response has <code>Content-Type: text/event-stream</code> with <code>Cache-Control: no-cache</code>.</p>
-<h2 id="markdown-code-highlighting">Markdown &amp; Code Highlighting</h2>
-<p><code>ChatView</code> automatically uses <code>marked.js</code> for Markdown rendering and <code>highlight.js</code> for code blocks when they are loaded on the page.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">Page</span><span class="p">(</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">ChatView</span><span class="p">(</span><span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">),</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">include_marked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>        <span class="c1"># Enable Markdown rendering</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">include_highlightjs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>   <span class="c1"># Enable code syntax highlighting</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">)</span>
-</code></pre></div>
-<p>If <code>marked.js</code> is not loaded, assistant messages are displayed as plain text with HTML escaping.</p>
-<h2 id="server-side-endpoint">Server-Side Endpoint</h2>
-<p>The POST endpoint receives JSON with a <code>message</code> field and should return a <code>chat_stream()</code> response:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">user_message</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">():</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="c1"># Use any LLM provider</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="k">async</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">call_llm</span><span class="p">(</span><span class="n">user_message</span><span class="p">):</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>            <span class="k">yield</span> <span class="n">token</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="k">return</span> <span class="n">chat_stream</span><span class="p">(</span><span class="n">generate</span><span class="p">())</span>
-</code></pre></div>
-<h3 id="request-format">Request Format</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&#39;s input text&quot;</span><span class="p">}</span>
-</code></pre></div>
-<h3 id="response-format">Response Format</h3>
-<p>SSE stream where each event is a JSON object:</p>
+<h3 id="metrics">Metrics</h3>
+<p>The <code>done</code> event can include a <code>metrics</code> dict with:</p>
 <ul>
-<li><code>{"token": "..."}</code> — a text token to append</li>
-<li><code>{"done": true}</code> — stream complete</li>
+<li><code>tokens</code> — Total tokens used</li>
+<li><code>duration_ms</code> — Total execution time in milliseconds</li>
+<li><code>tool_calls</code> — Number of tool calls made</li>
 </ul>
-<h2 id="how-it-works">How It Works</h2>
-<ol>
-<li>User submits message via the input form</li>
-<li>JavaScript adds a user chat bubble and an empty assistant bubble</li>
-<li><code>fetch()</code> sends a POST request to <code>send_url</code> with <code>{message: "..."}</code></li>
-<li>The response body is read as a stream using <code>ReadableStream</code></li>
-<li>Each SSE <code>data:</code> line is parsed; tokens are accumulated and rendered as Markdown</li>
-<li>On <code>done</code>, code blocks are highlighted with <code>hljs</code> if available</li>
-<li>The message area auto-scrolls to the latest message</li>
-<li>During streaming, the send button shows a loading state</li>
-</ol>
+<h2 id="agentmessage">AgentMessage</h2>
+<p>A Pydantic BaseModel for initial messages with optional tool call history.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentMessage</span><span class="p">,</span> <span class="n">ToolCall</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># User message</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">msg</span> <span class="o">=</span> <span class="n">AgentMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Search for kokage-ui&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Assistant message with tool calls</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">msg</span> <span class="o">=</span> <span class="n">AgentMessage</span><span class="p">(</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">role</span><span class="o">=</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Here are the results...&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">tool_calls</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="n">ToolCall</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;search&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="s2">&quot;kokage-ui&quot;</span><span class="p">},</span> <span class="n">result</span><span class="o">=</span><span class="s2">&quot;Found 3 items&quot;</span><span class="p">,</span> <span class="n">call_id</span><span class="o">=</span><span class="s2">&quot;tc1&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="p">],</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">)</span>
+</code></pre></div>
+<h2 id="agent_stream">agent_stream</h2>
+<p>Converts an async <code>AgentEvent</code> generator to an SSE <code>StreamingResponse</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentEvent</span><span class="p">,</span> <span class="n">agent_stream</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">():</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Working...&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello &quot;</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;world!&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;done&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tokens&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">return</span> <span class="n">agent_stream</span><span class="p">(</span><span class="n">run</span><span class="p">())</span>
+</code></pre></div>
+<p>SSE wire format:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>data: {&quot;type&quot;:&quot;text&quot;,&quot;content&quot;:&quot;Hello &quot;}
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>data: {&quot;type&quot;:&quot;text&quot;,&quot;content&quot;:&quot;world!&quot;}
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>data: {&quot;type&quot;:&quot;done&quot;,&quot;metrics&quot;:{&quot;tokens&quot;:10}}
+</code></pre></div>
+<h2 id="framework-integration">Framework Integration</h2>
+<h3 id="anthropic-claude">Anthropic Claude</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">anthropic</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentEvent</span><span class="p">,</span> <span class="n">agent_stream</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">client</span> <span class="o">=</span> <span class="n">anthropic</span><span class="o">.</span><span class="n">AsyncAnthropic</span><span class="p">()</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-20250514&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}],</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="p">)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;content_block_delta&quot;</span><span class="p">:</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>            <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;done&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="openai">OpenAI</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncOpenAI</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentEvent</span><span class="p">,</span> <span class="n">agent_stream</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">client</span> <span class="o">=</span> <span class="n">AsyncOpenAI</span><span class="p">()</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">stream</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}],</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="p">)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="k">async</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">stream</span><span class="p">:</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>        <span class="n">delta</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>        <span class="k">if</span> <span class="n">delta</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>            <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="k">yield</span> <span class="n">AgentEvent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;done&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="ui-layout">UI Layout</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌──────────────────────────────────────────────┐
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│ 🔄 Thinking...                               │  ← Status bar
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>├──────────────────────────────────────────────┤
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│                                              │
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│  [You]  Hello                                │
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│                                              │
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│  [Agent]                                     │
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│  ┌─ 🔧 Tool  search()               [▼] ─┐  │
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│  │  Input:  {&quot;q&quot;: &quot;foo&quot;}                  │  │
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│  │  Result: Found 3 items...              │  │
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│  └────────────────────────────────────────┘  │
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│  Based on the search results...              │
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>│                                              │
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>├──────────────────────────────────────────────┤
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>│ Tokens: 150  Duration: 2.5s  Tools: 1        │  ← Metrics bar
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>├──────────────────────────────────────────────┤
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>│ [メッセージを入力...]                [送信]  │
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>└──────────────────────────────────────────────┘
+</code></pre></div>
 
 
 
