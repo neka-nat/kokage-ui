@@ -72,6 +72,7 @@ nav:
     - Chat Demo: examples/chat_demo.md
     - Agent Demo: examples/agent_demo.md
     - Chart Demo: examples/chart_demo.md
+    - Auth Demo: examples/auth_demo.md
   - Component Catalog:
     - Overview: catalog/index.md
     - HTML Elements: catalog/elements.md

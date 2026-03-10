@@ -11,18 +11,21 @@ import inspect
 import io
 import math
 import urllib.parse
+from collections import deque
+from datetime import datetime, timezone
 from typing import Any, Callable
 
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse, StreamingResponse
-from pydantic import BaseModel, ConfigDict, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from starlette.responses import RedirectResponse
 
-from kokage_ui.components import Alert, Breadcrumb, Card, NavBar, Stat, Stats
+from kokage_ui.components import Alert, Badge, Breadcrumb, Card, NavBar, Stat, Stats
 from kokage_ui.data.crud import Storage, _process_bool_fields
-from kokage_ui.data.datagrid import DataGrid, DataGridState
-from kokage_ui.elements import A, Component, Div, H1, Li, Span, Ul
+from kokage_ui.data.datagrid import ColumnFilter, DataGrid, DataGridState
+from kokage_ui.elements import A, Component, Div, H1, H2, Li, P, Small, Span, Strong, Ul
 from kokage_ui.features.auth import UserMenu
+from kokage_ui.features.charts import Chart, ChartData, Dataset
 from kokage_ui.features.theme import ThemeSwitcher
 from kokage_ui.htmx import ConfirmDelete
 from kokage_ui.models import ModelDetail, ModelForm, _filter_fields
@@ -42,6 +45,50 @@ def _toast_url(base_url: str, message: str, toast_type: str = "success") -> str:
     return f"{base_url}{sep}_toast={urllib.parse.quote(message)}&_toast_type={toast_type}"
 
 
+# ========================================
+# Activity Log
+# ========================================
+
+_ACTIVITY_COLORS = {
+    "created": "success",
+    "updated": "warning",
+    "deleted": "error",
+}
+
+
+class ActivityEntry(BaseModel):
+    """A single activity log entry."""
+
+    action: str  # "created", "updated", "deleted"
+    model_name: str
+    item_id: str
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    user: str = ""
+
+
+class ActivityLog:
+    """In-memory ring buffer for recent admin operations."""
+
+    def __init__(self, max_entries: int = 50) -> None:
+        self._entries: deque[ActivityEntry] = deque(maxlen=max_entries)
+
+    def record(
+        self, action: str, model_name: str, item_id: str, user: str = ""
+    ) -> None:
+        self._entries.appendleft(
+            ActivityEntry(
+                action=action, model_name=model_name, item_id=item_id, user=user
+            )
+        )
+
+    @property
+    def entries(self) -> list[ActivityEntry]:
+        return list(self._entries)
+
+    def recent(self, n: int = 10) -> list[ActivityEntry]:
+        return list(self._entries)[:n]
+
+
 class ModelAdmin(BaseModel):
     """Configuration for a registered model in AdminSite.
 
@@ -57,6 +104,11 @@ class ModelAdmin(BaseModel):
         list_exclude: Fields to exclude from list view.
         per_page: Items per page in list view.
         id_field: Name of the ID field.
+        filters: Column filter definitions for DataGrid (field_name → ColumnFilter).
+        actions: Custom bulk actions as (label, handler) tuples.
+            Handler receives (selected_ids: list[str], storage: Storage) → None.
+        dashboard_widgets: List of callables returning Components for model dashboard.
+            Each callable receives (items: list, total: int) → Component.
     """
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -72,6 +124,9 @@ class ModelAdmin(BaseModel):
     list_exclude: list[str] | None = None
     per_page: int = 20
     id_field: str = "id"
+    filters: dict[str, ColumnFilter] | None = None
+    actions: list[tuple[str, Callable]] | None = None
+    dashboard_widgets: list[Callable] | None = None
 
     def model_post_init(self, __context: Any) -> None:
         if not self.name:
@@ -113,6 +168,7 @@ class AdminSite:
         self.theme = theme
         self.logout_url = logout_url
         self._registrations: list[ModelAdmin] = []
+        self.activity_log = ActivityLog()
         self._register_dashboard_routes()
 
     def register(self, model: type[BaseModel], *, storage: Storage, **kwargs: Any) -> None:
@@ -131,8 +187,18 @@ class AdminSite:
     # Layout helpers
     # ========================================
 
-    def _build_sidebar(self, active_model: str | None = None) -> Component:
-        """Build the sidebar navigation menu."""
+    def _build_sidebar(
+        self,
+        active_model: str | None = None,
+        counts: dict[str, int] | None = None,
+    ) -> Component:
+        """Build the sidebar navigation menu.
+
+        Args:
+            active_model: Currently active model name (for highlight).
+            counts: Dict of model_name → item count (for badges).
+        """
+        counts = counts or {}
         items: list[Any] = [
             Li(
                 A(
@@ -145,11 +211,19 @@ class AdminSite:
         ]
         for reg in self._registrations:
             is_active = active_model == reg.name
+            link_children: list[Any] = [
+                Span(reg.icon, cls="text-lg font-bold"),
+                reg.title,
+            ]
+            count = counts.get(reg.name)
+            if count is not None:
+                link_children.append(
+                    Badge(str(count), color="neutral", cls="badge-sm")
+                )
             items.append(
                 Li(
                     A(
-                        Span(reg.icon, cls="text-lg font-bold"),
-                        reg.title,
+                        *link_children,
                         href=f"{self.prefix}/{reg.name}/",
                         cls="active" if is_active else "",
                     )
@@ -188,10 +262,11 @@ class AdminSite:
         active_model: str | None = None,
         breadcrumb_items: list[tuple[str, str | None]] | None = None,
         user: Any = None,
+        counts: dict[str, int] | None = None,
     ) -> Page:
         """Wrap content in the admin layout."""
         navbar = self._build_navbar(user=user)
-        sidebar = self._build_sidebar(active_model=active_model)
+        sidebar = self._build_sidebar(active_model=active_model, counts=counts)
 
         body_children: list[Any] = []
         if breadcrumb_items:
@@ -203,7 +278,7 @@ class AdminSite:
             navbar,
             Div(sidebar, main_content, cls="flex pt-16"),
         )
-        return Page(layout, title=f"{title} - {self.title}", theme=self.theme, include_toast=True)
+        return Page(layout, title=f"{title} - {self.title}", theme=self.theme, include_toast=True, include_chartjs=True)
 
     # ========================================
     # Auth
@@ -238,6 +313,35 @@ class AdminSite:
     # Route registration
     # ========================================
 
+    def _render_activity_feed(self, n: int = 10) -> Component:
+        """Render the recent activity feed."""
+        entries = self.activity_log.recent(n)
+        if not entries:
+            return Card(
+                P("No recent activity.", cls="text-base-content/60"),
+                title="Recent Activity",
+            )
+
+        items: list[Any] = []
+        for entry in entries:
+            color = _ACTIVITY_COLORS.get(entry.action, "info")
+            time_str = entry.timestamp.strftime("%H:%M:%S")
+            user_str = f" by {entry.user}" if entry.user else ""
+            items.append(
+                Div(
+                    Div(
+                        Badge(entry.action, color=color, cls="badge-sm"),
+                        Strong(f" {entry.model_name}", cls="text-sm"),
+                        Span(f" #{entry.item_id}", cls="text-sm text-base-content/60"),
+                        cls="flex items-center gap-1",
+                    ),
+                    Small(f"{time_str}{user_str}", cls="text-xs text-base-content/50"),
+                    cls="flex items-center justify-between py-1 border-b border-base-200 last:border-0",
+                )
+            )
+
+        return Card(Div(*items), title="Recent Activity")
+
     def _register_dashboard_routes(self) -> None:
         """Register the main dashboard route."""
         site = self
@@ -248,11 +352,22 @@ class AdminSite:
             # Collect stats for each model
             stat_components: list[Any] = []
             model_cards: list[Any] = []
-            for reg in site._registrations:
+            counts: dict[str, int] = {}
+            chart_labels: list[str] = []
+            chart_values: list[int] = []
+            chart_colors = [
+                "#36a2eb", "#ff6384", "#ffce56", "#4bc0c0", "#9966ff",
+                "#ff9f40", "#c9cbcf", "#e7e9ed",
+            ]
+
+            for i, reg in enumerate(site._registrations):
                 _, total = await reg.storage.list(skip=0, limit=1)
+                counts[reg.name] = total
                 stat_components.append(
                     Stat(title=reg.title, value=str(total))
                 )
+                chart_labels.append(reg.title)
+                chart_values.append(total)
                 model_cards.append(
                     Card(
                         Span(f"{total} items", cls="text-sm opacity-70"),
@@ -264,11 +379,58 @@ class AdminSite:
                     )
                 )
 
-            content = Div(
+            # Overview chart
+            overview_chart = Chart(
+                type="bar",
+                data=ChartData(
+                    labels=chart_labels,
+                    datasets=[
+                        Dataset(
+                            label="Records",
+                            data=chart_values,
+                            backgroundColor=chart_colors[: len(chart_labels)],
+                        ),
+                    ],
+                ),
+                options={"plugins": {"legend": {"display": False}}, "scales": {"y": {"beginAtZero": True}}},
+                height="250px",
+            )
+
+            # Custom dashboard widgets from all registrations
+            custom_widgets: list[Any] = []
+            for reg in site._registrations:
+                if reg.dashboard_widgets:
+                    items, total = await reg.storage.list(skip=0, limit=100)
+                    for widget_fn in reg.dashboard_widgets:
+                        result = widget_fn(items, total)
+                        if inspect.isawaitable(result):
+                            result = await result
+                        custom_widgets.append(result)
+
+            # Activity feed
+            activity_feed = site._render_activity_feed()
+
+            # Build content
+            children: list[Any] = [
                 H1("Dashboard", cls="text-3xl font-bold mb-6"),
                 Stats(*stat_components, cls="mb-6") if stat_components else Div(),
+                Div(
+                    Card(overview_chart, title="Overview"),
+                    activity_feed,
+                    cls="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6",
+                ),
                 Div(*model_cards, cls="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"),
-            )
+            ]
+
+            if custom_widgets:
+                children.append(
+                    Div(
+                        H2("Widgets", cls="text-2xl font-bold mt-6 mb-4"),
+                        Div(*custom_widgets, cls="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"),
+                    )
+                )
+
+            content = Div(*children)
 
             return HTMLResponse(
                 content=_to_html_string_lazy(
@@ -277,6 +439,7 @@ class AdminSite:
                         "Dashboard",
                         breadcrumb_items=[("Admin", None)],
                         user=user,
+                        counts=counts,
                     )
                 )
             )
@@ -299,6 +462,15 @@ class AdminSite:
         id_field = admin.id_field
         form_exclude = list(set([id_field] + (admin.form_exclude or [])))
         list_exclude = admin.list_exclude or []
+        grid_filters = admin.filters
+
+        # Build bulk actions: default Delete + custom actions
+        bulk_actions: list[tuple[str, str]] = [
+            ("Delete Selected", f"{prefix}/{name}/_bulk_delete"),
+        ]
+        custom_actions = admin.actions or []
+        for i, (label, _handler_fn) in enumerate(custom_actions):
+            bulk_actions.append((label, f"{prefix}/{name}/_action/{i}"))
 
         base_breadcrumb: list[tuple[str, str | None]] = [
             ("Admin", f"{prefix}/"),
@@ -320,16 +492,14 @@ class AdminSite:
                 cls="flex gap-1",
             )
 
-        # --- GET {prefix}/{name}/ — List page ---
-        async def list_page(request: Request) -> HTMLResponse:
-            user = getattr(request.state, "user", None)
-            state = DataGridState.from_request(request)
-            skip = (state.page - 1) * admin.per_page
-            search = request.query_params.get("q") or None
-            items, total = await storage.list(skip=skip, limit=admin.per_page, search=search)
+        def _build_grid(
+            items: list[BaseModel],
+            total: int,
+            state: DataGridState,
+        ) -> DataGrid:
+            """Build a DataGrid with shared config."""
             total_pages = max(1, math.ceil(total / admin.per_page))
-
-            grid = DataGrid(
+            return DataGrid(
                 model,
                 items,
                 data_url=f"{prefix}/{name}/_list",
@@ -338,19 +508,39 @@ class AdminSite:
                 include=admin.list_fields,
                 sort_field=state.sort_field,
                 sort_order=state.sort_order,
+                filters=grid_filters,
                 filter_values=state.filter_values,
                 visible_columns=state.visible_columns,
                 page=state.page,
                 total_pages=total_pages,
                 total_items=total,
                 per_page=admin.per_page,
-                bulk_actions=[("Delete Selected", f"{prefix}/{name}/_bulk_delete")],
+                bulk_actions=bulk_actions,
                 csv_url=f"{prefix}/{name}/_csv",
                 id_field=id_field,
                 cell_renderers={id_field: lambda v: A(str(v), href=f"{prefix}/{name}/{v}")},
                 extra_columns={"Actions": _render_actions},
                 zebra=True,
             )
+
+        def _get_username(request: Request) -> str:
+            """Extract username from request state."""
+            user = getattr(request.state, "user", None)
+            if user is None:
+                return ""
+            if isinstance(user, dict):
+                return user.get("username", "")
+            return getattr(user, "username", str(user))
+
+        # --- GET {prefix}/{name}/ — List page ---
+        async def list_page(request: Request) -> HTMLResponse:
+            user = getattr(request.state, "user", None)
+            state = DataGridState.from_request(request)
+            skip = (state.page - 1) * admin.per_page
+            search = request.query_params.get("q") or None
+            items, total = await storage.list(skip=skip, limit=admin.per_page, search=search)
+
+            grid = _build_grid(items, total, state)
 
             content = Div(
                 Div(
@@ -379,61 +569,40 @@ class AdminSite:
             skip = (state.page - 1) * admin.per_page
             search = request.query_params.get("q") or None
             items, total = await storage.list(skip=skip, limit=admin.per_page, search=search)
-            total_pages = max(1, math.ceil(total / admin.per_page))
 
-            grid = DataGrid(
-                model,
-                items,
-                data_url=f"{prefix}/{name}/_list",
-                grid_id=f"{name}-grid",
-                exclude=list_exclude,
-                include=admin.list_fields,
-                sort_field=state.sort_field,
-                sort_order=state.sort_order,
-                filter_values=state.filter_values,
-                visible_columns=state.visible_columns,
-                page=state.page,
-                total_pages=total_pages,
-                total_items=total,
-                per_page=admin.per_page,
-                bulk_actions=[("Delete Selected", f"{prefix}/{name}/_bulk_delete")],
-                csv_url=f"{prefix}/{name}/_csv",
-                id_field=id_field,
-                cell_renderers={id_field: lambda v: A(str(v), href=f"{prefix}/{name}/{v}")},
-                extra_columns={"Actions": _render_actions},
-                zebra=True,
-            )
+            grid = _build_grid(items, total, state)
             return HTMLResponse(content=_to_html_string_lazy(grid))
 
         # --- POST {prefix}/{name}/_bulk_delete — Bulk delete ---
         async def bulk_delete(request: Request) -> HTMLResponse:
             form_data = await request.form()
             selected = form_data.getlist("selected")
+            username = _get_username(request)
             for item_id in selected:
                 await storage.delete(str(item_id))
+                site.activity_log.record("deleted", model.__name__, str(item_id), user=username)
 
             # Re-render list fragment
             items, total = await storage.list(skip=0, limit=admin.per_page)
-            total_pages = max(1, math.ceil(total / admin.per_page))
+            state = DataGridState(page=1)
+            grid = _build_grid(items, total, state)
+            return HTMLResponse(content=_to_html_string_lazy(grid))
 
-            grid = DataGrid(
-                model,
-                items,
-                data_url=f"{prefix}/{name}/_list",
-                grid_id=f"{name}-grid",
-                exclude=list_exclude,
-                include=admin.list_fields,
-                page=1,
-                total_pages=total_pages,
-                total_items=total,
-                per_page=admin.per_page,
-                bulk_actions=[("Delete Selected", f"{prefix}/{name}/_bulk_delete")],
-                csv_url=f"{prefix}/{name}/_csv",
-                id_field=id_field,
-                cell_renderers={id_field: lambda v: A(str(v), href=f"{prefix}/{name}/{v}")},
-                extra_columns={"Actions": _render_actions},
-                zebra=True,
-            )
+        # --- POST {prefix}/{name}/_action/{index} — Custom action ---
+        async def custom_action_handler(request: Request, index: int) -> HTMLResponse:
+            form_data = await request.form()
+            selected = list(form_data.getlist("selected"))
+
+            if 0 <= index < len(custom_actions):
+                _, handler_fn = custom_actions[index]
+                result = handler_fn(selected, storage)
+                if inspect.isawaitable(result):
+                    await result
+
+            # Re-render list fragment
+            items, total = await storage.list(skip=0, limit=admin.per_page)
+            state = DataGridState(page=1)
+            grid = _build_grid(items, total, state)
             return HTMLResponse(content=_to_html_string_lazy(grid))
 
         # --- GET {prefix}/{name}/_csv — CSV export ---
@@ -496,6 +665,10 @@ class AdminSite:
                 instance = model.model_validate(raw_data)
                 created = await storage.create(instance)
                 created_id = getattr(created, id_field)
+                site.activity_log.record(
+                    "created", model.__name__, str(created_id),
+                    user=_get_username(request),
+                )
                 redirect_url = _toast_url(
                     f"{prefix}/{name}/{created_id}", "Created successfully"
                 )
@@ -645,6 +818,10 @@ class AdminSite:
             try:
                 instance = model.model_validate(raw_data)
                 await storage.update(id, instance)
+                site.activity_log.record(
+                    "updated", model.__name__, str(id),
+                    user=_get_username(request),
+                )
                 redirect_url = _toast_url(
                     f"{prefix}/{name}/{id}", "Updated successfully"
                 )
@@ -701,6 +878,10 @@ class AdminSite:
             if not deleted:
                 return HTMLResponse(content="Not found", status_code=404)
 
+            site.activity_log.record(
+                "deleted", model.__name__, str(id),
+                user=_get_username(request),
+            )
             redirect_url = _toast_url(f"{prefix}/{name}/", "Deleted successfully")
             if request.headers.get("hx-request"):
                 return Response(
@@ -713,7 +894,7 @@ class AdminSite:
             )
 
         # Register routes — fixed paths before parameterized ones
-        route_defs = [
+        route_defs: list[tuple[str, Callable, list[str]]] = [
             (f"{prefix}/{name}/", list_page, ["GET"]),
             (f"{prefix}/{name}/_list", list_fragment, ["GET"]),
             (f"{prefix}/{name}/_bulk_delete", bulk_delete, ["POST"]),
@@ -725,6 +906,15 @@ class AdminSite:
             (f"{prefix}/{name}/{{id}}/edit", edit_handler, ["POST"]),
             (f"{prefix}/{name}/{{id}}", delete_handler, ["DELETE"]),
         ]
+
+        # Register custom action routes
+        for i in range(len(custom_actions)):
+            async def _action_route(request: Request, _idx: int = i) -> HTMLResponse:
+                return await custom_action_handler(request, _idx)
+
+            route_defs.append(
+                (f"{prefix}/{name}/_action/{i}", _action_route, ["POST"])
+            )
 
         for path, handler_fn, methods in route_defs:
             wrapped = self._wrap_auth(handler_fn)

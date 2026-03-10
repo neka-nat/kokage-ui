@@ -204,7 +204,7 @@ from kokage_ui.ai import ChatMessage, ChatView, chat_stream
 from kokage_ui.ai import AgentEvent, AgentMessage, AgentView, ToolCall, agent_stream
 
 # Admin dashboard
-from kokage_ui.features.admin import AdminSite, ModelAdmin
+from kokage_ui.features.admin import ActivityEntry, ActivityLog, AdminSite, ModelAdmin
 
 # Testing helpers
 from kokage_ui.dev.testing import (
