@@ -6,7 +6,8 @@ import sys
 
 import pytest
 
-from kokage_ui.dev.cli import _to_snake, cmd_add_crud, cmd_add_page, cmd_init
+from kokage_ui.dev.cli import _to_snake, cmd_add_crud, cmd_add_page, cmd_init, cmd_templates
+from kokage_ui.dev.templates import TEMPLATES
 
 
 # --- _to_snake ---
@@ -38,11 +39,13 @@ class TestToSnake:
 class TestCmdInit:
     def test_creates_project(self, tmp_path, monkeypatch, capsys):
         monkeypatch.chdir(tmp_path)
-        args = _make_args(name="myapp", crud=False)
+        args = _make_args(name="myapp", template=None)
         cmd_init(args)
 
         assert (tmp_path / "myapp" / "app.py").exists()
         assert (tmp_path / "myapp" / "pyproject.toml").exists()
+        assert (tmp_path / "myapp" / ".gitignore").exists()
+        assert (tmp_path / "myapp" / "README.md").exists()
 
         app_content = (tmp_path / "myapp" / "app.py").read_text()
         assert "Welcome to myapp!" in app_content
@@ -52,12 +55,16 @@ class TestCmdInit:
         assert 'name = "myapp"' in pyproject_content
         assert '"kokage-ui"' in pyproject_content
 
+        readme_content = (tmp_path / "myapp" / "README.md").read_text()
+        assert "# myapp" in readme_content
+
         out = capsys.readouterr().out
         assert "Created myapp/" in out
+        assert "template: basic" in out
 
     def test_creates_crud_project(self, tmp_path, monkeypatch, capsys):
         monkeypatch.chdir(tmp_path)
-        args = _make_args(name="myapp", crud=True)
+        args = _make_args(name="myapp", template="crud")
         cmd_init(args)
 
         app_content = (tmp_path / "myapp" / "app.py").read_text()
@@ -69,7 +76,7 @@ class TestCmdInit:
         monkeypatch.chdir(tmp_path)
         (tmp_path / "myapp").mkdir()
 
-        args = _make_args(name="myapp", crud=False)
+        args = _make_args(name="myapp", template=None)
         with pytest.raises(SystemExit, match="1"):
             cmd_init(args)
 
@@ -78,12 +85,100 @@ class TestCmdInit:
 
     def test_output_shows_run_instructions(self, tmp_path, monkeypatch, capsys):
         monkeypatch.chdir(tmp_path)
-        args = _make_args(name="myapp", crud=False)
+        args = _make_args(name="myapp", template=None)
         cmd_init(args)
 
         out = capsys.readouterr().out
         assert "cd myapp" in out
         assert "uv sync" in out
+
+
+class TestCmdInitTemplates:
+    """Test --template option for each template type."""
+
+    def test_unknown_template_error(self, tmp_path, monkeypatch, capsys):
+        monkeypatch.chdir(tmp_path)
+        args = _make_args(name="myapp", template="nonexistent")
+        with pytest.raises(SystemExit, match="1"):
+            cmd_init(args)
+
+        err = capsys.readouterr().err
+        assert "Unknown template" in err
+
+    def test_admin_template(self, tmp_path, monkeypatch, capsys):
+        monkeypatch.chdir(tmp_path)
+        args = _make_args(name="myapp", template="admin")
+        cmd_init(args)
+
+        app_content = (tmp_path / "myapp" / "app.py").read_text()
+        assert "AdminSite" in app_content
+        assert "SQLModelStorage" in app_content
+        assert "create_async_engine" in app_content
+
+        pyproject_content = (tmp_path / "myapp" / "pyproject.toml").read_text()
+        assert '"kokage-ui[sql]"' in pyproject_content
+
+    def test_dashboard_template(self, tmp_path, monkeypatch, capsys):
+        monkeypatch.chdir(tmp_path)
+        args = _make_args(name="myapp", template="dashboard")
+        cmd_init(args)
+
+        app_content = (tmp_path / "myapp" / "app.py").read_text()
+        assert "Chart" in app_content
+        assert "Stats" in app_content
+        assert "Stat" in app_content
+
+    def test_chat_template(self, tmp_path, monkeypatch, capsys):
+        monkeypatch.chdir(tmp_path)
+        args = _make_args(name="myapp", template="chat")
+        cmd_init(args)
+
+        app_content = (tmp_path / "myapp" / "app.py").read_text()
+        assert "ChatView" in app_content
+        assert "chat_stream" in app_content
+
+    def test_agent_template(self, tmp_path, monkeypatch, capsys):
+        monkeypatch.chdir(tmp_path)
+        args = _make_args(name="myapp", template="agent")
+        cmd_init(args)
+
+        app_content = (tmp_path / "myapp" / "app.py").read_text()
+        assert "AgentView" in app_content
+        assert "agent_stream" in app_content
+        assert "AgentEvent" in app_content
+
+    def test_all_templates_generate_valid_python(self, tmp_path, monkeypatch, capsys):
+        """Every template should produce syntactically valid Python."""
+        for key in TEMPLATES:
+            project_dir = tmp_path / f"proj_{key}"
+            monkeypatch.chdir(tmp_path)
+            args = _make_args(name=f"proj_{key}", template=key)
+            cmd_init(args)
+
+            app_file = project_dir / "app.py"
+            assert app_file.exists(), f"app.py not created for template '{key}'"
+
+            # Check syntax by compiling
+            source = app_file.read_text()
+            compile(source, str(app_file), "exec")
+
+    def test_gitignore_created(self, tmp_path, monkeypatch, capsys):
+        monkeypatch.chdir(tmp_path)
+        args = _make_args(name="myapp", template=None)
+        cmd_init(args)
+
+        gitignore = (tmp_path / "myapp" / ".gitignore").read_text()
+        assert "__pycache__/" in gitignore
+        assert "*.db" in gitignore
+
+    def test_readme_created(self, tmp_path, monkeypatch, capsys):
+        monkeypatch.chdir(tmp_path)
+        args = _make_args(name="myapp", template=None)
+        cmd_init(args)
+
+        readme = (tmp_path / "myapp" / "README.md").read_text()
+        assert "# myapp" in readme
+        assert "uvicorn app:app" in readme
 
 
 # --- cmd_add_page ---
@@ -175,6 +270,25 @@ class TestCmdAddCrud:
         assert "already exists" in err
 
 
+# --- cmd_templates ---
+
+
+class TestCmdTemplates:
+    def test_lists_all_templates(self, capsys):
+        cmd_templates(_make_args())
+
+        out = capsys.readouterr().out
+        for key in TEMPLATES:
+            assert key in out
+
+    def test_shows_descriptions(self, capsys):
+        cmd_templates(_make_args())
+
+        out = capsys.readouterr().out
+        for _key, (desc, _tmpl, _sql) in TEMPLATES.items():
+            assert desc in out
+
+
 # --- main() via argparse ---
 
 
@@ -197,6 +311,38 @@ class TestMain:
         )
         assert result.returncode == 0
         assert (tmp_path / "testproject" / "app.py").exists()
+
+    def test_init_with_template_flag(self, tmp_path):
+        result = subprocess.run(
+            [sys.executable, "-m", "kokage_ui.dev.cli", "init", "testproject", "--template", "dashboard"],
+            capture_output=True,
+            text=True,
+            cwd=tmp_path,
+        )
+        assert result.returncode == 0
+        app_content = (tmp_path / "testproject" / "app.py").read_text()
+        assert "Chart" in app_content
+
+    def test_init_with_short_template_flag(self, tmp_path):
+        result = subprocess.run(
+            [sys.executable, "-m", "kokage_ui.dev.cli", "init", "testproject", "-t", "chat"],
+            capture_output=True,
+            text=True,
+            cwd=tmp_path,
+        )
+        assert result.returncode == 0
+        app_content = (tmp_path / "testproject" / "app.py").read_text()
+        assert "ChatView" in app_content
+
+    def test_templates_subcommand(self):
+        result = subprocess.run(
+            [sys.executable, "-m", "kokage_ui.dev.cli", "templates"],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0
+        assert "basic" in result.stdout
+        assert "admin" in result.stdout
 
     def test_no_args_shows_help(self):
         result = subprocess.run(

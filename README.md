@@ -121,11 +121,23 @@ https://github.com/user-attachments/assets/d14d487c-a694-4159-9486-24caccb77a9b
 
 ## CLI
 
+Scaffold a new project in seconds:
+
 ```bash
-uvx kokage-ui init myapp            # Create new project
-uvx kokage-ui init myapp --crud     # Create with CRUD template
-uvx kokage-ui add page dashboard    # Add a new page
-uvx kokage-ui add crud Product      # Add CRUD model
+uvx kokage-ui init myapp                    # Minimal app with Card
+uvx kokage-ui init myapp -t crud            # CRUD app with model & storage
+uvx kokage-ui init myapp -t admin           # Admin dashboard with SQLite
+uvx kokage-ui init myapp -t dashboard       # KPI stats & Chart.js charts
+uvx kokage-ui init myapp -t chat            # AI chat with SSE streaming
+uvx kokage-ui init myapp -t agent           # AI agent with tool execution
+```
+
+Add pages and models to an existing project:
+
+```bash
+uvx kokage-ui add page dashboard            # Add a new page
+uvx kokage-ui add crud Product              # Add CRUD model
+uvx kokage-ui templates                     # List all available templates
 ```
 
 ## Examples
@@ -135,10 +147,13 @@ uvx kokage-ui add crud Product      # Add CRUD model
 | [hello.py](examples/hello.py) | Minimal app | `uvicorn examples.hello:app` |
 | [todo.py](examples/todo.py) | CRUD todo app | `uvicorn examples.todo:app` |
 | [dashboard.py](examples/dashboard.py) | Full dashboard | `uvicorn examples.dashboard:app` |
-| [admin_demo.py](examples/admin_demo.py) | Admin panel + Auth | `uvicorn examples.admin_demo:app` |
+| [admin_demo.py](examples/admin_demo.py) | Admin panel (SQLite) | `uvicorn examples.admin_demo:app` |
+| [auth_demo.py](examples/auth_demo.py) | Auth + Admin | `uvicorn examples.auth_demo:app` |
 | [blog.py](examples/blog.py) | Markdown + Charts + Tabs | `uvicorn examples.blog:app` |
 | [realtime.py](examples/realtime.py) | SSE notifications | `uvicorn examples.realtime:app` |
 | [chat_demo.py](examples/chat_demo.py) | Streaming chat UI | `uvicorn examples.chat_demo:app` |
+| [agent_demo.py](examples/agent_demo.py) | AI agent with tools | `uvicorn examples.agent_demo:app` |
+| [chart_demo.py](examples/chart_demo.py) | Chart.js 6 chart types | `uvicorn examples.chart_demo:app` |
 
 ## Documentation
 

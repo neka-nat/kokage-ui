@@ -5,11 +5,13 @@ import os
 import sys
 
 from kokage_ui.dev.templates import (
-    APP_CRUD_TEMPLATE,
-    APP_TEMPLATE,
     CRUD_MODEL_TEMPLATE,
+    GITIGNORE_TEMPLATE,
     PAGE_TEMPLATE,
+    PYPROJECT_SQL_TEMPLATE,
     PYPROJECT_TEMPLATE,
+    README_TEMPLATE,
+    TEMPLATES,
 )
 
 
@@ -29,14 +31,23 @@ def cmd_init(args: argparse.Namespace) -> None:
         print(f"Error: '{base}' already exists.", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Created {base}/")
+    template_key = args.template or "basic"
 
-    if args.crud:
-        _write_file(f"{base}/app.py", APP_CRUD_TEMPLATE.format(name=name))
-    else:
-        _write_file(f"{base}/app.py", APP_TEMPLATE.format(name=name))
+    if template_key not in TEMPLATES:
+        print(f"Error: Unknown template '{template_key}'.", file=sys.stderr)
+        print(f"Available templates: {', '.join(TEMPLATES)}", file=sys.stderr)
+        sys.exit(1)
 
-    _write_file(f"{base}/pyproject.toml", PYPROJECT_TEMPLATE.format(name=name))
+    _desc, app_template, uses_sql = TEMPLATES[template_key]
+
+    print(f"Created {base}/  (template: {template_key})")
+
+    _write_file(f"{base}/app.py", app_template.format(name=name))
+
+    pyproject = PYPROJECT_SQL_TEMPLATE if uses_sql else PYPROJECT_TEMPLATE
+    _write_file(f"{base}/pyproject.toml", pyproject.format(name=name))
+    _write_file(f"{base}/.gitignore", GITIGNORE_TEMPLATE)
+    _write_file(f"{base}/README.md", README_TEMPLATE.format(name=name))
 
     print(f"\nRun:\n  cd {name}\n  uv sync\n  uv run uvicorn app:app --reload")
 
@@ -72,6 +83,12 @@ def cmd_add_crud(args: argparse.Namespace) -> None:
     print(f'  ui.crud("/{plural}", model={model_name}, storage={snake}_storage, title="{model_name}s")')
 
 
+def cmd_templates(args: argparse.Namespace) -> None:
+    print("Available templates:\n")
+    for key, (desc, _tmpl, _sql) in TEMPLATES.items():
+        print(f"  {key:<12} {desc}")
+
+
 def _to_snake(name: str) -> str:
     """CamelCase to snake_case."""
     result = []
@@ -86,12 +103,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(prog="kokage-ui", description="kokage-ui scaffolding tool")
     sub = parser.add_subparsers(dest="command")
 
-    # kokage init
+    # kokage-ui init
     init_p = sub.add_parser("init", help="Create a new project")
     init_p.add_argument("name", help="Project name")
-    init_p.add_argument("--crud", action="store_true", help="Include CRUD template")
+    init_p.add_argument(
+        "--template", "-t",
+        choices=list(TEMPLATES.keys()),
+        default=None,
+        help="Project template (default: basic)",
+    )
 
-    # kokage add
+    # kokage-ui add
     add_p = sub.add_parser("add", help="Add page or CRUD model")
     add_sub = add_p.add_subparsers(dest="add_type")
 
@@ -100,6 +122,9 @@ def main() -> None:
 
     crud_p = add_sub.add_parser("crud", help="Add a CRUD model")
     crud_p.add_argument("name", help="Model name in CamelCase (e.g. Product)")
+
+    # kokage-ui templates
+    sub.add_parser("templates", help="List available templates")
 
     args = parser.parse_args()
 
@@ -112,6 +137,8 @@ def main() -> None:
             cmd_add_crud(args)
         else:
             add_p.print_help()
+    elif args.command == "templates":
+        cmd_templates(args)
     else:
         parser.print_help()
 
