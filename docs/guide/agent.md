@@ -83,7 +83,7 @@ The `done` event can include a `metrics` dict with:
 
 ## AgentMessage
 
-A dataclass for initial messages with optional tool call history.
+A Pydantic BaseModel for initial messages with optional tool call history.
 
 ```python
 from kokage_ui.ai import AgentMessage, ToolCall

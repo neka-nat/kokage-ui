@@ -92,11 +92,11 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `Layout` | Reusable page layout builder |
 | `Modal` | Dialog overlay (`showModal()`) |
 | `Drawer` | Sidebar/off-canvas panel |
-| `Tab` | Single tab definition (dataclass) |
+| `Tab` | Single tab definition (BaseModel) |
 | `Tabs` | Tabbed navigation (link or content mode) |
-| `Step` | Single step definition (dataclass) |
+| `Step` | Single step definition (BaseModel) |
 | `Steps` | Progress step indicator |
-| `TimelineItem` | Single timeline item definition (dataclass) |
+| `TimelineItem` | Single timeline item definition (BaseModel) |
 | `Timeline` | Timeline component (vertical/horizontal) |
 | `Breadcrumb` | Navigation breadcrumb trail |
 | `Collapse` | Expandable content section |
@@ -162,7 +162,7 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | Export | Description |
 |--------|-------------|
 | `AdminSite` | Auto-generate admin panel from registered models |
-| `ModelAdmin` | Model registration configuration (dataclass) |
+| `ModelAdmin` | Model registration configuration (BaseModel) |
 
 ## Authentication & Authorization
 
@@ -193,6 +193,9 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | Export | Description |
 |--------|-------------|
 | `Chart` | Chart.js chart (line, bar, pie, doughnut, radar, scatter) |
+| `Dataset` | Typed Chart.js dataset (BaseModel, `extra="allow"`) |
+| `ChartData` | Typed Chart.js data config (labels + datasets) |
+| `ChartOptions` | Typed Chart.js options config (BaseModel, `extra="allow"`) |
 | `CodeBlock` | Syntax-highlighted code block (Highlight.js) |
 | `Markdown` | Server-side Markdown rendering (requires `kokage-ui[markdown]`) |
 
@@ -201,7 +204,7 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | Export | Description |
 |--------|-------------|
 | `ChatView` | Streaming chat UI with DaisyUI chat bubbles |
-| `ChatMessage` | Chat message dataclass (role, content, name) |
+| `ChatMessage` | Chat message model (role, content, name) |
 | `chat_stream` | Convert async token generator to SSE StreamingResponse |
 
 ## AI Agent
@@ -210,6 +213,6 @@ All elements inherit from `Component`. Children are positional args, attributes 
 |--------|-------------|
 | `AgentView` | Agent dashboard with tool call visualization, status/metrics bars |
 | `AgentEvent` | Framework-agnostic SSE event (text, tool_call, tool_result, status, error, done) |
-| `AgentMessage` | Agent message dataclass with optional tool_calls |
+| `AgentMessage` | Agent message model with optional tool_calls |
 | `ToolCall` | Tool call record (name, input, result, call_id) |
 | `agent_stream` | Convert async AgentEvent generator to SSE StreamingResponse |

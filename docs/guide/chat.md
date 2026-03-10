@@ -68,7 +68,7 @@ ChatView(
 
 ## ChatMessage
 
-A dataclass representing a single chat message.
+A Pydantic BaseModel representing a single chat message.
 
 ```python
 from kokage_ui.ai import ChatMessage
