@@ -110,6 +110,8 @@ async def agent(message: str):
 
 `ui.agent()` renders a full agent UI with status bar, collapsible tool call panels, streaming Markdown, and execution metrics.
 
+https://github.com/user-attachments/assets/1dfbe1ec-eb87-447f-9c4c-17f16d2d123b
+
 ## Features
 
 - **50+ HTML Elements** — `Div`, `H1`, `Form`, `Input`, etc. as Python classes
