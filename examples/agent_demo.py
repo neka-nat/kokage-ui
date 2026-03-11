@@ -30,8 +30,6 @@ def agent_page():
             user_name="あなた",
         ),
         title="Agent Demo",
-        include_marked=True,
-        include_highlightjs=True,
     )
 
 

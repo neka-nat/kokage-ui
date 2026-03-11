@@ -39,8 +39,6 @@ def chat_page():
             user_name="あなた",
         ),
         title="Chat Demo",
-        include_marked=True,
-        include_highlightjs=True,
     )
 
 

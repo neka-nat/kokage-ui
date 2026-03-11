@@ -297,44 +297,22 @@ APP_CHAT_TEMPLATE = '''\
 
 import asyncio
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 
-from kokage_ui import KokageUI, Page
-from kokage_ui.ai import ChatMessage, ChatView, chat_stream
+from kokage_ui import KokageUI
 
 app = FastAPI()
 ui = KokageUI(app)
 
 
-@ui.page("/")
-def home():
-    return Page(
-        ChatView(
-            send_url="/api/chat",
-            messages=[ChatMessage(role="assistant", content="Hello! How can I help you?")],
-            placeholder="Type a message...",
-            send_label="Send",
-        ),
-        title="{name}",
-        include_marked=True,
-        include_highlightjs=True,
-    )
-
-
-@app.post("/api/chat")
-async def chat(request: Request):
-    data = await request.json()
-    user_message = data.get("message", "")
-
-    async def generate():
-        # Replace this with your LLM API call
-        response = f"You said: **{{user_message}}**\\n\\nThis is a demo response. "
-        response += "Integrate your preferred LLM (Claude, GPT, etc.) here."
-        for char in response:
-            yield char
-            await asyncio.sleep(0.02)
-
-    return chat_stream(generate())
+@ui.chat("/", placeholder="Type a message...", send_label="Send", title="{name}")
+async def chat(message: str):
+    # Replace this with your LLM API call
+    response = f"You said: **{{message}}**\\n\\nThis is a demo response. "
+    response += "Integrate your preferred LLM (Claude, GPT, etc.) here."
+    for char in response:
+        yield char
+        await asyncio.sleep(0.02)
 '''
 
 APP_AGENT_TEMPLATE = '''\
@@ -343,67 +321,46 @@ APP_AGENT_TEMPLATE = '''\
 import asyncio
 import json
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 
-from kokage_ui import KokageUI, Page
-from kokage_ui.ai import AgentEvent, AgentView, agent_stream
+from kokage_ui import KokageUI
+from kokage_ui.ai import AgentEvent
 
 app = FastAPI()
 ui = KokageUI(app)
 
 
-@ui.page("/")
-def home():
-    return Page(
-        AgentView(
-            send_url="/api/agent",
-            agent_name="Agent",
-            placeholder="Ask the agent...",
-            send_label="Send",
-        ),
-        title="{name}",
-        include_marked=True,
-        include_highlightjs=True,
+@ui.agent("/", placeholder="Ask the agent...", send_label="Send", title="{name}")
+async def agent(message: str):
+    yield AgentEvent(type="status", content="Thinking...")
+    await asyncio.sleep(0.5)
+
+    # Simulate a tool call
+    yield AgentEvent(
+        type="tool_call",
+        call_id="tc1",
+        tool_name="search",
+        tool_input=json.dumps({{"query": message}}),
+    )
+    await asyncio.sleep(1.0)
+    yield AgentEvent(
+        type="tool_result",
+        call_id="tc1",
+        result=f"Found 3 results for '{{message}}'",
     )
 
+    # Stream response text
+    yield AgentEvent(type="status", content="Generating response...")
+    response = f"Based on the search results for **{{message}}**, here is what I found.\\n\\n"
+    response += "This is a demo agent. Replace the tool calls and LLM integration with your own logic."
+    for char in response:
+        yield AgentEvent(type="text", content=char)
+        await asyncio.sleep(0.02)
 
-@app.post("/api/agent")
-async def agent(request: Request):
-    data = await request.json()
-    user_message = data.get("message", "")
-
-    async def run():
-        yield AgentEvent(type="status", content="Thinking...")
-        await asyncio.sleep(0.5)
-
-        # Simulate a tool call
-        yield AgentEvent(
-            type="tool_call",
-            call_id="tc1",
-            tool_name="search",
-            tool_input=json.dumps({{"query": user_message}}),
-        )
-        await asyncio.sleep(1.0)
-        yield AgentEvent(
-            type="tool_result",
-            call_id="tc1",
-            result=f"Found 3 results for '{{user_message}}'",
-        )
-
-        # Stream response text
-        yield AgentEvent(type="status", content="Generating response...")
-        response = f"Based on the search results for **{{user_message}}**, here is what I found.\\n\\n"
-        response += "This is a demo agent. Replace the tool calls and LLM integration with your own logic."
-        for char in response:
-            yield AgentEvent(type="text", content=char)
-            await asyncio.sleep(0.02)
-
-        yield AgentEvent(
-            type="done",
-            metrics={{"tokens": 150, "duration_ms": 2500, "tool_calls": 1}},
-        )
-
-    return agent_stream(run())
+    yield AgentEvent(
+        type="done",
+        metrics={{"tokens": 150, "duration_ms": 2500, "tool_calls": 1}},
+    )
 '''
 
 # ---------- Add command templates ----------

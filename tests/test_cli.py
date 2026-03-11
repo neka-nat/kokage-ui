@@ -134,8 +134,8 @@ class TestCmdInitTemplates:
         cmd_init(args)
 
         app_content = (tmp_path / "myapp" / "app.py").read_text()
-        assert "ChatView" in app_content
-        assert "chat_stream" in app_content
+        assert "ui.chat(" in app_content
+        assert "async def chat" in app_content
 
     def test_agent_template(self, tmp_path, monkeypatch, capsys):
         monkeypatch.chdir(tmp_path)
@@ -143,8 +143,7 @@ class TestCmdInitTemplates:
         cmd_init(args)
 
         app_content = (tmp_path / "myapp" / "app.py").read_text()
-        assert "AgentView" in app_content
-        assert "agent_stream" in app_content
+        assert "ui.agent(" in app_content
         assert "AgentEvent" in app_content
 
     def test_all_templates_generate_valid_python(self, tmp_path, monkeypatch, capsys):
@@ -332,7 +331,7 @@ class TestMain:
         )
         assert result.returncode == 0
         app_content = (tmp_path / "testproject" / "app.py").read_text()
-        assert "ChatView" in app_content
+        assert "ui.chat(" in app_content
 
     def test_templates_subcommand(self):
         result = subprocess.run(
