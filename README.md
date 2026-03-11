@@ -70,34 +70,19 @@ https://github.com/user-attachments/assets/4c4ad3be-664d-432e-9c2e-23e80755b461
 Build an LLM chat interface with SSE streaming in a few lines:
 
 ```python
-from fastapi import FastAPI, Request
-from kokage_ui import KokageUI, Page
-from kokage_ui.ai import ChatView, ChatMessage, chat_stream
+from fastapi import FastAPI
+from kokage_ui import KokageUI
 
 app = FastAPI()
 ui = KokageUI(app)
 
-@ui.page("/chat")
-def chat_page():
-    return Page(
-        ChatView(send_url="/api/chat"),
-        title="AI Chat",
-        include_marked=True,
-        include_highlightjs=True,
-    )
-
-@app.post("/api/chat")
-async def chat(request: Request):
-    data = await request.json()
-
-    async def generate():
-        async for token in your_llm(data["message"]):  # OpenAI, Anthropic, etc.
-            yield token
-
-    return chat_stream(generate())
+@ui.chat("/chat")
+async def chat(message: str):
+    async for token in your_llm(message):  # OpenAI, Anthropic, etc.
+        yield token
 ```
 
-`ChatView` renders DaisyUI chat bubbles with real-time SSE streaming, Markdown rendering, and code highlighting.
+`ui.chat()` auto-generates the page with DaisyUI chat bubbles, SSE streaming, Markdown rendering, and code highlighting.
 
 https://github.com/user-attachments/assets/d14d487c-a694-4159-9486-24caccb77a9b
 
