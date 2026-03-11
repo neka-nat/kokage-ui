@@ -191,3 +191,41 @@ class TestPageIncludeMarked:
         page = Page(title="Test")
         html = page.render()
         assert "marked.min.js" not in html
+
+
+class TestAutoDetectDependencies:
+    """Page auto-detects ChatView/AgentView and enables marked/highlightjs."""
+
+    def test_chatview_auto_enables_marked(self):
+        page = Page(ChatView(send_url="/api/chat"), title="Test")
+        html = page.render()
+        assert "marked.min.js" in html
+        assert "highlight.min.js" in html
+
+    def test_agentview_auto_enables_marked(self):
+        from kokage_ui.ai.agent import AgentView
+
+        page = Page(AgentView(send_url="/api/agent"), title="Test")
+        html = page.render()
+        assert "marked.min.js" in html
+        assert "highlight.min.js" in html
+
+    def test_nested_chatview_detected(self):
+        from kokage_ui.elements import Div
+
+        page = Page(Div(ChatView(send_url="/api/chat")), title="Test")
+        html = page.render()
+        assert "marked.min.js" in html
+
+    def test_no_chatview_no_auto_include(self):
+        from kokage_ui.elements import Div
+
+        page = Page(Div("hello"), title="Test")
+        html = page.render()
+        assert "marked.min.js" not in html
+
+    def test_explicit_false_is_overridden_by_auto_detect(self):
+        """Auto-detect enables dependencies even if not explicitly set."""
+        page = Page(ChatView(send_url="/api/chat"), title="Test")
+        assert page.include_marked is True
+        assert page.include_highlightjs is True

@@ -369,6 +369,165 @@ class KokageUI:
             response_class=HTMLResponse,
         )
 
+    def chat(
+        self,
+        path: str,
+        *,
+        placeholder: str = "メッセージを入力...",
+        send_label: str = "送信",
+        assistant_name: str = "Assistant",
+        user_name: str = "You",
+        height: str = "600px",
+        title: str = "Chat",
+        layout: Any = None,
+    ) -> Callable:
+        """Decorator for AI chat endpoints.
+
+        Registers both a page route (GET) with ChatView and an API
+        endpoint (POST) for SSE streaming.  The decorated function
+        receives ``message: str`` and should be an async generator
+        that yields string tokens.
+
+        Example::
+
+            @ui.chat("/chat")
+            async def my_chat(message: str):
+                async for token in call_llm(message):
+                    yield token
+
+        Args:
+            path: URL path.
+            placeholder: Input field placeholder text.
+            send_label: Submit button label.
+            assistant_name: Display name for assistant messages.
+            user_name: Display name for user messages.
+            height: CSS height for the chat container.
+            title: Page title.
+            layout: Optional Layout instance to wrap the page.
+        """
+
+        def decorator(func: Callable) -> Callable:
+            from kokage_ui.ai.chat import ChatView, chat_stream
+
+            api_path = f"{path}/send"
+
+            chat_view = ChatView(
+                send_url=api_path,
+                placeholder=placeholder,
+                send_label=send_label,
+                assistant_name=assistant_name,
+                user_name=user_name,
+                height=height,
+            )
+
+            page_content = Page(chat_view, title=title)
+
+            @self.page(path, layout=layout, title=title)
+            def _chat_page():
+                return page_content
+
+            async def _chat_api(request: Request) -> Response:
+                data = await request.json()
+                message = data.get("message", "")
+                return chat_stream(func(message))
+
+            self.app.add_api_route(
+                api_path,
+                _chat_api,
+                methods=["POST"],
+            )
+
+            if self.debug:
+                self._routes.append({"path": api_path, "methods": ["POST"], "type": "chat", "name": func.__name__})
+
+            return func
+
+        return decorator
+
+    def agent(
+        self,
+        path: str,
+        *,
+        placeholder: str = "メッセージを入力...",
+        send_label: str = "送信",
+        agent_name: str = "Agent",
+        user_name: str = "You",
+        height: str = "700px",
+        show_metrics: bool = True,
+        show_status: bool = True,
+        tool_expanded: bool = False,
+        title: str = "Agent",
+        layout: Any = None,
+    ) -> Callable:
+        """Decorator for AI agent endpoints.
+
+        Registers both a page route (GET) with AgentView and an API
+        endpoint (POST) for SSE streaming.  The decorated function
+        receives ``message: str`` and should be an async generator
+        that yields AgentEvent instances.
+
+        Example::
+
+            @ui.agent("/agent")
+            async def my_agent(message: str):
+                yield AgentEvent(type="text", content="Hello")
+                yield AgentEvent(type="done")
+
+        Args:
+            path: URL path.
+            placeholder: Input field placeholder text.
+            send_label: Submit button label.
+            agent_name: Display name for agent messages.
+            user_name: Display name for user messages.
+            height: CSS height for the container.
+            show_metrics: Show metrics bar.
+            show_status: Show status bar.
+            tool_expanded: Default expand state for tool panels.
+            title: Page title.
+            layout: Optional Layout instance to wrap the page.
+        """
+
+        def decorator(func: Callable) -> Callable:
+            from kokage_ui.ai.agent import AgentView, agent_stream
+
+            api_path = f"{path}/send"
+
+            agent_view = AgentView(
+                send_url=api_path,
+                placeholder=placeholder,
+                send_label=send_label,
+                agent_name=agent_name,
+                user_name=user_name,
+                height=height,
+                show_metrics=show_metrics,
+                show_status=show_status,
+                tool_expanded=tool_expanded,
+            )
+
+            page_content = Page(agent_view, title=title)
+
+            @self.page(path, layout=layout, title=title)
+            def _agent_page():
+                return page_content
+
+            async def _agent_api(request: Request) -> Response:
+                data = await request.json()
+                message = data.get("message", "")
+                return agent_stream(func(message))
+
+            self.app.add_api_route(
+                api_path,
+                _agent_api,
+                methods=["POST"],
+            )
+
+            if self.debug:
+                self._routes.append({"path": api_path, "methods": ["POST"], "type": "agent", "name": func.__name__})
+
+            return func
+
+        return decorator
+
     def fragment(
         self,
         path: str,

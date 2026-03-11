@@ -53,6 +53,20 @@ _TOAST_SCRIPT = """\
 _TOAST_CONTAINER = '<div id="kokage-toast" class="toast toast-end toast-top z-50" style="display:none"></div>'
 
 
+def _has_component(children: tuple | list, class_names: tuple[str, ...]) -> bool:
+    """Recursively check if any child is an instance of the given class names."""
+    for child in children:
+        if child is None:
+            continue
+        if type(child).__name__ in class_names:
+            return True
+        # Recurse into Component children
+        if isinstance(child, Component) and hasattr(child, "children"):
+            if _has_component(child.children, class_names):
+                return True
+    return False
+
+
 class Page:
     """Full HTML document.
 
@@ -104,6 +118,12 @@ class Page:
         self.include_quill = include_quill
         self.include_flatpickr = include_flatpickr
         self.include_marked = include_marked
+
+        # Auto-detect components that require marked.js / highlight.js
+        if not self.include_marked or not self.include_highlightjs:
+            if _has_component(children, ("ChatView", "AgentView")):
+                self.include_marked = True
+                self.include_highlightjs = True
 
     def render(self) -> str:
         """Generate full HTML document string."""
