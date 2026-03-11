@@ -86,6 +86,30 @@ async def chat(message: str):
 
 https://github.com/user-attachments/assets/d14d487c-a694-4159-9486-24caccb77a9b
 
+## AI Agent View
+
+Build an agent dashboard with tool call visualization:
+
+```python
+from fastapi import FastAPI
+from kokage_ui import KokageUI
+from kokage_ui.ai import AgentEvent
+
+app = FastAPI()
+ui = KokageUI(app)
+
+@ui.agent("/agent")
+async def agent(message: str):
+    yield AgentEvent(type="tool_call", call_id="1", tool_name="search", tool_input=message)
+    result = await your_tool(message)
+    yield AgentEvent(type="tool_result", call_id="1", result=result)
+    async for token in your_llm(message, result):
+        yield AgentEvent(type="text", content=token)
+    yield AgentEvent(type="done", metrics={"tokens": 150, "tool_calls": 1})
+```
+
+`ui.agent()` renders a full agent UI with status bar, collapsible tool call panels, streaming Markdown, and execution metrics.
+
 ## Features
 
 - **50+ HTML Elements** — `Div`, `H1`, `Form`, `Input`, etc. as Python classes
