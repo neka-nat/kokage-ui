@@ -65,6 +65,24 @@ This single `ui.crud()` call generates list, create, detail, edit, and delete pa
 
 https://github.com/user-attachments/assets/4c4ad3be-664d-432e-9c2e-23e80755b461
 
+Switch to SQLite for real persistence — same API, just swap the storage:
+
+```python
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlmodel import SQLModel, Field
+from kokage_ui import SQLModelStorage
+
+class Todo(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    title: str = Field(min_length=1)
+    done: bool = False
+
+engine = create_async_engine("sqlite+aiosqlite:///data.db")
+ui.crud("/todos", model=Todo, storage=SQLModelStorage(Todo, engine))
+```
+
+`pip install kokage-ui[sql]` for SQLModel support.
+
 ## Streaming Chat UI
 
 Build an LLM chat interface with SSE streaming in a few lines:
