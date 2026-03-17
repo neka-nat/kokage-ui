@@ -98,6 +98,7 @@ PREVIEW_HTML_TEMPLATE = """\
   <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>body {{ padding: 1rem; background: transparent; }}</style>
+{extra_head}
 </head>
 <body>
 {body}
@@ -126,6 +127,7 @@ class CatalogEntry:
     code: str
     examples: list
     params: list[tuple[str, str, str]] | None = None
+    extra_head: str = ""  # Extra tags to inject into preview <head>
 
 
 # ---------------------------------------------------------------------------
@@ -1237,6 +1239,7 @@ def build_entries() -> list[CatalogEntry]:
             ("width", "str", 'CSS width (default: "100%")'),
             ("height", "str", 'CSS height (default: "400px")'),
         ],
+        extra_head='  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>',
     ))
 
     entries.append(CatalogEntry(
@@ -1308,7 +1311,7 @@ def generate_preview_html(entry: CatalogEntry) -> str:
     for example in entry.examples:
         parts.append(render_component(example))
     body = "\n".join(parts)
-    return PREVIEW_HTML_TEMPLATE.format(body=body)
+    return PREVIEW_HTML_TEMPLATE.format(body=body, extra_head=entry.extra_head)
 
 
 def preview_filename(entry: CatalogEntry) -> str:
