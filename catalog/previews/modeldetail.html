@@ -10,13 +10,16 @@
 <body>
 <div><div class="card bg-base-100 shadow-xl"><div class="card-body"><h2 class="card-title">User Profile</h2><div class="py-2"><strong class="text-sm opacity-70">Name</strong><div class="text-lg">Alice</div></div><div class="py-2"><strong class="text-sm opacity-70">Email</strong><div class="text-lg">alice@example.com</div></div><div class="py-2"><strong class="text-sm opacity-70">Age</strong><div class="text-lg">30</div></div></div></div></div>
 <script>
-// Notify parent of content height for iframe auto-resize
+// Notify parent of content height for iframe auto-resize (with loop guard)
+var _lastH = 0;
 function notifyHeight() {
-  var h = document.documentElement.scrollHeight;
-  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  var h = document.body.scrollHeight;
+  if (h !== _lastH) {
+    _lastH = h;
+    window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  }
 }
 window.addEventListener("load", notifyHeight);
-new ResizeObserver(notifyHeight).observe(document.body);
 </script>
 </body>
 </html>

@@ -10,13 +10,16 @@
 <body>
 <div class="stats shadow"><div class="stat"><div class="stat-title">Total Users</div><div class="stat-value">31K</div><div class="stat-desc">+2.1% from last month</div></div><div class="stat"><div class="stat-title">Revenue</div><div class="stat-value">$4,200</div><div class="stat-desc">+12% from last month</div></div><div class="stat"><div class="stat-title">Active Now</div><div class="stat-value">573</div><div class="stat-desc">21 more than yesterday</div></div></div>
 <script>
-// Notify parent of content height for iframe auto-resize
+// Notify parent of content height for iframe auto-resize (with loop guard)
+var _lastH = 0;
 function notifyHeight() {
-  var h = document.documentElement.scrollHeight;
-  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  var h = document.body.scrollHeight;
+  if (h !== _lastH) {
+    _lastH = h;
+    window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  }
 }
 window.addEventListener("load", notifyHeight);
-new ResizeObserver(notifyHeight).observe(document.body);
 </script>
 </body>
 </html>

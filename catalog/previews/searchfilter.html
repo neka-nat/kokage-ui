@@ -10,13 +10,16 @@
 <body>
 <input type="search" name="q" placeholder="Search users..." hx-get="/api/search" hx-trigger="keyup changed delay:300ms" hx-target="#results" class="input" />
 <script>
-// Notify parent of content height for iframe auto-resize
+// Notify parent of content height for iframe auto-resize (with loop guard)
+var _lastH = 0;
 function notifyHeight() {
-  var h = document.documentElement.scrollHeight;
-  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  var h = document.body.scrollHeight;
+  if (h !== _lastH) {
+    _lastH = h;
+    window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  }
 }
 window.addEventListener("load", notifyHeight);
-new ResizeObserver(notifyHeight).observe(document.body);
 </script>
 </body>
 </html>

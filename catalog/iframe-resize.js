@@ -4,7 +4,10 @@ window.addEventListener("message", function (e) {
     var iframes = document.querySelectorAll("iframe");
     iframes.forEach(function (f) {
       if (f.contentWindow === e.source) {
-        f.style.height = e.data.height + "px";
+        var newH = e.data.height + "px";
+        if (f.style.height !== newH) {
+          f.style.height = newH;
+        }
       }
     });
   }

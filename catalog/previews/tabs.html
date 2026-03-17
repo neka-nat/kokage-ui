@@ -10,13 +10,16 @@
 <body>
 <div role="tablist" class="tabs tabs-lifted"><input type="radio" name="kokage-tabs" class="tab" aria-label="Tab 1" checked /><div class="tab-content p-4" role="tabpanel"><p>Content of tab 1</p></div><input type="radio" name="kokage-tabs" class="tab" aria-label="Tab 2" /><div class="tab-content p-4" role="tabpanel"><p>Content of tab 2</p></div><input type="radio" name="kokage-tabs" class="tab" aria-label="Tab 3" /><div class="tab-content p-4" role="tabpanel"><p>Content of tab 3</p></div></div>
 <script>
-// Notify parent of content height for iframe auto-resize
+// Notify parent of content height for iframe auto-resize (with loop guard)
+var _lastH = 0;
 function notifyHeight() {
-  var h = document.documentElement.scrollHeight;
-  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  var h = document.body.scrollHeight;
+  if (h !== _lastH) {
+    _lastH = h;
+    window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  }
 }
 window.addEventListener("load", notifyHeight);
-new ResizeObserver(notifyHeight).observe(document.body);
 </script>
 </body>
 </html>

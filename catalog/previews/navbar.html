@@ -10,13 +10,16 @@
 <body>
 <div class="navbar bg-base-100 shadow-sm"><div class="navbar-start"><button class="btn btn btn-ghost text-xl">kokage-ui</button></div><div class="navbar-center"><div><button class="btn btn-ghost">Home</button><button class="btn btn-ghost">Docs</button></div></div><div class="navbar-end"><button class="btn btn-primary btn-sm">Login</button></div></div>
 <script>
-// Notify parent of content height for iframe auto-resize
+// Notify parent of content height for iframe auto-resize (with loop guard)
+var _lastH = 0;
 function notifyHeight() {
-  var h = document.documentElement.scrollHeight;
-  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  var h = document.body.scrollHeight;
+  if (h !== _lastH) {
+    _lastH = h;
+    window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  }
 }
 window.addEventListener("load", notifyHeight);
-new ResizeObserver(notifyHeight).observe(document.body);
 </script>
 </body>
 </html>
