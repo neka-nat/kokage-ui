@@ -33,8 +33,18 @@ def agent_page():
     )
 
 
+import json as _json
+
 MOCK_RESULTS = {
-    "default": "3件の結果が見つかりました:\n1. kokage-ui - FastAPIにUIを追加\n2. htmx - HTML拡張\n3. DaisyUI - Tailwindコンポーネント",
+    "default": _json.dumps(
+        [
+            {"name": "kokage-ui", "description": "FastAPIにUIを追加", "stars": 120},
+            {"name": "htmx", "description": "HTML拡張", "stars": 35000},
+            {"name": "DaisyUI", "description": "Tailwindコンポーネント", "stars": 30000},
+        ],
+        ensure_ascii=False,
+        indent=2,
+    ),
 }
 
 MOCK_RESPONSE = (
@@ -70,11 +80,12 @@ async def agent(request: Request):
         )
         await asyncio.sleep(1.0)
 
-        # Tool result
+        # Tool result (JSON auto-detected for rich preview)
         yield AgentEvent(
             type="tool_result",
             call_id="tc1",
             result=MOCK_RESULTS["default"],
+            preview_hint="json",
         )
         await asyncio.sleep(0.3)
 

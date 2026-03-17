@@ -50,6 +50,7 @@ The main agent dashboard component. Renders a status bar, message area with tool
 | `messages` | list[AgentMessage] \| None | None | Initial messages |
 | `placeholder` | str | `"メッセージを入力..."` | Input placeholder |
 | `send_label` | str | `"送信"` | Submit button label |
+| `stop_label` | str | `"停止"` | Stop button label (during streaming) |
 | `agent_name` | str | `"Agent"` | Agent display name |
 | `user_name` | str | `"You"` | User display name |
 | `height` | str | `"700px"` | Container CSS height |
@@ -57,6 +58,19 @@ The main agent dashboard component. Renders a status bar, message area with tool
 | `show_status` | bool | True | Show status bar |
 | `tool_expanded` | bool | False | Default tool panel state |
 | `agent_id` | str \| None | None | Auto-generated if omitted |
+
+### Stop Button
+
+During streaming, the send button automatically transforms into a stop button (red, with the `stop_label` text). Clicking it aborts the fetch request via `AbortController`, preserving any content received so far. The button reverts to the send state after stopping.
+
+```python
+AgentView(
+    send_url="/api/agent",
+    stop_label="Cancel",  # customize the stop button text
+)
+```
+
+This feature is also available on `ChatView` with the same `stop_label` parameter.
 
 ## AgentEvent
 
@@ -99,6 +113,53 @@ msg = AgentMessage(
         ToolCall(name="search", input={"q": "kokage-ui"}, result="Found 3 items", call_id="tc1"),
     ],
 )
+```
+
+## FilePreview (Rich Tool Results)
+
+Tool results are automatically rendered with rich previews based on content type detection. You can also provide a `preview_hint` to explicitly specify the format.
+
+### Supported Types
+
+| Type | Detection | Preview |
+|------|-----------|---------|
+| **JSON** | `{` or `[` prefix | Collapsible tree view |
+| **CSV** | Consistent comma/tab columns | DaisyUI table |
+| **Code** | `hint="python"` etc. | Syntax-highlighted block |
+| **Image** | URL with image extension | `<img>` tag |
+| **Text** | Fallback | `<pre>` block |
+
+### Usage with AgentEvent
+
+```python
+# JSON result — auto-detected or hinted
+yield AgentEvent(
+    type="tool_result",
+    call_id="tc1",
+    result='[{"name": "Alice"}, {"name": "Bob"}]',
+    preview_hint="json",
+)
+
+# CSV result
+yield AgentEvent(
+    type="tool_result",
+    call_id="tc2",
+    result="name,age\nAlice,30\nBob,25",
+    preview_hint="csv",
+)
+```
+
+### Standalone Component
+
+`FilePreview` can also be used independently:
+
+```python
+from kokage_ui.ai import FilePreview
+
+FilePreview('{"key": "value"}')                         # JSON tree
+FilePreview("name,age\nAlice,30", hint="csv")            # Table
+FilePreview("def hello(): pass", hint="python")          # Code
+FilePreview(url="/uploads/image.png")                    # Image
 ```
 
 ## agent_stream
@@ -190,6 +251,6 @@ async def run(message: str):
 ├──────────────────────────────────────────────┤
 │ Tokens: 150  Duration: 2.5s  Tools: 1        │  ← Metrics bar
 ├──────────────────────────────────────────────┤
-│ [メッセージを入力...]                [送信]  │
+│ [メッセージを入力...]          [送信] / [停止] │
 └──────────────────────────────────────────────┘
 ```

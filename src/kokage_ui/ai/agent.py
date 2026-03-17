@@ -16,6 +16,7 @@ from typing import Any
 from markupsafe import escape
 from starlette.responses import StreamingResponse
 
+from kokage_ui.ai.preview import JS_PREVIEW_RENDERER, render_preview
 from kokage_ui.elements import Component, _render_attrs
 
 
@@ -33,6 +34,7 @@ class ToolCall(BaseModel):
     input: dict | str = ""
     result: str = ""
     call_id: str = ""
+    preview_hint: str = ""
 
 
 class AgentMessage(BaseModel):
@@ -62,6 +64,7 @@ class AgentEvent(BaseModel):
         tool_input: Tool input arguments (for tool_call).
         call_id: Unique call identifier (for tool_call, tool_result).
         result: Tool execution result (for tool_result).
+        preview_hint: Content type hint for rich preview (for tool_result).
         metrics: Execution metrics (for done event).
     """
 
@@ -71,6 +74,7 @@ class AgentEvent(BaseModel):
     tool_input: dict | str = ""
     call_id: str = ""
     result: str = ""
+    preview_hint: str = ""
     metrics: dict | None = None
 
     def to_dict(self) -> dict:
@@ -86,6 +90,8 @@ class AgentEvent(BaseModel):
             d["call_id"] = self.call_id
         if self.result:
             d["result"] = self.result
+        if self.preview_hint:
+            d["preview_hint"] = self.preview_hint
         if self.metrics is not None:
             d["metrics"] = self.metrics
         return d
@@ -119,7 +125,6 @@ def _render_tool_collapse(tc: ToolCall, expanded: bool = False) -> str:
     name_escaped = escape(tc.name)
     input_str = tc.input if isinstance(tc.input, str) else json.dumps(tc.input, ensure_ascii=False, indent=2)
     input_escaped = escape(input_str)
-    result_escaped = escape(tc.result)
     checked = " checked" if expanded else ""
 
     html = (
@@ -134,9 +139,10 @@ def _render_tool_collapse(tc: ToolCall, expanded: bool = False) -> str:
         f'<pre class="bg-base-300 p-2 rounded mt-1 whitespace-pre-wrap">{input_escaped}</pre>'
     )
     if tc.result:
+        result_html = render_preview(tc.result, hint=tc.preview_hint)
         html += (
             f'<div class="font-semibold mt-2">Result:</div>'
-            f'<pre class="bg-base-300 p-2 rounded mt-1 whitespace-pre-wrap">{result_escaped}</pre>'
+            f"{result_html}"
         )
     html += "</div></div></div>"
     return html
@@ -189,6 +195,7 @@ class AgentView(Component):
         messages: Initial messages to display.
         placeholder: Input field placeholder text.
         send_label: Submit button label.
+        stop_label: Stop button label shown during streaming.
         agent_name: Display name for agent messages.
         user_name: Display name for user messages.
         height: CSS height for the container.
@@ -207,6 +214,7 @@ class AgentView(Component):
         messages: list[AgentMessage] | None = None,
         placeholder: str = "メッセージを入力...",
         send_label: str = "送信",
+        stop_label: str = "停止",
         agent_name: str = "Agent",
         user_name: str = "You",
         height: str = "700px",
@@ -220,6 +228,7 @@ class AgentView(Component):
         self.messages = messages or []
         self.placeholder = placeholder
         self.send_label = send_label
+        self.stop_label = stop_label
         self.agent_name = agent_name
         self.user_name = user_name
         self.height = height
@@ -247,6 +256,8 @@ class AgentView(Component):
         js_send_url = json.dumps(self.send_url, ensure_ascii=False)
         js_user_name = json.dumps(self.user_name, ensure_ascii=False)
         js_agent_name = json.dumps(self.agent_name, ensure_ascii=False)
+        js_send_label = json.dumps(self.send_label, ensure_ascii=False)
+        js_stop_label = json.dumps(self.stop_label, ensure_ascii=False)
         js_tool_expanded = "true" if self.tool_expanded else "false"
 
         # Status bar
@@ -275,6 +286,8 @@ class AgentView(Component):
   var sendUrl = {js_send_url};
   var userName = {js_user_name};
   var agentName = {js_agent_name};
+  var sendLabel = {js_send_label};
+  var stopLabel = {js_stop_label};
   var toolExpanded = {js_tool_expanded};
   var form = document.getElementById(agentId + '-form');
   var messagesEl = document.getElementById(agentId + '-messages');
@@ -287,11 +300,33 @@ class AgentView(Component):
   var fullText = '';
   var bubbleEl = null;
   var renderPending = false;
+  var abortController = null;
 
   var _escapeEl = document.createElement('div');
   function escapeHtml(s) {{
     _escapeEl.textContent = s;
     return _escapeEl.innerHTML;
+  }}
+
+  {JS_PREVIEW_RENDERER}
+
+  function setStreaming(active) {{
+    if (active) {{
+      btn.textContent = stopLabel;
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-error');
+      btn.classList.add('loading');
+      btn.disabled = false;
+      btn.type = 'button';
+    }} else {{
+      btn.textContent = sendLabel;
+      btn.classList.remove('btn-error');
+      btn.classList.add('btn-primary');
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.type = 'submit';
+      abortController = null;
+    }}
   }}
 
   function setStatus(text) {{
@@ -349,6 +384,17 @@ class AgentView(Component):
     return panel;
   }}
 
+  function finalize() {{
+    renderContent();
+    if (typeof hljs !== 'undefined' && bubbleEl) {{
+      bubbleEl.querySelectorAll('pre code').forEach(function(el) {{
+        hljs.highlightElement(el);
+      }});
+    }}
+    setStreaming(false);
+    input.focus();
+  }}
+
   function handleEvent(data) {{
     switch(data.type) {{
       case 'text':
@@ -379,8 +425,7 @@ class AgentView(Component):
           if (contentDiv) {{
             var resultDiv = document.createElement('div');
             resultDiv.innerHTML = '<div class="font-semibold mt-2">Result:</div>'
-              + '<pre class="bg-base-300 p-2 rounded mt-1 whitespace-pre-wrap">'
-              + escapeHtml(data.result || '') + '</pre>';
+              + renderPreview(data.result || '', data.preview_hint || '');
             contentDiv.appendChild(resultDiv);
           }}
         }}
@@ -402,17 +447,9 @@ class AgentView(Component):
         break;
 
       case 'done':
-        renderContent();
-        if (typeof hljs !== 'undefined') {{
-          bubbleEl.querySelectorAll('pre code').forEach(function(el) {{
-            hljs.highlightElement(el);
-          }});
-        }}
         setMetrics(data.metrics);
         setStatus('');
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        input.focus();
+        finalize();
         break;
     }}
   }}
@@ -442,6 +479,12 @@ class AgentView(Component):
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }}
 
+  btn.addEventListener('click', function() {{
+    if (abortController) {{
+      abortController.abort();
+    }}
+  }});
+
   form.addEventListener('submit', function(e) {{
     e.preventDefault();
     var message = input.value.trim();
@@ -453,13 +496,14 @@ class AgentView(Component):
     bubbleEl = addBubble('assistant', agentName, '');
     fullText = '';
     toolPanels = {{}};
-    btn.classList.add('loading');
-    btn.disabled = true;
+    abortController = new AbortController();
+    setStreaming(true);
 
     fetch(sendUrl, {{
       method: 'POST',
       headers: {{'Content-Type': 'application/json'}},
-      body: JSON.stringify({{message: message}})
+      body: JSON.stringify({{message: message}}),
+      signal: abortController.signal
     }}).then(function(response) {{
       if (!response.ok) throw new Error('HTTP ' + response.status);
       var reader = response.body.getReader();
@@ -469,7 +513,7 @@ class AgentView(Component):
       function read() {{
         return reader.read().then(function(result) {{
           if (result.done) {{
-            handleEvent({{type: 'done'}});
+            finalize();
             return;
           }}
           buffer += decoder.decode(result.value, {{stream: true}});
@@ -491,14 +535,18 @@ class AgentView(Component):
 
       return read();
     }}).catch(function(err) {{
+      if (err.name === 'AbortError') {{
+        setStatus('');
+        finalize();
+        return;
+      }}
       if (bubbleEl) {{
         var errSpan = document.createElement('span');
         errSpan.className = 'text-error';
         errSpan.textContent = err.message;
         bubbleEl.appendChild(errSpan);
       }}
-      btn.classList.remove('loading');
-      btn.disabled = false;
+      setStreaming(false);
     }});
   }});
 }})();

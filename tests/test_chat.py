@@ -120,6 +120,33 @@ class TestChatView:
         assert "Alice" in html
         assert "Bot" in html
 
+    def test_abort_controller_in_script(self):
+        view = ChatView(send_url="/api/chat", chat_id="test")
+        html = str(view)
+        assert "AbortController" in html
+        assert "abortController.abort()" in html
+        assert "AbortError" in html
+
+    def test_stop_button_label_in_js(self):
+        view = ChatView(send_url="/api/chat", chat_id="test")
+        html = str(view)
+        assert "stopLabel" in html
+
+    def test_custom_stop_label(self):
+        view = ChatView(send_url="/api/chat", stop_label="Stop", chat_id="test")
+        html = str(view)
+        assert '"Stop"' in html
+
+    def test_default_stop_label(self):
+        view = ChatView(send_url="/api/chat", chat_id="test")
+        assert view.stop_label == "停止"
+
+    def test_set_streaming_function_in_script(self):
+        view = ChatView(send_url="/api/chat", chat_id="test")
+        html = str(view)
+        assert "setStreaming" in html
+        assert "btn-error" in html
+
     def test_chat_header_in_bubbles(self):
         messages = [ChatMessage(role="assistant", content="Hi")]
         view = ChatView(send_url="/api/chat", messages=messages, chat_id="test")

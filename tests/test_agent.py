@@ -238,6 +238,35 @@ class TestAgentView:
         html = str(view)
         assert "/api/agent" in html
 
+    def test_abort_controller_in_script(self):
+        view = AgentView(send_url="/api/agent", agent_id="test-agent")
+        html = str(view)
+        assert "AbortController" in html
+        assert "abortController.abort()" in html
+        assert "AbortError" in html
+
+    def test_stop_button_label_in_js(self):
+        view = AgentView(send_url="/api/agent", agent_id="test-agent")
+        html = str(view)
+        assert "stopLabel" in html
+
+    def test_custom_stop_label(self):
+        view = AgentView(
+            send_url="/api/agent", stop_label="Stop", agent_id="test-agent"
+        )
+        html = str(view)
+        assert '"Stop"' in html
+
+    def test_default_stop_label(self):
+        view = AgentView(send_url="/api/agent", agent_id="test-agent")
+        assert view.stop_label == "停止"
+
+    def test_set_streaming_function_in_script(self):
+        view = AgentView(send_url="/api/agent", agent_id="test-agent")
+        html = str(view)
+        assert "setStreaming" in html
+        assert "btn-error" in html
+
     def test_agent_names_in_bubbles(self):
         messages = [
             AgentMessage(role="user", content="Hi"),

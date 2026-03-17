@@ -95,6 +95,7 @@ class ChatView(Component):
         messages: Initial messages to display.
         placeholder: Input field placeholder text.
         send_label: Submit button label.
+        stop_label: Stop button label shown during streaming.
         assistant_name: Display name for assistant messages.
         user_name: Display name for user messages.
         height: CSS height for the chat container.
@@ -110,6 +111,7 @@ class ChatView(Component):
         messages: list[ChatMessage] | None = None,
         placeholder: str = "メッセージを入力...",
         send_label: str = "送信",
+        stop_label: str = "停止",
         assistant_name: str = "Assistant",
         user_name: str = "You",
         height: str = "600px",
@@ -120,6 +122,7 @@ class ChatView(Component):
         self.messages = messages or []
         self.placeholder = placeholder
         self.send_label = send_label
+        self.stop_label = stop_label
         self.assistant_name = assistant_name
         self.user_name = user_name
         self.height = height
@@ -142,23 +145,47 @@ class ChatView(Component):
         js_send_url = json.dumps(self.send_url, ensure_ascii=False)
         js_user_name = json.dumps(self.user_name, ensure_ascii=False)
         js_assistant_name = json.dumps(self.assistant_name, ensure_ascii=False)
+        js_send_label = json.dumps(self.send_label, ensure_ascii=False)
+        js_stop_label = json.dumps(self.stop_label, ensure_ascii=False)
 
         script = f"""\
 <script>
 (function(){{
-  var chatId = {json.dumps(str(self.chat_id))};
+  var chatId = {json.dumps(self.chat_id)};
   var sendUrl = {js_send_url};
   var userName = {js_user_name};
   var assistantName = {js_assistant_name};
+  var sendLabel = {js_send_label};
+  var stopLabel = {js_stop_label};
   var form = document.getElementById(chatId + '-form');
   var messagesEl = document.getElementById(chatId + '-messages');
   var input = document.getElementById(chatId + '-input');
   var btn = document.getElementById(chatId + '-btn');
+  var abortController = null;
 
   function escapeHtml(s) {{
     var d = document.createElement('div');
     d.appendChild(document.createTextNode(s));
     return d.innerHTML;
+  }}
+
+  function setStreaming(active) {{
+    if (active) {{
+      btn.textContent = stopLabel;
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-error');
+      btn.classList.add('loading');
+      btn.disabled = false;
+      btn.type = 'button';
+    }} else {{
+      btn.textContent = sendLabel;
+      btn.classList.remove('btn-error');
+      btn.classList.add('btn-primary');
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.type = 'submit';
+      abortController = null;
+    }}
   }}
 
   function addBubble(role, name, content) {{
@@ -173,6 +200,12 @@ class ChatView(Component):
     return div.querySelector('.chat-bubble');
   }}
 
+  btn.addEventListener('click', function() {{
+    if (abortController) {{
+      abortController.abort();
+    }}
+  }});
+
   form.addEventListener('submit', function(e) {{
     e.preventDefault();
     var message = input.value.trim();
@@ -182,14 +215,15 @@ class ChatView(Component):
     addBubble('user', userName, escapeHtml(message));
 
     var bubbleEl = addBubble('assistant', assistantName, '');
-    btn.classList.add('loading');
-    btn.disabled = true;
+    abortController = new AbortController();
+    setStreaming(true);
 
     var fullText = '';
     fetch(sendUrl, {{
       method: 'POST',
       headers: {{'Content-Type': 'application/json'}},
-      body: JSON.stringify({{message: message}})
+      body: JSON.stringify({{message: message}}),
+      signal: abortController.signal
     }}).then(function(response) {{
       if (!response.ok) throw new Error('HTTP ' + response.status);
       var reader = response.body.getReader();
@@ -241,16 +275,20 @@ class ChatView(Component):
             hljs.highlightElement(el);
           }});
         }}
-        btn.classList.remove('loading');
-        btn.disabled = false;
+        setStreaming(false);
         input.focus();
       }}
 
       return read();
     }}).catch(function(err) {{
+      if (err.name === 'AbortError') {{
+        renderContent();
+        setStreaming(false);
+        input.focus();
+        return;
+      }}
       bubbleEl.innerHTML = '<span class="text-error">' + escapeHtml(err.message) + '</span>';
-      btn.classList.remove('loading');
-      btn.disabled = false;
+      setStreaming(false);
     }});
   }});
 }})();

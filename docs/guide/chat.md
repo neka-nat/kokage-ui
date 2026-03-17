@@ -56,10 +56,19 @@ ChatView(
 | `messages` | list[ChatMessage] \| None | Initial messages to display |
 | `placeholder` | str | Input placeholder text (default: `"メッセージを入力..."`) |
 | `send_label` | str | Submit button label (default: `"送信"`) |
+| `stop_label` | str | Stop button label during streaming (default: `"停止"`) |
 | `assistant_name` | str | Display name for assistant bubbles (default: `"Assistant"`) |
 | `user_name` | str | Display name for user bubbles (default: `"You"`) |
 | `height` | str | CSS height for the chat container (default: `"600px"`) |
 | `chat_id` | str \| None | Unique ID prefix; auto-generated if omitted |
+
+### Stop Button
+
+During streaming, the send button transforms into a red stop button. Clicking it aborts the request via `AbortController`, preserving any content received so far.
+
+```python
+ChatView(send_url="/api/chat", stop_label="Cancel")
+```
 
 ### Chat Bubble Layout
 

@@ -216,3 +216,4 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `AgentMessage` | Agent message model with optional tool_calls |
 | `ToolCall` | Tool call record (name, input, result, call_id) |
 | `agent_stream` | Convert async AgentEvent generator to SSE StreamingResponse |
+| `FilePreview` | Rich content preview (JSON tree, CSV table, code, image, text) |

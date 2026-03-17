@@ -203,6 +203,9 @@ from kokage_ui.ai import ChatMessage, ChatView, chat_stream
 # AI agent
 from kokage_ui.ai import AgentEvent, AgentMessage, AgentView, ToolCall, agent_stream
 
+# AI preview
+from kokage_ui.ai import FilePreview
+
 # Admin dashboard
 from kokage_ui.features.admin import ActivityEntry, ActivityLog, AdminSite, ModelAdmin
 
@@ -412,6 +415,7 @@ __all__ = [
     "AgentView",
     "ToolCall",
     "agent_stream",
+    "FilePreview",
     # Testing
     "render",
     "rendered",
