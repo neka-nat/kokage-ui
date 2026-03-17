@@ -10,13 +10,16 @@
 <body>
 <div><button onclick="document.getElementById(&#39;demo-modal&#39;).showModal()" class="btn btn-primary">Open Modal</button><dialog id="demo-modal" class="modal"><div class="modal-box"><h3 class="font-bold text-lg">Modal Title</h3><p>This is the modal content.</p><div class="modal-action"><button class="btn btn">Close</button></div></div><form method="dialog" class="modal-backdrop"></form></dialog></div>
 <script>
-// Notify parent of content height for iframe auto-resize
+// Notify parent of content height for iframe auto-resize (with loop guard)
+var _lastH = 0;
 function notifyHeight() {
-  var h = document.documentElement.scrollHeight;
-  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  var h = document.body.scrollHeight;
+  if (h !== _lastH) {
+    _lastH = h;
+    window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  }
 }
 window.addEventListener("load", notifyHeight);
-new ResizeObserver(notifyHeight).observe(document.body);
 </script>
 </body>
 </html>

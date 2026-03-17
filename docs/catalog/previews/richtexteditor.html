@@ -8,15 +8,18 @@
   <style>body { padding: 1rem; background: transparent; }</style>
 </head>
 <body>
-<div><div id="kokage-rte-7087c194" style="height:200px">&lt;p&gt;Hello &lt;strong&gt;world&lt;/strong&gt;&lt;/p&gt;</div><input type="hidden" name="content" id="kokage-rte-7087c194-input" value="&lt;p&gt;Hello &lt;strong&gt;world&lt;/strong&gt;&lt;/p&gt;" /><script>(function(){if(typeof Quill==='undefined'){console.error('Quill is not loaded');return;}var q=new Quill('#kokage-rte-7087c194',{theme:'snow',placeholder:"Write something...",modules:{toolbar:[[{"header": [1, 2, 3, false]}], ["bold", "italic", "underline"], [{"list": "ordered"}, {"list": "bullet"}], ["link", "image", "code-block"], ["clean"]]}});var hidden=document.getElementById('kokage-rte-7087c194-input');hidden.value=q.root.innerHTML;q.on('text-change',function(){hidden.value=q.root.innerHTML;});var form=hidden.closest('form');if(form){form.addEventListener('submit',function(){hidden.value=q.root.innerHTML;});}document.body.addEventListener('htmx:configRequest',function(e){if(e.detail.elt.closest&&e.detail.elt.closest('form')){hidden.value=q.root.innerHTML;}});})()</script></div>
+<div><div id="kokage-rte-f237de5b" style="height:200px">&lt;p&gt;Hello &lt;strong&gt;world&lt;/strong&gt;&lt;/p&gt;</div><input type="hidden" name="content" id="kokage-rte-f237de5b-input" value="&lt;p&gt;Hello &lt;strong&gt;world&lt;/strong&gt;&lt;/p&gt;" /><script>(function(){if(typeof Quill==='undefined'){console.error('Quill is not loaded');return;}var q=new Quill('#kokage-rte-f237de5b',{theme:'snow',placeholder:"Write something...",modules:{toolbar:[[{"header": [1, 2, 3, false]}], ["bold", "italic", "underline"], [{"list": "ordered"}, {"list": "bullet"}], ["link", "image", "code-block"], ["clean"]]}});var hidden=document.getElementById('kokage-rte-f237de5b-input');hidden.value=q.root.innerHTML;q.on('text-change',function(){hidden.value=q.root.innerHTML;});var form=hidden.closest('form');if(form){form.addEventListener('submit',function(){hidden.value=q.root.innerHTML;});}document.body.addEventListener('htmx:configRequest',function(e){if(e.detail.elt.closest&&e.detail.elt.closest('form')){hidden.value=q.root.innerHTML;}});})()</script></div>
 <script>
-// Notify parent of content height for iframe auto-resize
+// Notify parent of content height for iframe auto-resize (with loop guard)
+var _lastH = 0;
 function notifyHeight() {
-  var h = document.documentElement.scrollHeight;
-  window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  var h = document.body.scrollHeight;
+  if (h !== _lastH) {
+    _lastH = h;
+    window.parent.postMessage({ type: "kokage-resize", height: h }, "*");
+  }
 }
 window.addEventListener("load", notifyHeight);
-new ResizeObserver(notifyHeight).observe(document.body);
 </script>
 </body>
 </html>
