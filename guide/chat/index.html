@@ -931,6 +931,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#stop-button" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Button
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#chat-bubble-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1759,6 +1770,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#stop-button" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Button
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#chat-bubble-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1949,6 +1971,11 @@
 <td>Submit button label (default: <code>"送信"</code>)</td>
 </tr>
 <tr>
+<td><code>stop_label</code></td>
+<td>str</td>
+<td>Stop button label during streaming (default: <code>"停止"</code>)</td>
+</tr>
+<tr>
 <td><code>assistant_name</code></td>
 <td>str</td>
 <td>Display name for assistant bubbles (default: <code>"Assistant"</code>)</td>
@@ -1970,6 +1997,10 @@
 </tr>
 </tbody>
 </table>
+<h3 id="stop-button">Stop Button</h3>
+<p>During streaming, the send button transforms into a red stop button. Clicking it aborts the request via <code>AbortController</code>, preserving any content received so far.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">ChatView</span><span class="p">(</span><span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">,</span> <span class="n">stop_label</span><span class="o">=</span><span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="chat-bubble-layout">Chat Bubble Layout</h3>
 <ul>
 <li><strong>User messages</strong> — aligned right with <code>chat-bubble-primary</code> styling</li>
@@ -1977,10 +2008,10 @@
 </ul>
 <h2 id="chatmessage">ChatMessage</h2>
 <p>A Pydantic BaseModel representing a single chat message.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatMessage</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello!&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hi there!&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Bot&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatMessage</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hello!&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Hi there!&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Bot&quot;</span><span class="p">)</span>
 </code></pre></div>
 <table>
 <thead>
@@ -2010,47 +2041,47 @@
 </table>
 <h2 id="chat_stream">chat_stream</h2>
 <p>Helper function that converts an async token generator to an SSE <code>StreamingResponse</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">chat_stream</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">():</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="k">yield</span> <span class="s2">&quot;Hello&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="k">yield</span> <span class="s2">&quot; world&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">return</span> <span class="n">chat_stream</span><span class="p">(</span><span class="n">generate</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">chat_stream</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">():</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="k">yield</span> <span class="s2">&quot;Hello&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="k">yield</span> <span class="s2">&quot; world&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">return</span> <span class="n">chat_stream</span><span class="p">(</span><span class="n">generate</span><span class="p">())</span>
 </code></pre></div>
 <p>Each token is sent as a Server-Sent Event:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>data: {&quot;token&quot;: &quot;Hello&quot;}
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>data: {&quot;token&quot;: &quot; world&quot;}
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>data: {&quot;done&quot;: true}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>data: {&quot;token&quot;: &quot;Hello&quot;}
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>data: {&quot;token&quot;: &quot; world&quot;}
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>data: {&quot;done&quot;: true}
 </code></pre></div>
 <p>The response has <code>Content-Type: text/event-stream</code> with <code>Cache-Control: no-cache</code>.</p>
 <h2 id="markdown-code-highlighting">Markdown &amp; Code Highlighting</h2>
 <p><code>ChatView</code> automatically uses <code>marked.js</code> for Markdown rendering and <code>highlight.js</code> for code blocks when they are loaded on the page.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">Page</span><span class="p">(</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">ChatView</span><span class="p">(</span><span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">),</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">include_marked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>        <span class="c1"># Enable Markdown rendering</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">include_highlightjs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>   <span class="c1"># Enable code syntax highlighting</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">Page</span><span class="p">(</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">ChatView</span><span class="p">(</span><span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">),</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">include_marked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>        <span class="c1"># Enable Markdown rendering</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">include_highlightjs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>   <span class="c1"># Enable code syntax highlighting</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">)</span>
 </code></pre></div>
 <p>If <code>marked.js</code> is not loaded, assistant messages are displayed as plain text with HTML escaping.</p>
 <h2 id="server-side-endpoint">Server-Side Endpoint</h2>
 <p>The POST endpoint receives JSON with a <code>message</code> field and should return a <code>chat_stream()</code> response:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">user_message</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">():</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="c1"># Use any LLM provider</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="k">async</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">call_llm</span><span class="p">(</span><span class="n">user_message</span><span class="p">):</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>            <span class="k">yield</span> <span class="n">token</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="k">return</span> <span class="n">chat_stream</span><span class="p">(</span><span class="n">generate</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/chat&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">user_message</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">():</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="c1"># Use any LLM provider</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="k">async</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">call_llm</span><span class="p">(</span><span class="n">user_message</span><span class="p">):</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>            <span class="k">yield</span> <span class="n">token</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="k">return</span> <span class="n">chat_stream</span><span class="p">(</span><span class="n">generate</span><span class="p">())</span>
 </code></pre></div>
 <h3 id="request-format">Request Format</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&#39;s input text&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&#39;s input text&quot;</span><span class="p">}</span>
 </code></pre></div>
 <h3 id="response-format">Response Format</h3>
 <p>SSE stream where each event is a JSON object:</p>
