@@ -10,10 +10,6 @@ requires-python = ">=3.11"
 dependencies = [
     "kokage-ui",
 ]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 '''
 
 PYPROJECT_SQL_TEMPLATE = '''\
@@ -24,10 +20,6 @@ requires-python = ">=3.11"
 dependencies = [
     "kokage-ui[sql]",
 ]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 '''
 
 GITIGNORE_TEMPLATE = '''\
