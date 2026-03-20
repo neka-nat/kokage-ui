@@ -1,6 +1,6 @@
 [project]
 name = "kokage-ui"
-version = "0.5.0"
+version = "0.6.0"
 description = "Add htmx + DaisyUI based UI to FastAPI with pure Python"
 readme = "README.md"
 requires-python = ">=3.11"
