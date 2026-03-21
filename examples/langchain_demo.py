@@ -214,11 +214,11 @@ async def _mock_langgraph_messages(message: str):
 
 @app.post("/api/stream-events")
 async def api_stream_events(request: Request):
-    from kokage_ui.ai.langchain import langchain_stream
+    from kokage_ui.ai.langchain import langchain_agent_stream
 
     data = await request.json()
     events = _mock_astream_events(data["message"])
-    return agent_stream(langchain_stream(events))
+    return langchain_agent_stream(events)
 
 
 @app.post("/api/langgraph")

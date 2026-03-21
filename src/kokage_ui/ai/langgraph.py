@@ -1,7 +1,7 @@
 """LangGraph integration adapter for kokage-ui AgentView.
 
-Converts LangGraph ``astream`` output into :class:`AgentEvent` for
-use with :func:`agent_stream`.
+Converts LangGraph ``astream`` output directly into SSE
+``StreamingResponse`` for :class:`AgentView`.
 
 Requires ``kokage-ui[langchain]`` (``langgraph >= 0.2``).
 
@@ -9,8 +9,7 @@ Example with ``stream_mode="messages"``::
 
     from langgraph.prebuilt import create_react_agent
     from langchain_openai import ChatOpenAI
-    from kokage_ui.ai import agent_stream
-    from kokage_ui.ai.langgraph import langgraph_stream
+    from kokage_ui.ai.langgraph import langgraph_agent_stream
 
     llm = ChatOpenAI(model="gpt-4o", streaming=True)
     agent = create_react_agent(llm, tools=[...])
@@ -22,7 +21,7 @@ Example with ``stream_mode="messages"``::
             {"messages": [("user", data["message"])]},
             stream_mode="messages",
         )
-        return agent_stream(langgraph_stream(stream))
+        return langgraph_agent_stream(stream)
 
 Example with ``stream_mode="updates"``::
 
@@ -30,7 +29,7 @@ Example with ``stream_mode="updates"``::
         {"messages": [("user", data["message"])]},
         stream_mode="updates",
     )
-    return agent_stream(langgraph_stream(stream, stream_mode="updates"))
+    return langgraph_agent_stream(stream, stream_mode="updates")
 """
 
 from __future__ import annotations
@@ -39,23 +38,41 @@ import json
 from collections.abc import AsyncIterator
 from typing import Any
 
-from kokage_ui.ai.agent import AgentEvent
+from kokage_ui.ai.agent import AgentEvent, agent_stream
+from starlette.responses import StreamingResponse
 
 
-async def langgraph_stream(
+def langgraph_agent_stream(
     stream: AsyncIterator[Any],
     *,
     stream_mode: str = "messages",
     include_status: bool = True,
-) -> AsyncIterator[AgentEvent]:
-    """Convert LangGraph ``astream`` output to :class:`AgentEvent` stream.
+) -> StreamingResponse:
+    """Convert LangGraph ``astream`` directly to SSE StreamingResponse.
+
+    One-line adapter for use with :class:`AgentView`.
 
     Args:
         stream: Async iterator from ``graph.astream(...)``.
         stream_mode: Must match the ``stream_mode`` passed to ``astream()``.
             Supported: ``"messages"`` (default), ``"updates"``.
         include_status: Emit ``status`` events on node transitions.
+
+    Returns:
+        A ``StreamingResponse`` ready to return from a FastAPI endpoint.
     """
+    return agent_stream(
+        _langgraph_stream(stream, stream_mode=stream_mode, include_status=include_status)
+    )
+
+
+async def _langgraph_stream(
+    stream: AsyncIterator[Any],
+    *,
+    stream_mode: str = "messages",
+    include_status: bool = True,
+) -> AsyncIterator[AgentEvent]:
+    """Convert LangGraph ``astream`` output to :class:`AgentEvent` stream."""
     if stream_mode == "messages":
         async for item in _handle_messages_mode(stream, include_status=include_status):
             yield item

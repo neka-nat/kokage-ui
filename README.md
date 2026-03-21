@@ -136,26 +136,25 @@ https://github.com/user-attachments/assets/1dfbe1ec-eb87-447f-9c4c-17f16d2d123b
 Connect to LangChain or LangGraph with built-in adapters — no boilerplate event mapping:
 
 ```python
-from kokage_ui.ai import agent_stream
-from kokage_ui.ai.langchain import langchain_stream
+from kokage_ui.ai.langchain import langchain_agent_stream
 
 # executor = AgentExecutor (LangChain's agent runner with tools and LLM)
 @app.post("/api/agent")
 async def run(request: Request):
     data = await request.json()
     events = executor.astream_events({"input": data["message"]}, version="v2")
-    return agent_stream(langchain_stream(events))
+    return langchain_agent_stream(events)
 ```
 
 ```python
-from kokage_ui.ai.langgraph import langgraph_stream
+from kokage_ui.ai.langgraph import langgraph_agent_stream
 
 # graph = LangGraph's CompiledStateGraph (e.g. from create_react_agent)
 @app.post("/api/agent")
 async def run(request: Request):
     data = await request.json()
     stream = graph.astream({"messages": [("user", data["message"])]}, stream_mode="messages")
-    return agent_stream(langgraph_stream(stream))
+    return langgraph_agent_stream(stream)
 ```
 
 Also includes `LangChainCallbackHandler` for legacy `AgentExecutor` and `ToolRegistry` + `to_langchain_tools` for bidirectional tool conversion.

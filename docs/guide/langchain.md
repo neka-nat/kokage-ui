@@ -1,6 +1,6 @@
 # LangChain / LangGraph Integration
 
-kokage-ui provides adapter functions that convert LangChain and LangGraph streaming output into `AgentEvent` for use with `AgentView`.
+kokage-ui provides one-line adapters that convert LangChain and LangGraph streaming output directly into SSE `StreamingResponse` for use with `AgentView`.
 
 Install the optional dependency:
 
@@ -8,9 +8,9 @@ Install the optional dependency:
 pip install kokage-ui[langchain]
 ```
 
-## langchain_stream
+## langchain_agent_stream
 
-Converts LangChain `astream_events` v2 output into `AgentEvent`.
+Converts LangChain `astream_events` v2 output directly into `StreamingResponse`.
 
 ```python
 from fastapi import FastAPI, Request
@@ -20,8 +20,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
 
 from kokage_ui import KokageUI, Page
-from kokage_ui.ai import AgentView, agent_stream
-from kokage_ui.ai.langchain import langchain_stream
+from kokage_ui.ai import AgentView
+from kokage_ui.ai.langchain import langchain_agent_stream
 
 app = FastAPI()
 ui = KokageUI(app)
@@ -53,7 +53,7 @@ async def run_agent(request: Request):
     events = executor.astream_events(
         {"input": data["message"]}, version="v2"
     )
-    return agent_stream(langchain_stream(events))
+    return langchain_agent_stream(events)
 ```
 
 ### Event Mapping
@@ -73,17 +73,16 @@ async def run_agent(request: Request):
 | `events` | AsyncIterator | (required) | Output from `astream_events(..., version="v2")` |
 | `include_status` | bool | True | Emit status events on chain/tool start |
 
-## langgraph_stream
+## langgraph_agent_stream
 
-Converts LangGraph `astream` output into `AgentEvent`. Supports `messages` and `updates` stream modes.
+Converts LangGraph `astream` output directly into `StreamingResponse`. Supports `messages` and `updates` stream modes.
 
 ### Messages Mode (default)
 
 ```python
 from langgraph.prebuilt import create_react_agent
 from langchain_openai import ChatOpenAI
-from kokage_ui.ai import agent_stream
-from kokage_ui.ai.langgraph import langgraph_stream
+from kokage_ui.ai.langgraph import langgraph_agent_stream
 
 llm = ChatOpenAI(model="gpt-4o", streaming=True)
 agent = create_react_agent(llm, tools=[search])
@@ -95,7 +94,7 @@ async def run_agent(request: Request):
         {"messages": [("user", data["message"])]},
         stream_mode="messages",
     )
-    return agent_stream(langgraph_stream(stream))
+    return langgraph_agent_stream(stream)
 ```
 
 ### Updates Mode
@@ -108,7 +107,7 @@ async def run_agent(request: Request):
         {"messages": [("user", data["message"])]},
         stream_mode="updates",
     )
-    return agent_stream(langgraph_stream(stream, stream_mode="updates"))
+    return langgraph_agent_stream(stream, stream_mode="updates")
 ```
 
 ### Event Mapping (messages mode)

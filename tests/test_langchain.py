@@ -77,8 +77,13 @@ def _install_mock_langchain():
 
 _install_mock_langchain()
 
-from kokage_ui.ai.langchain import LangChainCallbackHandler, langchain_stream, to_langchain_tools  # noqa: E402
-from kokage_ui.ai.langgraph import langgraph_stream  # noqa: E402
+from kokage_ui.ai.langchain import (  # noqa: E402
+    LangChainCallbackHandler,
+    _langchain_stream,
+    langchain_agent_stream,
+    to_langchain_tools,
+)
+from kokage_ui.ai.langgraph import _langgraph_stream, langgraph_agent_stream  # noqa: E402
 from kokage_ui.ai.tools import ToolRegistry  # noqa: E402
 
 
@@ -112,7 +117,7 @@ class TestLangchainStream:
                 "run_id": "r1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         assert len(result) == 2
         assert result[0] == AgentEvent(type="text", content="Hello")
         assert result[1] == AgentEvent(type="text", content=" world")
@@ -127,7 +132,7 @@ class TestLangchainStream:
                 "run_id": "tc1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         tool_events = [e for e in result if e.type == "tool_call"]
         assert len(tool_events) == 1
         assert tool_events[0].tool_name == "search"
@@ -143,7 +148,7 @@ class TestLangchainStream:
                 "run_id": "tc1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         assert len(result) == 1
         assert result[0].type == "tool_result"
         assert result[0].result == "Found 3 items"
@@ -158,7 +163,7 @@ class TestLangchainStream:
                 "run_id": "tc1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         assert result[0].result == "plain result"
 
     @pytest.mark.asyncio
@@ -170,7 +175,7 @@ class TestLangchainStream:
                 "run_id": "tc1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         assert result[0].result == '{"key": "value"}'
 
     @pytest.mark.asyncio
@@ -183,7 +188,7 @@ class TestLangchainStream:
                 "run_id": "r1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         assert len(result) == 1
         assert result[0].type == "status"
         assert result[0].content == "Thinking..."
@@ -204,7 +209,7 @@ class TestLangchainStream:
                 "run_id": "tc1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events), include_status=False))
+        result = await _collect(_langchain_stream(_async_iter(events), include_status=False))
         status_events = [e for e in result if e.type == "status"]
         assert len(status_events) == 0
 
@@ -218,7 +223,7 @@ class TestLangchainStream:
                 "run_id": "r1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         assert len(result) == 1
         assert result[0].type == "done"
 
@@ -238,7 +243,7 @@ class TestLangchainStream:
                 "run_id": "r1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         assert len(result) == 0
 
     @pytest.mark.asyncio
@@ -250,7 +255,7 @@ class TestLangchainStream:
                 "run_id": "r1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         assert len(result) == 0
 
     @pytest.mark.asyncio
@@ -273,7 +278,7 @@ class TestLangchainStream:
                 "run_id": "tc1",
             },
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         tool_calls = [e for e in result if e.type == "tool_call"]
         assert len(tool_calls) == 1
 
@@ -295,7 +300,7 @@ class TestLangchainStream:
             },
             {"event": "on_chain_end", "name": "Agent", "data": {}, "run_id": "r1"},
         ]
-        result = await _collect(langchain_stream(_async_iter(events)))
+        result = await _collect(_langchain_stream(_async_iter(events)))
         types = [e.type for e in result]
         assert types == ["status", "tool_call", "status", "tool_result", "text", "done"]
 
@@ -310,7 +315,7 @@ class TestLanggraphStreamMessages:
             (_MockAIMessageChunk(content="Hello"), {"langgraph_node": "agent"}),
             (_MockAIMessageChunk(content=" world"), {"langgraph_node": "agent"}),
         ]
-        result = await _collect(langgraph_stream(_async_iter(items)))
+        result = await _collect(_langgraph_stream(_async_iter(items)))
         text_events = [e for e in result if e.type == "text"]
         assert len(text_events) == 2
         assert text_events[0].content == "Hello"
@@ -322,7 +327,7 @@ class TestLanggraphStreamMessages:
             tool_calls=[{"id": "tc1", "name": "search", "args": {"q": "test"}}]
         )
         items = [(chunk, {"langgraph_node": "agent"})]
-        result = await _collect(langgraph_stream(_async_iter(items)))
+        result = await _collect(_langgraph_stream(_async_iter(items)))
         tc_events = [e for e in result if e.type == "tool_call"]
         assert len(tc_events) == 1
         assert tc_events[0].tool_name == "search"
@@ -333,7 +338,7 @@ class TestLanggraphStreamMessages:
         items = [
             (_MockToolMessage(content="result data", tool_call_id="tc1"), {"langgraph_node": "tools"}),
         ]
-        result = await _collect(langgraph_stream(_async_iter(items)))
+        result = await _collect(_langgraph_stream(_async_iter(items)))
         tr_events = [e for e in result if e.type == "tool_result"]
         assert len(tr_events) == 1
         assert tr_events[0].result == "result data"
@@ -345,7 +350,7 @@ class TestLanggraphStreamMessages:
             (_MockAIMessageChunk(content="hi"), {"langgraph_node": "agent"}),
             (_MockToolMessage(content="r", tool_call_id="tc1"), {"langgraph_node": "tools"}),
         ]
-        result = await _collect(langgraph_stream(_async_iter(items)))
+        result = await _collect(_langgraph_stream(_async_iter(items)))
         status_events = [e for e in result if e.type == "status"]
         assert len(status_events) == 2
         assert "agent" in status_events[0].content
@@ -356,7 +361,7 @@ class TestLanggraphStreamMessages:
         items = [
             (_MockAIMessageChunk(content="hi"), {"langgraph_node": "agent"}),
         ]
-        result = await _collect(langgraph_stream(_async_iter(items), include_status=False))
+        result = await _collect(_langgraph_stream(_async_iter(items), include_status=False))
         status_events = [e for e in result if e.type == "status"]
         assert len(status_events) == 0
 
@@ -365,7 +370,7 @@ class TestLanggraphStreamMessages:
         items = [
             (_MockAIMessageChunk(content="hi"), {"langgraph_node": "agent"}),
         ]
-        result = await _collect(langgraph_stream(_async_iter(items)))
+        result = await _collect(_langgraph_stream(_async_iter(items)))
         assert result[-1].type == "done"
 
     @pytest.mark.asyncio
@@ -377,7 +382,7 @@ class TestLanggraphStreamMessages:
             (chunk, {"langgraph_node": "agent"}),
             (chunk, {"langgraph_node": "agent"}),
         ]
-        result = await _collect(langgraph_stream(_async_iter(items)))
+        result = await _collect(_langgraph_stream(_async_iter(items)))
         tc_events = [e for e in result if e.type == "tool_call"]
         assert len(tc_events) == 1
 
@@ -386,7 +391,7 @@ class TestLanggraphStreamMessages:
         items = [
             (_MockToolMessage(content={"key": "val"}, tool_call_id="tc1"), {"langgraph_node": "tools"}),
         ]
-        result = await _collect(langgraph_stream(_async_iter(items)))
+        result = await _collect(_langgraph_stream(_async_iter(items)))
         tr = [e for e in result if e.type == "tool_result"][0]
         assert tr.result == '{"key": "val"}'
 
@@ -400,7 +405,7 @@ class TestLanggraphStreamUpdates:
         updates = [
             {"agent": {"messages": [_MockAIMessage(content="Hello from agent")]}}
         ]
-        result = await _collect(langgraph_stream(_async_iter(updates), stream_mode="updates"))
+        result = await _collect(_langgraph_stream(_async_iter(updates), stream_mode="updates"))
         text_events = [e for e in result if e.type == "text"]
         assert len(text_events) == 1
         assert text_events[0].content == "Hello from agent"
@@ -412,7 +417,7 @@ class TestLanggraphStreamUpdates:
             tool_calls=[{"id": "tc1", "name": "search", "args": {"q": "test"}}],
         )
         updates = [{"agent": {"messages": [msg]}}]
-        result = await _collect(langgraph_stream(_async_iter(updates), stream_mode="updates"))
+        result = await _collect(_langgraph_stream(_async_iter(updates), stream_mode="updates"))
         tc_events = [e for e in result if e.type == "tool_call"]
         assert len(tc_events) == 1
         assert tc_events[0].tool_name == "search"
@@ -422,7 +427,7 @@ class TestLanggraphStreamUpdates:
         updates = [
             {"tools": {"messages": [_MockToolMessage(content="tool output", tool_call_id="tc1")]}}
         ]
-        result = await _collect(langgraph_stream(_async_iter(updates), stream_mode="updates"))
+        result = await _collect(_langgraph_stream(_async_iter(updates), stream_mode="updates"))
         tr_events = [e for e in result if e.type == "tool_result"]
         assert len(tr_events) == 1
         assert tr_events[0].result == "tool output"
@@ -433,7 +438,7 @@ class TestLanggraphStreamUpdates:
             {"agent": {"messages": [_MockAIMessage(content="hi")]}},
             {"tools": {"messages": [_MockToolMessage(content="r", tool_call_id="tc1")]}},
         ]
-        result = await _collect(langgraph_stream(_async_iter(updates), stream_mode="updates"))
+        result = await _collect(_langgraph_stream(_async_iter(updates), stream_mode="updates"))
         status_events = [e for e in result if e.type == "status"]
         assert any("agent" in e.content for e in status_events)
         assert any("tools" in e.content for e in status_events)
@@ -441,13 +446,13 @@ class TestLanggraphStreamUpdates:
     @pytest.mark.asyncio
     async def test_done_emitted(self):
         updates = [{"agent": {"messages": []}}]
-        result = await _collect(langgraph_stream(_async_iter(updates), stream_mode="updates"))
+        result = await _collect(_langgraph_stream(_async_iter(updates), stream_mode="updates"))
         assert result[-1].type == "done"
 
     @pytest.mark.asyncio
     async def test_unsupported_mode_raises(self):
         with pytest.raises(ValueError, match="Unsupported stream_mode"):
-            await _collect(langgraph_stream(_async_iter([]), stream_mode="invalid"))
+            await _collect(_langgraph_stream(_async_iter([]), stream_mode="invalid"))
 
 
 # ==================== Import error ====================
@@ -650,6 +655,44 @@ class TestToLangchainTools:
         assert tools == []
 
 
+# ==================== agent_stream wrappers ====================
+
+
+class TestLangchainAgentStream:
+    def test_returns_streaming_response(self):
+        from starlette.responses import StreamingResponse
+
+        events = [
+            {
+                "event": "on_chat_model_stream",
+                "data": {"chunk": _MockAIMessageChunk(content="Hi")},
+                "run_id": "r1",
+            },
+        ]
+        resp = langchain_agent_stream(_async_iter(events))
+        assert isinstance(resp, StreamingResponse)
+        assert resp.media_type == "text/event-stream"
+
+
+class TestLanggraphAgentStream:
+    def test_returns_streaming_response(self):
+        from starlette.responses import StreamingResponse
+
+        items = [
+            (_MockAIMessageChunk(content="Hi"), {"langgraph_node": "agent"}),
+        ]
+        resp = langgraph_agent_stream(_async_iter(items))
+        assert isinstance(resp, StreamingResponse)
+        assert resp.media_type == "text/event-stream"
+
+    def test_updates_mode_returns_streaming_response(self):
+        from starlette.responses import StreamingResponse
+
+        updates = [{"agent": {"messages": [_MockAIMessage(content="Hi")]}}]
+        resp = langgraph_agent_stream(_async_iter(updates), stream_mode="updates")
+        assert isinstance(resp, StreamingResponse)
+
+
 # ==================== Import error ====================
 
 
@@ -670,7 +713,7 @@ class TestImportError:
             importlib.reload(lc_mod)
 
             with pytest.raises(ImportError, match="langchain-core"):
-                async for _ in lc_mod.langchain_stream(_async_iter([])):
+                async for _ in lc_mod._langchain_stream(_async_iter([])):
                     pass
         finally:
             sys.modules.update(saved)

@@ -11,10 +11,10 @@ from kokage_ui.ai.tools import ToolInfo, ToolRegistry
 
 # LangChain-dependent exports are lazy-loaded below.
 _LANGCHAIN_EXPORTS = {
-    "langchain_stream": "langchain",
+    "langchain_agent_stream": "langchain",
     "LangChainCallbackHandler": "langchain",
     "to_langchain_tools": "langchain",
-    "langgraph_stream": "langgraph",
+    "langgraph_agent_stream": "langgraph",
 }
 
 
@@ -42,7 +42,7 @@ __all__ = [
     "ToolRegistry",
     "agent_stream",
     "chat_stream",
-    "langchain_stream",
-    "langgraph_stream",
+    "langchain_agent_stream",
+    "langgraph_agent_stream",
     "to_langchain_tools",
 ]

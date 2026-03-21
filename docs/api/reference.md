@@ -229,7 +229,7 @@ All elements inherit from `Component`. Children are positional args, attributes 
 
 | Export | Module | Description |
 |--------|--------|-------------|
-| `langchain_stream` | `ai.langchain` | Convert LangChain `astream_events` v2 to AgentEvent stream |
-| `langgraph_stream` | `ai.langgraph` | Convert LangGraph `astream` to AgentEvent stream (messages/updates modes) |
+| `langchain_agent_stream` | `ai.langchain` | Convert LangChain `astream_events` v2 directly to SSE StreamingResponse |
+| `langgraph_agent_stream` | `ai.langgraph` | Convert LangGraph `astream` directly to SSE StreamingResponse (messages/updates modes) |
 | `LangChainCallbackHandler` | `ai.langchain` | Callback-based adapter for `AgentExecutor` and legacy runnables |
 | `to_langchain_tools` | `ai.langchain` | Convert `ToolRegistry` / callables to LangChain `StructuredTool` |

@@ -1,17 +1,17 @@
 """LangChain integration adapter for kokage-ui AgentView.
 
-Converts LangChain ``astream_events`` v2 output into :class:`AgentEvent` for
-use with :func:`agent_stream`.  Also provides :class:`LangChainCallbackHandler`
-for callback-based integration and :func:`to_langchain_tools` for converting
-:class:`ToolRegistry` tools to LangChain ``BaseTool``.
+Converts LangChain ``astream_events`` v2 output into SSE
+``StreamingResponse`` for :class:`AgentView`.  Also provides
+:class:`LangChainCallbackHandler` for callback-based integration and
+:func:`to_langchain_tools` for converting :class:`ToolRegistry` tools
+to LangChain ``BaseTool``.
 
 Requires ``kokage-ui[langchain]`` (``langchain-core >= 0.3``).
 
 Example::
 
     from langchain_openai import ChatOpenAI
-    from kokage_ui.ai import agent_stream
-    from kokage_ui.ai.langchain import langchain_stream
+    from kokage_ui.ai.langchain import langchain_agent_stream
 
     llm = ChatOpenAI(model="gpt-4o", streaming=True)
 
@@ -21,7 +21,7 @@ Example::
         events = llm.astream_events(
             [{"role": "user", "content": data["message"]}], version="v2"
         )
-        return agent_stream(langchain_stream(events))
+        return langchain_agent_stream(events)
 """
 
 from __future__ import annotations
@@ -32,7 +32,8 @@ import uuid
 from collections.abc import AsyncIterator, Callable
 from typing import Any
 
-from kokage_ui.ai.agent import AgentEvent
+from kokage_ui.ai.agent import AgentEvent, agent_stream
+from starlette.responses import StreamingResponse
 
 _IMPORT_MSG = (
     "langchain-core is required for this feature. "
@@ -40,18 +41,32 @@ _IMPORT_MSG = (
 )
 
 
-async def langchain_stream(
+def langchain_agent_stream(
     events: AsyncIterator[dict[str, Any]],
     *,
     include_status: bool = True,
-) -> AsyncIterator[AgentEvent]:
-    """Convert LangChain ``astream_events`` v2 to :class:`AgentEvent` stream.
+) -> StreamingResponse:
+    """Convert LangChain ``astream_events`` v2 directly to SSE StreamingResponse.
+
+    One-line adapter for use with :class:`AgentView`.
 
     Args:
         events: Async iterator of LangChain event dicts from
             ``runnable.astream_events(..., version="v2")``.
         include_status: Emit ``status`` events on chain/tool start.
+
+    Returns:
+        A ``StreamingResponse`` ready to return from a FastAPI endpoint.
     """
+    return agent_stream(_langchain_stream(events, include_status=include_status))
+
+
+async def _langchain_stream(
+    events: AsyncIterator[dict[str, Any]],
+    *,
+    include_status: bool = True,
+) -> AsyncIterator[AgentEvent]:
+    """Convert LangChain ``astream_events`` v2 to :class:`AgentEvent` stream."""
     try:
         from langchain_core.messages import AIMessageChunk, ToolMessage  # noqa: F401
     except ImportError:
