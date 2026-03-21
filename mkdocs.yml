@@ -62,6 +62,7 @@ nav:
     - htmx Patterns: guide/htmx.md
     - Streaming Chat: guide/chat.md
     - Agent View: guide/agent.md
+    - LangChain / LangGraph: guide/langchain.md
   - Examples:
     - Hello World: examples/hello.md
     - Todo App: examples/todo.md
@@ -71,6 +72,7 @@ nav:
     - Real-time: examples/realtime.md
     - Chat Demo: examples/chat_demo.md
     - Agent Demo: examples/agent_demo.md
+    - LangChain Demo: examples/langchain_demo.md
     - Chart Demo: examples/chart_demo.md
     - Auth Demo: examples/auth_demo.md
   - Component Catalog:

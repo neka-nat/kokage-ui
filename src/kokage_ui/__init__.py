@@ -203,6 +203,9 @@ from kokage_ui.ai import ChatMessage, ChatView, chat_stream
 # AI agent
 from kokage_ui.ai import AgentEvent, AgentMessage, AgentView, ToolCall, agent_stream
 
+# AI tools
+from kokage_ui.ai import ToolInfo, ToolRegistry
+
 # AI preview
 from kokage_ui.ai import FilePreview
 
@@ -414,6 +417,8 @@ __all__ = [
     "AgentMessage",
     "AgentView",
     "ToolCall",
+    "ToolInfo",
+    "ToolRegistry",
     "agent_stream",
     "FilePreview",
     # Testing

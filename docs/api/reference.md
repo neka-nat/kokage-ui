@@ -217,3 +217,19 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `ToolCall` | Tool call record (name, input, result, call_id) |
 | `agent_stream` | Convert async AgentEvent generator to SSE StreamingResponse |
 | `FilePreview` | Rich content preview (JSON tree, CSV table, code, image, text) |
+
+## Tool Registry
+
+| Export | Description |
+|--------|-------------|
+| `ToolRegistry` | Decorator-based tool registry for AI agent tools |
+| `ToolInfo` | Tool metadata (name, description, parameters, func) |
+
+## LLM Framework Adapters
+
+| Export | Module | Description |
+|--------|--------|-------------|
+| `langchain_stream` | `ai.langchain` | Convert LangChain `astream_events` v2 to AgentEvent stream |
+| `langgraph_stream` | `ai.langgraph` | Convert LangGraph `astream` to AgentEvent stream (messages/updates modes) |
+| `LangChainCallbackHandler` | `ai.langchain` | Callback-based adapter for `AgentExecutor` and legacy runnables |
+| `to_langchain_tools` | `ai.langchain` | Convert `ToolRegistry` / callables to LangChain `StructuredTool` |

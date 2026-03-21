@@ -21,8 +21,14 @@ dev = [
     "sqlmodel>=0.0.16",
     "aiosqlite>=0.20.0",
 ]
+langchain = [
+    "langchain-core>=0.3",
+]
 markdown = [
     "markdown>=3.5",
+]
+all = [
+    "kokage-ui[sql,langchain,markdown]",
 ]
 docs = [
     "mkdocs-material>=9.0",

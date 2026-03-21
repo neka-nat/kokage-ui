@@ -130,6 +130,37 @@ async def agent(message: str):
 
 https://github.com/user-attachments/assets/1dfbe1ec-eb87-447f-9c4c-17f16d2d123b
 
+## LangChain / LangGraph Integration
+
+Connect to LangChain or LangGraph with built-in adapters — no boilerplate event mapping:
+
+```python
+from kokage_ui.ai import agent_stream
+from kokage_ui.ai.langchain import langchain_stream
+
+# LangChain astream_events → AgentView (one line)
+@app.post("/api/agent")
+async def run(request: Request):
+    data = await request.json()
+    events = executor.astream_events({"input": data["message"]}, version="v2")
+    return agent_stream(langchain_stream(events))
+```
+
+```python
+from kokage_ui.ai.langgraph import langgraph_stream
+
+# LangGraph astream → AgentView (one line)
+@app.post("/api/agent")
+async def run(request: Request):
+    data = await request.json()
+    stream = graph.astream({"messages": [("user", data["message"])]}, stream_mode="messages")
+    return agent_stream(langgraph_stream(stream))
+```
+
+Also includes `LangChainCallbackHandler` for legacy `AgentExecutor` and `ToolRegistry` + `to_langchain_tools` for bidirectional tool conversion.
+
+`pip install kokage-ui[langchain]` for LangChain support, or `pip install kokage-ui[all]` for everything.
+
 ## Features
 
 - **50+ HTML Elements** — `Div`, `H1`, `Form`, `Input`, etc. as Python classes
@@ -182,6 +213,7 @@ uvx kokage-ui templates                     # List all available templates
 | [realtime.py](examples/realtime.py) | SSE notifications | `uvicorn examples.realtime:app` |
 | [chat_demo.py](examples/chat_demo.py) | Streaming chat UI | `uvicorn examples.chat_demo:app` |
 | [agent_demo.py](examples/agent_demo.py) | AI agent with tools | `uvicorn examples.agent_demo:app` |
+| [langchain_demo.py](examples/langchain_demo.py) | LangChain/LangGraph adapters | `uvicorn examples.langchain_demo:app` |
 | [chart_demo.py](examples/chart_demo.py) | Chart.js 6 chart types | `uvicorn examples.chart_demo:app` |
 
 ## Documentation
