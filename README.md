@@ -9,7 +9,8 @@
 ## Quick Start
 
 ```bash
-pip install kokage-ui
+pip install kokage-ui            # core
+pip install kokage-ui[all]       # SQL + LangChain + Markdown support
 ```
 
 ```python
@@ -138,7 +139,7 @@ Connect to LangChain or LangGraph with built-in adapters — no boilerplate even
 from kokage_ui.ai import agent_stream
 from kokage_ui.ai.langchain import langchain_stream
 
-# LangChain astream_events → AgentView (one line)
+# executor = AgentExecutor (LangChain's agent runner with tools and LLM)
 @app.post("/api/agent")
 async def run(request: Request):
     data = await request.json()
@@ -149,7 +150,7 @@ async def run(request: Request):
 ```python
 from kokage_ui.ai.langgraph import langgraph_stream
 
-# LangGraph astream → AgentView (one line)
+# graph = LangGraph's CompiledStateGraph (e.g. from create_react_agent)
 @app.post("/api/agent")
 async def run(request: Request):
     data = await request.json()
