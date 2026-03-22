@@ -206,6 +206,9 @@ from kokage_ui.ai import AgentEvent, AgentMessage, AgentView, ToolCall, agent_st
 # AI tools
 from kokage_ui.ai import ToolInfo, ToolRegistry
 
+# AI conversation
+from kokage_ui.ai import ConversationStore, InMemoryConversationStore, Message, Thread
+
 # AI preview
 from kokage_ui.ai import FilePreview
 
@@ -420,6 +423,10 @@ __all__ = [
     "ToolInfo",
     "ToolRegistry",
     "agent_stream",
+    "ConversationStore",
+    "InMemoryConversationStore",
+    "Message",
+    "Thread",
     "FilePreview",
     # Testing
     "render",
