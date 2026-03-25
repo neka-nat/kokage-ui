@@ -8,6 +8,7 @@ from kokage_ui.ai.agent import AgentEvent, AgentMessage, AgentView, ToolCall, ag
 from kokage_ui.ai.chat import ChatMessage, ChatView, chat_stream
 from kokage_ui.ai.conversation import ConversationStore, InMemoryConversationStore, Message, Thread
 from kokage_ui.ai.preview import FilePreview
+from kokage_ui.ai.threaded import ThreadedAgentView
 from kokage_ui.ai.tools import ToolInfo, ToolRegistry
 
 # LangChain-dependent exports are lazy-loaded below.
@@ -45,6 +46,7 @@ __all__ = [
     "ToolCall",
     "ToolInfo",
     "ToolRegistry",
+    "ThreadedAgentView",
     "agent_stream",
     "chat_stream",
     "langchain_agent_stream",

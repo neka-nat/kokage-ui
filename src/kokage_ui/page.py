@@ -121,7 +121,7 @@ class Page:
 
         # Auto-detect components that require marked.js / highlight.js
         if not self.include_marked or not self.include_highlightjs:
-            if _has_component(children, ("ChatView", "AgentView")):
+            if _has_component(children, ("ChatView", "AgentView", "ThreadedAgentView")):
                 self.include_marked = True
                 self.include_highlightjs = True
 

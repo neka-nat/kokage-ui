@@ -209,6 +209,9 @@ from kokage_ui.ai import ToolInfo, ToolRegistry
 # AI conversation
 from kokage_ui.ai import ConversationStore, InMemoryConversationStore, Message, Thread
 
+# AI threaded agent
+from kokage_ui.ai import ThreadedAgentView
+
 # AI preview
 from kokage_ui.ai import FilePreview
 
@@ -428,6 +431,7 @@ __all__ = [
     "Message",
     "Thread",
     "FilePreview",
+    "ThreadedAgentView",
     # Testing
     "render",
     "rendered",

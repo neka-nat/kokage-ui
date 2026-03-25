@@ -167,10 +167,17 @@ class ConversationStore(ABC):
         @app.post(f"{prefix}/{{thread_id}}/messages", status_code=201)
         async def _add_message(thread_id: str, request: fastapi.Request):
             data = await request.json()
+            tool_calls = None
+            raw_tc = data.get("tool_calls")
+            if raw_tc and isinstance(raw_tc, list):
+                from kokage_ui.ai.agent import ToolCall
+
+                tool_calls = [ToolCall(**tc) if isinstance(tc, dict) else tc for tc in raw_tc]
             return await store.add_message(
                 thread_id,
                 role=data.get("role", "user"),
                 content=data.get("content", ""),
+                tool_calls=tool_calls,
             )
 
         @app.delete(f"{prefix}/{{thread_id}}/messages")
