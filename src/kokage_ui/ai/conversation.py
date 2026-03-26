@@ -22,6 +22,22 @@ from pydantic import BaseModel, Field
 from kokage_ui.ai.agent import ToolCall
 
 
+class Attachment(BaseModel):
+    """A file attachment on a message.
+
+    Args:
+        name: Original file name.
+        url: URL of the stored file.
+        content_type: MIME type (e.g. ``"image/png"``).
+        size: File size in bytes.
+    """
+
+    name: str = ""
+    url: str = ""
+    content_type: str = ""
+    size: int = 0
+
+
 class Thread(BaseModel):
     """A conversation thread.
 
@@ -55,6 +71,7 @@ class Message(BaseModel):
     role: str = ""
     content: str = ""
     tool_calls: list[ToolCall] | None = None
+    attachments: list[Attachment] | None = None
     created_at: str = ""
 
 
@@ -100,6 +117,7 @@ class ConversationStore(ABC):
         role: str,
         content: str = "",
         tool_calls: list[ToolCall] | None = None,
+        attachments: list[Attachment] | None = None,
     ) -> Message:
         """Add a message to a thread."""
 
@@ -173,11 +191,16 @@ class ConversationStore(ABC):
                 from kokage_ui.ai.agent import ToolCall
 
                 tool_calls = [ToolCall(**tc) if isinstance(tc, dict) else tc for tc in raw_tc]
+            attachments = None
+            raw_att = data.get("attachments")
+            if raw_att and isinstance(raw_att, list):
+                attachments = [Attachment(**a) if isinstance(a, dict) else a for a in raw_att]
             return await store.add_message(
                 thread_id,
                 role=data.get("role", "user"),
                 content=data.get("content", ""),
                 tool_calls=tool_calls,
+                attachments=attachments,
             )
 
         @app.delete(f"{prefix}/{{thread_id}}/messages")
@@ -226,6 +249,7 @@ class InMemoryConversationStore(ConversationStore):
         role: str,
         content: str = "",
         tool_calls: list[ToolCall] | None = None,
+        attachments: list[Attachment] | None = None,
     ) -> Message:
         msg = Message(
             id=_new_id(),
@@ -233,6 +257,7 @@ class InMemoryConversationStore(ConversationStore):
             role=role,
             content=content,
             tool_calls=tool_calls,
+            attachments=attachments,
             created_at=_now_iso(),
         )
         if thread_id not in self._messages:

@@ -6,7 +6,7 @@ and AgentView for AI agent dashboards with tool call visualization.
 
 from kokage_ui.ai.agent import AgentEvent, AgentMessage, AgentView, ToolCall, agent_stream
 from kokage_ui.ai.chat import ChatMessage, ChatView, chat_stream
-from kokage_ui.ai.conversation import ConversationStore, InMemoryConversationStore, Message, Thread
+from kokage_ui.ai.conversation import Attachment, ConversationStore, InMemoryConversationStore, Message, Thread
 from kokage_ui.ai.preview import FilePreview
 from kokage_ui.ai.threaded import ThreadedAgentView
 from kokage_ui.ai.tools import ToolInfo, ToolRegistry
@@ -35,6 +35,7 @@ __all__ = [
     "AgentEvent",
     "AgentMessage",
     "AgentView",
+    "Attachment",
     "ChatMessage",
     "ChatView",
     "ConversationStore",

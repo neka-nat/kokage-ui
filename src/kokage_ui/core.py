@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import functools
 import inspect
+import json
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
 
@@ -378,6 +379,10 @@ class KokageUI:
         assistant_name: str = "Assistant",
         user_name: str = "You",
         height: str = "600px",
+        file_handler: Callable | None = None,
+        accept: str = "image/*,.pdf,.txt,.csv",
+        max_file_size: int = 10 * 1024 * 1024,
+        max_files: int = 5,
         title: str = "Chat",
         layout: Any = None,
     ) -> Callable:
@@ -402,6 +407,11 @@ class KokageUI:
             assistant_name: Display name for assistant messages.
             user_name: Display name for user messages.
             height: CSS height for the chat container.
+            file_handler: Async callback ``(filename, UploadFile) -> url``.
+                Enables file attachments when provided.
+            accept: Accepted file types for the file input.
+            max_file_size: Maximum file size in bytes (client-side).
+            max_files: Maximum number of files per message (client-side).
             title: Page title.
             layout: Optional Layout instance to wrap the page.
         """
@@ -418,18 +428,45 @@ class KokageUI:
                 assistant_name=assistant_name,
                 user_name=user_name,
                 height=height,
+                enable_attachments=file_handler is not None,
+                accept=accept,
+                max_file_size=max_file_size,
+                max_files=max_files,
             )
 
             page_content = Page(chat_view, title=title)
+
+            sig = inspect.signature(func)
+            has_attachments_param = "attachments" in sig.parameters
 
             @self.page(path, layout=layout, title=title)
             def _chat_page():
                 return page_content
 
             async def _chat_api(request: Request) -> Response:
-                data = await request.json()
-                message = data.get("message", "")
-                return chat_stream(func(message))
+                from kokage_ui.ai.conversation import Attachment
+
+                content_type = request.headers.get("content-type", "")
+                attachments: list[Attachment] = []
+                if "multipart" in content_type and file_handler is not None:
+                    form_data = await request.form()
+                    message = form_data.get("message", "")
+                    files = form_data.getlist("files")
+                    for f in files:
+                        if hasattr(f, "filename") and f.filename:
+                            url = await file_handler(f.filename, f)
+                            attachments.append(Attachment(
+                                name=f.filename, url=url,
+                                content_type=f.content_type or "", size=f.size or 0,
+                            ))
+                else:
+                    data = await request.json()
+                    message = data.get("message", "")
+
+                kwargs: dict[str, Any] = {"message": message}
+                if has_attachments_param:
+                    kwargs["attachments"] = attachments
+                return chat_stream(func(**kwargs))
 
             self.app.add_api_route(
                 api_path,
@@ -456,6 +493,10 @@ class KokageUI:
         show_metrics: bool = True,
         show_status: bool = True,
         tool_expanded: bool = False,
+        file_handler: Callable | None = None,
+        accept: str = "image/*,.pdf,.txt,.csv",
+        max_file_size: int = 10 * 1024 * 1024,
+        max_files: int = 5,
         title: str = "Agent",
         layout: Any = None,
     ) -> Callable:
@@ -483,12 +524,17 @@ class KokageUI:
             show_metrics: Show metrics bar.
             show_status: Show status bar.
             tool_expanded: Default expand state for tool panels.
+            file_handler: Async callback ``(filename, UploadFile) -> url``.
+                Enables file attachments when provided.
+            accept: Accepted file types for the file input.
+            max_file_size: Maximum file size in bytes (client-side).
+            max_files: Maximum number of files per message (client-side).
             title: Page title.
             layout: Optional Layout instance to wrap the page.
         """
 
         def decorator(func: Callable) -> Callable:
-            from kokage_ui.ai.agent import AgentView, agent_stream
+            from kokage_ui.ai.agent import AgentEvent, AgentView, agent_stream
 
             api_path = f"{path}/send"
 
@@ -502,18 +548,45 @@ class KokageUI:
                 show_metrics=show_metrics,
                 show_status=show_status,
                 tool_expanded=tool_expanded,
+                enable_attachments=file_handler is not None,
+                accept=accept,
+                max_file_size=max_file_size,
+                max_files=max_files,
             )
 
             page_content = Page(agent_view, title=title)
+
+            sig = inspect.signature(func)
+            has_attachments_param = "attachments" in sig.parameters
 
             @self.page(path, layout=layout, title=title)
             def _agent_page():
                 return page_content
 
             async def _agent_api(request: Request) -> Response:
-                data = await request.json()
-                message = data.get("message", "")
-                return agent_stream(func(message))
+                from kokage_ui.ai.conversation import Attachment
+
+                content_type = request.headers.get("content-type", "")
+                attachments: list[Attachment] = []
+                if "multipart" in content_type and file_handler is not None:
+                    form_data = await request.form()
+                    message = form_data.get("message", "")
+                    files = form_data.getlist("files")
+                    for f in files:
+                        if hasattr(f, "filename") and f.filename:
+                            url = await file_handler(f.filename, f)
+                            attachments.append(Attachment(
+                                name=f.filename, url=url,
+                                content_type=f.content_type or "", size=f.size or 0,
+                            ))
+                else:
+                    data = await request.json()
+                    message = data.get("message", "")
+
+                kwargs: dict[str, Any] = {"message": message}
+                if has_attachments_param:
+                    kwargs["attachments"] = attachments
+                return agent_stream(func(**kwargs))
 
             self.app.add_api_route(
                 api_path,
@@ -544,6 +617,10 @@ class KokageUI:
         show_status: bool = True,
         tool_expanded: bool = False,
         new_thread_label: str = "+ New Thread",
+        file_handler: Callable | None = None,
+        accept: str = "image/*,.pdf,.txt,.csv",
+        max_file_size: int = 10 * 1024 * 1024,
+        max_files: int = 5,
         title: str = "Agent",
         layout: Any = None,
     ) -> Callable:
@@ -577,12 +654,17 @@ class KokageUI:
             show_status: Show status bar.
             tool_expanded: Default expand state for tool panels.
             new_thread_label: Label for new thread button.
+            file_handler: Async callback ``(filename, UploadFile) -> url``.
+                Enables file attachments when provided.
+            accept: Accepted file types for the file input.
+            max_file_size: Maximum file size in bytes (client-side).
+            max_files: Maximum number of files per message (client-side).
             title: Page title.
             layout: Optional Layout instance to wrap the page.
         """
 
         def decorator(func: Callable) -> Callable:
-            from kokage_ui.ai.agent import agent_stream
+            from kokage_ui.ai.agent import AgentEvent, agent_stream
             from kokage_ui.ai.threaded import ThreadedAgentView
 
             base = path.rstrip("/")
@@ -605,19 +687,55 @@ class KokageUI:
                 show_status=show_status,
                 tool_expanded=tool_expanded,
                 new_thread_label=new_thread_label,
+                enable_attachments=file_handler is not None,
+                accept=accept,
+                max_file_size=max_file_size,
+                max_files=max_files,
             )
 
             page_content = Page(threaded_view, title=title)
+
+            sig = inspect.signature(func)
+            has_attachments_param = "attachments" in sig.parameters
 
             @self.page(path, layout=layout, title=title)
             def _threaded_agent_page():
                 return page_content
 
             async def _threaded_agent_api(request: Request) -> Response:
-                data = await request.json()
-                message = data.get("message", "")
-                thread_id = data.get("thread_id", "")
-                return agent_stream(func(message, thread_id))
+                from kokage_ui.ai.conversation import Attachment
+
+                content_type = request.headers.get("content-type", "")
+                attachments: list[Attachment] = []
+                if "multipart" in content_type and file_handler is not None:
+                    form_data = await request.form()
+                    message = form_data.get("message", "")
+                    thread_id = form_data.get("thread_id", "")
+                    files = form_data.getlist("files")
+                    for f in files:
+                        if hasattr(f, "filename") and f.filename:
+                            url = await file_handler(f.filename, f)
+                            attachments.append(Attachment(
+                                name=f.filename, url=url,
+                                content_type=f.content_type or "", size=f.size or 0,
+                            ))
+                else:
+                    data = await request.json()
+                    message = data.get("message", "")
+                    thread_id = data.get("thread_id", "")
+
+                kwargs: dict[str, Any] = {"message": message, "thread_id": thread_id}
+                if has_attachments_param:
+                    kwargs["attachments"] = attachments
+
+                async def _wrap_with_attachments():
+                    if attachments:
+                        att_dicts = [a.model_dump() for a in attachments]
+                        yield AgentEvent(type="attachments", content=json.dumps(att_dicts))
+                    async for event in func(**kwargs):
+                        yield event
+
+                return agent_stream(_wrap_with_attachments())
 
             self.app.add_api_route(
                 api_path,

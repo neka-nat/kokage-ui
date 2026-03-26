@@ -207,7 +207,7 @@ from kokage_ui.ai import AgentEvent, AgentMessage, AgentView, ToolCall, agent_st
 from kokage_ui.ai import ToolInfo, ToolRegistry
 
 # AI conversation
-from kokage_ui.ai import ConversationStore, InMemoryConversationStore, Message, Thread
+from kokage_ui.ai import Attachment, ConversationStore, InMemoryConversationStore, Message, Thread
 
 # AI threaded agent
 from kokage_ui.ai import ThreadedAgentView
@@ -426,6 +426,7 @@ __all__ = [
     "ToolInfo",
     "ToolRegistry",
     "agent_stream",
+    "Attachment",
     "ConversationStore",
     "InMemoryConversationStore",
     "Message",

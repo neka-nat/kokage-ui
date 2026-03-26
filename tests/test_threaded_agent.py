@@ -8,11 +8,14 @@ from httpx import ASGITransport, AsyncClient
 
 from kokage_ui import (
     AgentEvent,
+    Attachment,
     InMemoryConversationStore,
     KokageUI,
     Page,
     ThreadedAgentView,
 )
+from kokage_ui.ai.agent import AgentView
+from kokage_ui.ai.chat import ChatView
 
 
 # ---------------------------------------------------------------------------
@@ -117,6 +120,34 @@ class TestThreadedAgentViewRender:
     def test_sidebar_width(self):
         html = self._render()
         assert "w-64" in html
+
+    def test_no_attach_button_by_default(self):
+        html = self._render(agent_id="t1")
+        # Should have hidden file input but no visible attach button
+        assert 't1-files' in html
+        assert '\U0001F4CE' not in html
+
+    def test_attach_button_when_enabled(self):
+        html = self._render(agent_id="t1", enable_attachments=True)
+        assert 't1-attach' in html
+        assert '\U0001F4CE' in html
+        assert 't1-files' in html
+        assert 't1-file-preview' in html
+
+    def test_accept_attribute(self):
+        html = self._render(enable_attachments=True, accept="image/*")
+        assert 'accept="image/*"' in html
+
+    def test_file_config_in_js(self):
+        html = self._render(enable_attachments=True, max_file_size=5000, max_files=3)
+        assert "enableAttach = true" in html
+        assert "maxFileSize = 5000" in html
+        assert "maxFiles = 3" in html
+
+    def test_drag_drop_in_js_when_enabled(self):
+        html = self._render(enable_attachments=True)
+        assert "dragover" in html
+        assert "clipboard" in html
 
 
 # ---------------------------------------------------------------------------
@@ -274,6 +305,148 @@ class TestThreadedAgentDecorator:
 # ---------------------------------------------------------------------------
 # TestPageAutoDetect
 # ---------------------------------------------------------------------------
+
+
+class TestFileAttachmentDecorator:
+    """Test file_handler integration in threaded_agent decorator."""
+
+    @pytest.fixture
+    def app_with_files(self):
+        app = FastAPI()
+        ui = KokageUI(app)
+        store = InMemoryConversationStore()
+
+        async def mock_file_handler(filename, upload_file):
+            return f"/uploads/{filename}"
+
+        @ui.threaded_agent("/agent", store=store, file_handler=mock_file_handler)
+        async def agent_fn(message: str, thread_id: str, attachments: list[Attachment]):
+            if attachments:
+                yield AgentEvent(type="text", content=f"Got {len(attachments)} files")
+            else:
+                yield AgentEvent(type="text", content=f"Echo: {message}")
+            yield AgentEvent(type="done")
+
+        return app, store
+
+    @pytest.mark.anyio
+    async def test_page_has_attach_button(self, app_with_files):
+        app, _ = app_with_files
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            resp = await client.get("/agent")
+            assert resp.status_code == 200
+            assert "\U0001F4CE" in resp.text
+            assert "enableAttach = true" in resp.text
+
+    @pytest.mark.anyio
+    async def test_json_send_still_works(self, app_with_files):
+        app, store = app_with_files
+        thread = await store.create_thread(title="Test")
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            resp = await client.post(
+                "/agent/send",
+                json={"message": "hello", "thread_id": thread.id},
+            )
+            assert resp.status_code == 200
+            assert "Echo: hello" in resp.text
+
+    @pytest.mark.anyio
+    async def test_multipart_send_with_file(self, app_with_files):
+        app, store = app_with_files
+        thread = await store.create_thread(title="Test")
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            resp = await client.post(
+                "/agent/send",
+                data={"message": "check this", "thread_id": thread.id},
+                files={"files": ("test.png", b"fake-png-data", "image/png")},
+            )
+            assert resp.status_code == 200
+            # Should contain attachments event and text about files
+            assert "Got 1 files" in resp.text
+            # Should have attachments SSE event
+            assert '"type": "attachments"' in resp.text
+
+    @pytest.mark.anyio
+    async def test_no_file_handler_no_attach_button(self):
+        app = FastAPI()
+        ui = KokageUI(app)
+        store = InMemoryConversationStore()
+
+        @ui.threaded_agent("/agent", store=store)
+        async def agent_fn(message: str, thread_id: str):
+            yield AgentEvent(type="done")
+
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            resp = await client.get("/agent")
+            assert "enableAttach = false" in resp.text
+
+    @pytest.mark.anyio
+    async def test_message_with_attachments_stored(self, app_with_files):
+        """Test that attachments can be stored via REST API."""
+        app, store = app_with_files
+        thread = await store.create_thread(title="Test")
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            resp = await client.post(
+                f"/agent/threads/{thread.id}/messages",
+                json={
+                    "role": "user",
+                    "content": "see file",
+                    "attachments": [
+                        {"name": "photo.jpg", "url": "/uploads/photo.jpg",
+                         "content_type": "image/jpeg", "size": 1024}
+                    ],
+                },
+            )
+            assert resp.status_code == 201
+            msg = resp.json()
+            assert msg["attachments"] is not None
+            assert msg["attachments"][0]["name"] == "photo.jpg"
+
+
+class TestAgentViewAttachments:
+    """Test AgentView attachment UI."""
+
+    def test_no_attach_by_default(self):
+        view = AgentView(send_url="/send", agent_id="a1")
+        html = view.render()
+        assert "\U0001F4CE" not in html
+        assert "enableAttach = false" in html
+
+    def test_attach_enabled(self):
+        view = AgentView(send_url="/send", agent_id="a1", enable_attachments=True)
+        html = view.render()
+        assert "\U0001F4CE" in html
+        assert "enableAttach = true" in html
+        assert "a1-files" in html
+        assert "a1-attach" in html
+        assert "a1-file-preview" in html
+
+
+class TestChatViewAttachments:
+    """Test ChatView attachment UI."""
+
+    def test_no_attach_by_default(self):
+        view = ChatView(send_url="/send", chat_id="c1")
+        html = view.render()
+        assert "\U0001F4CE" not in html
+
+    def test_attach_enabled(self):
+        view = ChatView(send_url="/send", chat_id="c1", enable_attachments=True)
+        html = view.render()
+        assert "\U0001F4CE" in html
+        assert "c1-files" in html
+        assert "c1-attach" in html
+        assert "c1-file-preview" in html
 
 
 class TestPageAutoDetect:

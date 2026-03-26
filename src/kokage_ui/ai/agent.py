@@ -221,6 +221,10 @@ class AgentView(Component):
         show_metrics: bool = True,
         show_status: bool = True,
         tool_expanded: bool = False,
+        enable_attachments: bool = False,
+        accept: str = "image/*,.pdf,.txt,.csv",
+        max_file_size: int = 10 * 1024 * 1024,
+        max_files: int = 5,
         agent_id: str | None = None,
         **attrs: Any,
     ) -> None:
@@ -235,6 +239,10 @@ class AgentView(Component):
         self.show_metrics = show_metrics
         self.show_status = show_status
         self.tool_expanded = tool_expanded
+        self.enable_attachments = enable_attachments
+        self.accept = accept
+        self.max_file_size = max_file_size
+        self.max_files = max_files
         self.agent_id = agent_id or f"agent-{uuid.uuid4().hex[:8]}"
 
         attrs["cls"] = f"flex flex-col {attrs.get('cls', '')}".strip()
@@ -259,6 +267,10 @@ class AgentView(Component):
         js_send_label = json.dumps(self.send_label, ensure_ascii=False)
         js_stop_label = json.dumps(self.stop_label, ensure_ascii=False)
         js_tool_expanded = "true" if self.tool_expanded else "false"
+        js_enable_attach = "true" if self.enable_attachments else "false"
+        js_accept = json.dumps(self.accept, ensure_ascii=False)
+        js_max_file_size = str(self.max_file_size)
+        js_max_files = str(self.max_files)
 
         # Status bar
         status_html = ""
@@ -289,18 +301,26 @@ class AgentView(Component):
   var sendLabel = {js_send_label};
   var stopLabel = {js_stop_label};
   var toolExpanded = {js_tool_expanded};
+  var enableAttach = {js_enable_attach};
+  var acceptTypes = {js_accept};
+  var maxFileSize = {js_max_file_size};
+  var maxFiles = {js_max_files};
   var form = document.getElementById(agentId + '-form');
   var messagesEl = document.getElementById(agentId + '-messages');
   var input = document.getElementById(agentId + '-input');
   var btn = document.getElementById(agentId + '-btn');
   var statusEl = document.getElementById(agentId + '-status');
   var metricsEl = document.getElementById(agentId + '-metrics');
+  var filesInput = document.getElementById(agentId + '-files');
+  var attachBtn = document.getElementById(agentId + '-attach');
+  var previewEl = document.getElementById(agentId + '-file-preview');
 
   var toolPanels = {{}};
   var fullText = '';
   var bubbleEl = null;
   var renderPending = false;
   var abortController = null;
+  var pendingFiles = [];
 
   var _escapeEl = document.createElement('div');
   function escapeHtml(s) {{
@@ -309,6 +329,95 @@ class AgentView(Component):
   }}
 
   {JS_PREVIEW_RENDERER}
+
+  function formatSize(bytes) {{
+    if (bytes < 1024) return bytes + 'B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + 'KB';
+    return (bytes / 1048576).toFixed(1) + 'MB';
+  }}
+
+  function renderFilePreview() {{
+    if (!previewEl) return;
+    previewEl.innerHTML = '';
+    if (pendingFiles.length === 0) {{ previewEl.classList.add('hidden'); return; }}
+    previewEl.classList.remove('hidden');
+    for (var i = 0; i < pendingFiles.length; i++) {{
+      (function(idx) {{
+        var f = pendingFiles[idx];
+        var item = document.createElement('div');
+        item.className = 'flex items-center gap-2 bg-base-200 rounded px-2 py-1 text-xs';
+        var isImg = f.type && f.type.startsWith('image/');
+        if (isImg) {{
+          var img = document.createElement('img');
+          img.className = 'w-8 h-8 object-cover rounded';
+          img.src = URL.createObjectURL(f);
+          item.appendChild(img);
+        }} else {{
+          var icon = document.createElement('span');
+          icon.textContent = '\\ud83d\\udcc4';
+          item.appendChild(icon);
+        }}
+        var nameSpan = document.createElement('span');
+        nameSpan.className = 'truncate max-w-[120px]';
+        nameSpan.textContent = f.name;
+        item.appendChild(nameSpan);
+        var sizeSpan = document.createElement('span');
+        sizeSpan.className = 'text-base-content/50';
+        sizeSpan.textContent = formatSize(f.size);
+        item.appendChild(sizeSpan);
+        var removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-ghost btn-xs';
+        removeBtn.textContent = '\\u00d7';
+        removeBtn.addEventListener('click', function() {{
+          pendingFiles.splice(idx, 1);
+          renderFilePreview();
+        }});
+        item.appendChild(removeBtn);
+        previewEl.appendChild(item);
+      }})(i);
+    }}
+  }}
+
+  if (enableAttach && attachBtn && filesInput) {{
+    attachBtn.addEventListener('click', function() {{ filesInput.click(); }});
+    filesInput.addEventListener('change', function() {{
+      var files = filesInput.files;
+      for (var i = 0; i < files.length; i++) {{
+        if (pendingFiles.length >= maxFiles) break;
+        if (files[i].size > maxFileSize) continue;
+        pendingFiles.push(files[i]);
+      }}
+      filesInput.value = '';
+      renderFilePreview();
+    }});
+    form.addEventListener('dragover', function(e) {{ e.preventDefault(); form.classList.add('border-primary'); }});
+    form.addEventListener('dragleave', function() {{ form.classList.remove('border-primary'); }});
+    form.addEventListener('drop', function(e) {{
+      e.preventDefault();
+      form.classList.remove('border-primary');
+      var files = e.dataTransfer.files;
+      for (var i = 0; i < files.length; i++) {{
+        if (pendingFiles.length >= maxFiles) break;
+        if (files[i].size > maxFileSize) continue;
+        pendingFiles.push(files[i]);
+      }}
+      renderFilePreview();
+    }});
+    input.addEventListener('paste', function(e) {{
+      var items = e.clipboardData && e.clipboardData.items;
+      if (!items) return;
+      for (var i = 0; i < items.length; i++) {{
+        if (items[i].kind === 'file') {{
+          var f = items[i].getAsFile();
+          if (f && pendingFiles.length < maxFiles && f.size <= maxFileSize) {{
+            pendingFiles.push(f);
+            renderFilePreview();
+          }}
+        }}
+      }}
+    }});
+  }}
 
   function setStreaming(active) {{
     if (active) {{
@@ -488,10 +597,27 @@ class AgentView(Component):
   form.addEventListener('submit', function(e) {{
     e.preventDefault();
     var message = input.value.trim();
-    if (!message) return;
+    if (!message && pendingFiles.length === 0) return;
     input.value = '';
 
-    addBubble('user', userName, escapeHtml(message));
+    var userHtml = escapeHtml(message);
+    var sentFiles = pendingFiles.slice();
+    if (sentFiles.length > 0) {{
+      var ph = '<div class="flex flex-wrap gap-2 mt-1">';
+      for (var fi = 0; fi < sentFiles.length; fi++) {{
+        var sf = sentFiles[fi];
+        if (sf.type && sf.type.startsWith('image/')) {{
+          ph += '<img src="' + URL.createObjectURL(sf) + '" class="max-w-xs max-h-48 rounded" />';
+        }} else {{
+          ph += '<div class="badge badge-outline gap-1">\\ud83d\\udcc4 ' + escapeHtml(sf.name) + '</div>';
+        }}
+      }}
+      ph += '</div>';
+      userHtml += ph;
+    }}
+    addBubble('user', userName, userHtml);
+    pendingFiles = [];
+    renderFilePreview();
 
     bubbleEl = addBubble('assistant', agentName, '');
     fullText = '';
@@ -499,10 +625,22 @@ class AgentView(Component):
     abortController = new AbortController();
     setStreaming(true);
 
+    var fetchBody, fetchHeaders;
+    if (sentFiles.length > 0) {{
+      var fd = new FormData();
+      fd.append('message', message);
+      for (var fj = 0; fj < sentFiles.length; fj++) fd.append('files', sentFiles[fj]);
+      fetchBody = fd;
+      fetchHeaders = {{}};
+    }} else {{
+      fetchBody = JSON.stringify({{message: message}});
+      fetchHeaders = {{'Content-Type': 'application/json'}};
+    }}
+
     fetch(sendUrl, {{
       method: 'POST',
-      headers: {{'Content-Type': 'application/json'}},
-      body: JSON.stringify({{message: message}}),
+      headers: fetchHeaders,
+      body: fetchBody,
       signal: abortController.signal
     }}).then(function(response) {{
       if (!response.ok) throw new Error('HTTP ' + response.status);
@@ -554,6 +692,14 @@ class AgentView(Component):
 
         attrs_str = self._render_attrs()
 
+        attach_html = (
+            f'<input id="{cid}-files" type="file" multiple accept="{escape(self.accept)}" class="hidden" />'
+            f'<button id="{cid}-attach" type="button" class="btn btn-ghost btn-sm"'
+            f' title="Attach files">\U0001F4CE</button>'
+            if self.enable_attachments else
+            f'<input id="{cid}-files" type="file" class="hidden" />'
+        )
+
         return (
             f"<div{attrs_str}>"
             f"{status_html}"
@@ -561,7 +707,9 @@ class AgentView(Component):
             f"{bubble_html}"
             f"</div>"
             f"{metrics_html}"
-            f'<form id="{cid}-form" class="p-4 border-t border-base-300 flex gap-2">'
+            f'<div id="{cid}-file-preview" class="px-4 pt-2 flex flex-wrap gap-2 hidden"></div>'
+            f'<form id="{cid}-form" class="p-4 border-t border-base-300 flex gap-2 items-end">'
+            f"{attach_html}"
             f'<input id="{cid}-input" type="text" class="input input-bordered flex-1"'
             f' placeholder="{placeholder_escaped}" autocomplete="off" />'
             f'<button id="{cid}-btn" type="submit" class="btn btn-primary">'

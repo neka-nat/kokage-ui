@@ -1,23 +1,48 @@
-"""Threaded agent demo — multiple persistent conversations.
+"""Threaded agent demo — multiple persistent conversations with file attachments.
 
 Run:
     uv run uvicorn examples.threaded_agent_demo:app --reload
 """
 
 import asyncio
+import os
+import uuid
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
-from kokage_ui import AgentEvent, InMemoryConversationStore, KokageUI
+from kokage_ui import AgentEvent, Attachment, InMemoryConversationStore, KokageUI
 
 app = FastAPI(title="Threaded Agent Demo")
 ui = KokageUI(app)
 store = InMemoryConversationStore()
 
+# Simple file storage to /tmp/uploads
+UPLOAD_DIR = "/tmp/kokage_uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
-@ui.threaded_agent("/", store=store, title="Threaded Agent Demo")
-async def demo_agent(message: str, thread_id: str):
-    """Simple echo agent with a simulated tool call."""
+
+async def save_file(filename: str, upload_file) -> str:
+    """Save uploaded file and return its URL."""
+    ext = os.path.splitext(filename)[1]
+    stored_name = f"{uuid.uuid4().hex[:8]}{ext}"
+    path = os.path.join(UPLOAD_DIR, stored_name)
+    content = await upload_file.read()
+    with open(path, "wb") as f:
+        f.write(content)
+    return f"/uploads/{stored_name}"
+
+
+@ui.threaded_agent(
+    "/",
+    store=store,
+    title="Threaded Agent Demo",
+    file_handler=save_file,
+    accept="image/*,.pdf,.txt,.csv,.json",
+)
+async def demo_agent(message: str, thread_id: str, attachments: list[Attachment]):
+    """Echo agent with file attachment support."""
     yield AgentEvent(type="status", content="Thinking...")
     await asyncio.sleep(0.5)
 
@@ -36,11 +61,17 @@ async def demo_agent(message: str, thread_id: str):
         preview_hint="json",
     )
 
-    # Stream response text
-    response = f"You said: **{message}**\n\nThis is thread `{thread_id}`."
+    # Build response
+    parts = [f"You said: **{message}**"]
+    if attachments:
+        parts.append(f"\n\nReceived **{len(attachments)}** file(s):")
+        for att in attachments:
+            parts.append(f"\n- `{att.name}` ({att.content_type}, {att.size} bytes)")
+
+    response = "".join(parts)
     for char in response:
         yield AgentEvent(type="text", content=char)
-        await asyncio.sleep(0.02)
+        await asyncio.sleep(0.01)
 
     yield AgentEvent(
         type="done",

@@ -57,6 +57,10 @@ class ThreadedAgentView(Component):
         show_status: bool = True,
         tool_expanded: bool = False,
         new_thread_label: str = "+ New Thread",
+        enable_attachments: bool = False,
+        accept: str = "image/*,.pdf,.txt,.csv",
+        max_file_size: int = 10 * 1024 * 1024,
+        max_files: int = 5,
         agent_id: str | None = None,
         **attrs: Any,
     ) -> None:
@@ -72,6 +76,10 @@ class ThreadedAgentView(Component):
         self.show_status = show_status
         self.tool_expanded = tool_expanded
         self.new_thread_label = new_thread_label
+        self.enable_attachments = enable_attachments
+        self.accept = accept
+        self.max_file_size = max_file_size
+        self.max_files = max_files
         self.agent_id = agent_id or f"ta-{uuid.uuid4().hex[:8]}"
         super().__init__(**attrs)
 
@@ -86,6 +94,10 @@ class ThreadedAgentView(Component):
         js_send_label = json.dumps(self.send_label, ensure_ascii=False)
         js_stop_label = json.dumps(self.stop_label, ensure_ascii=False)
         js_tool_expanded = "true" if self.tool_expanded else "false"
+        js_enable_attach = "true" if self.enable_attachments else "false"
+        js_accept = json.dumps(self.accept, ensure_ascii=False)
+        js_max_file_size = str(self.max_file_size)
+        js_max_files = str(self.max_files)
 
         placeholder_escaped = escape(self.placeholder)
         send_label_escaped = escape(self.send_label)
@@ -118,6 +130,10 @@ class ThreadedAgentView(Component):
   var sendLabel = {js_send_label};
   var stopLabel = {js_stop_label};
   var toolExpanded = {js_tool_expanded};
+  var enableAttach = {js_enable_attach};
+  var acceptTypes = {js_accept};
+  var maxFileSize = {js_max_file_size};
+  var maxFiles = {js_max_files};
 
   var form = document.getElementById(cid + '-form');
   var messagesEl = document.getElementById(cid + '-messages');
@@ -126,6 +142,10 @@ class ThreadedAgentView(Component):
   var statusEl = document.getElementById(cid + '-status');
   var metricsEl = document.getElementById(cid + '-metrics');
   var threadListEl = document.getElementById(cid + '-thread-list');
+  var filesInput = document.getElementById(cid + '-files');
+  var attachBtn = document.getElementById(cid + '-attach');
+  var previewEl = document.getElementById(cid + '-file-preview');
+  var pendingFiles = [];
 
   var currentThreadId = null;
   var threadMessageCount = 0;
@@ -143,6 +163,114 @@ class ThreadedAgentView(Component):
   }}
 
   {JS_PREVIEW_RENDERER}
+
+  /* --- File attachment helpers --- */
+
+  function renderFilePreview() {{
+    if (!previewEl) return;
+    previewEl.innerHTML = '';
+    if (pendingFiles.length === 0) {{ previewEl.classList.add('hidden'); return; }}
+    previewEl.classList.remove('hidden');
+    for (var i = 0; i < pendingFiles.length; i++) {{
+      (function(idx) {{
+        var f = pendingFiles[idx];
+        var item = document.createElement('div');
+        item.className = 'flex items-center gap-2 bg-base-200 rounded px-2 py-1 text-xs';
+        var isImg = f.type && f.type.startsWith('image/');
+        if (isImg) {{
+          var img = document.createElement('img');
+          img.className = 'w-8 h-8 object-cover rounded';
+          img.src = URL.createObjectURL(f);
+          item.appendChild(img);
+        }} else {{
+          var icon = document.createElement('span');
+          icon.textContent = '\\ud83d\\udcc4';
+          item.appendChild(icon);
+        }}
+        var nameSpan = document.createElement('span');
+        nameSpan.className = 'truncate max-w-[120px]';
+        nameSpan.textContent = f.name;
+        item.appendChild(nameSpan);
+        var sizeSpan = document.createElement('span');
+        sizeSpan.className = 'text-base-content/50';
+        sizeSpan.textContent = formatSize(f.size);
+        item.appendChild(sizeSpan);
+        var removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-ghost btn-xs';
+        removeBtn.textContent = '\\u00d7';
+        removeBtn.addEventListener('click', function() {{
+          pendingFiles.splice(idx, 1);
+          renderFilePreview();
+        }});
+        item.appendChild(removeBtn);
+        previewEl.appendChild(item);
+      }})(i);
+    }}
+  }}
+
+  function formatSize(bytes) {{
+    if (bytes < 1024) return bytes + 'B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + 'KB';
+    return (bytes / 1048576).toFixed(1) + 'MB';
+  }}
+
+  function renderAttachmentBubble(attachments) {{
+    var html = '';
+    if (!attachments || !attachments.length) return html;
+    for (var i = 0; i < attachments.length; i++) {{
+      var a = attachments[i];
+      var isImg = a.content_type && a.content_type.startsWith('image/');
+      if (isImg) {{
+        html += '<img src="' + escapeHtml(a.url) + '" class="max-w-xs max-h-48 rounded mt-1" loading="lazy" />';
+      }} else {{
+        html += '<a href="' + escapeHtml(a.url) + '" target="_blank" class="link link-primary text-sm">\\ud83d\\udcc4 ' + escapeHtml(a.name) + '</a> ';
+      }}
+    }}
+    return '<div class="flex flex-wrap gap-2 mt-1">' + html + '</div>';
+  }}
+
+  if (enableAttach && attachBtn && filesInput) {{
+    attachBtn.addEventListener('click', function() {{ filesInput.click(); }});
+    filesInput.addEventListener('change', function() {{
+      var files = filesInput.files;
+      for (var i = 0; i < files.length; i++) {{
+        if (pendingFiles.length >= maxFiles) break;
+        if (files[i].size > maxFileSize) continue;
+        pendingFiles.push(files[i]);
+      }}
+      filesInput.value = '';
+      renderFilePreview();
+    }});
+    /* Drag and drop on input area */
+    form.addEventListener('dragover', function(e) {{ e.preventDefault(); form.classList.add('border-primary'); }});
+    form.addEventListener('dragleave', function() {{ form.classList.remove('border-primary'); }});
+    form.addEventListener('drop', function(e) {{
+      e.preventDefault();
+      form.classList.remove('border-primary');
+      var files = e.dataTransfer.files;
+      for (var i = 0; i < files.length; i++) {{
+        if (pendingFiles.length >= maxFiles) break;
+        if (files[i].size > maxFileSize) continue;
+        pendingFiles.push(files[i]);
+      }}
+      renderFilePreview();
+    }});
+    /* Paste image from clipboard */
+    input.addEventListener('paste', function(e) {{
+      var items = e.clipboardData && e.clipboardData.items;
+      if (!items) return;
+      for (var i = 0; i < items.length; i++) {{
+        if (items[i].kind === 'file') {{
+          var f = items[i].getAsFile();
+          if (f && pendingFiles.length < maxFiles && f.size <= maxFileSize) {{
+            pendingFiles.push(f);
+            renderFilePreview();
+          }}
+        }}
+      }}
+    }});
+  }}
 
   /* --- Streaming UI helpers (same as AgentView) --- */
 
@@ -332,6 +460,9 @@ class ThreadedAgentView(Component):
         }}
         setStatus('');
         break;
+      case 'attachments':
+        try {{ sentAttachmentUrls = JSON.parse(data.content || '[]'); }} catch(ex) {{ sentAttachmentUrls = []; }}
+        break;
       case 'done':
         setMetrics(data.metrics);
         setStatus('');
@@ -386,7 +517,8 @@ class ThreadedAgentView(Component):
       threadMessageCount = messages.length;
       messages.forEach(function(msg) {{
         if (msg.role === 'user') {{
-          addBubble('user', userName, escapeHtml(msg.content || ''));
+          var uc = escapeHtml(msg.content || '') + renderAttachmentBubble(msg.attachments);
+          addBubble('user', userName, uc);
         }} else {{
           bubbleEl = addBubble('assistant', agentName, '');
           if (msg.tool_calls && msg.tool_calls.length) {{
@@ -451,13 +583,14 @@ class ThreadedAgentView(Component):
     }});
   }}
 
-  function saveMessages(userMessage, assistantContent, toolCalls) {{
+  function saveMessages(userMessage, assistantContent, toolCalls, attachments) {{
     if (!currentThreadId) return;
     var tcPayload = toolCalls.length > 0 ? toolCalls : null;
+    var attPayload = attachments && attachments.length > 0 ? attachments : null;
     fetch(threadsUrl + '/' + currentThreadId + '/messages', {{
       method: 'POST',
       headers: {{'Content-Type': 'application/json'}},
-      body: JSON.stringify({{role: 'user', content: userMessage}})
+      body: JSON.stringify({{role: 'user', content: userMessage, attachments: attPayload}})
     }}).then(function() {{
       return fetch(threadsUrl + '/' + currentThreadId + '/messages', {{
         method: 'POST',
@@ -489,10 +622,28 @@ class ThreadedAgentView(Component):
   form.addEventListener('submit', function(e) {{
     e.preventDefault();
     var message = input.value.trim();
-    if (!message || !currentThreadId) return;
+    if ((!message && pendingFiles.length === 0) || !currentThreadId) return;
     input.value = '';
 
-    addBubble('user', userName, escapeHtml(message));
+    var userHtml = escapeHtml(message);
+    var sentFiles = pendingFiles.slice();
+    var sentAttachmentUrls = [];
+    if (sentFiles.length > 0) {{
+      var previewHtml = '<div class="flex flex-wrap gap-2 mt-1">';
+      for (var fi = 0; fi < sentFiles.length; fi++) {{
+        var sf = sentFiles[fi];
+        if (sf.type && sf.type.startsWith('image/')) {{
+          previewHtml += '<img src="' + URL.createObjectURL(sf) + '" class="max-w-xs max-h-48 rounded" />';
+        }} else {{
+          previewHtml += '<div class="badge badge-outline gap-1">\\ud83d\\udcc4 ' + escapeHtml(sf.name) + '</div>';
+        }}
+      }}
+      previewHtml += '</div>';
+      userHtml += previewHtml;
+    }}
+    addBubble('user', userName, userHtml);
+    pendingFiles = [];
+    renderFilePreview();
 
     bubbleEl = addBubble('assistant', agentName, '');
     fullText = '';
@@ -501,10 +652,23 @@ class ThreadedAgentView(Component):
     abortController = new AbortController();
     setStreaming(true);
 
+    var fetchBody, fetchHeaders;
+    if (sentFiles.length > 0) {{
+      var fd = new FormData();
+      fd.append('message', message);
+      fd.append('thread_id', currentThreadId);
+      for (var fj = 0; fj < sentFiles.length; fj++) fd.append('files', sentFiles[fj]);
+      fetchBody = fd;
+      fetchHeaders = {{}};
+    }} else {{
+      fetchBody = JSON.stringify({{message: message, thread_id: currentThreadId}});
+      fetchHeaders = {{'Content-Type': 'application/json'}};
+    }}
+
     fetch(sendUrl, {{
       method: 'POST',
-      headers: {{'Content-Type': 'application/json'}},
-      body: JSON.stringify({{message: message, thread_id: currentThreadId}}),
+      headers: fetchHeaders,
+      body: fetchBody,
       signal: abortController.signal
     }}).then(function(response) {{
       if (!response.ok) throw new Error('HTTP ' + response.status);
@@ -516,7 +680,7 @@ class ThreadedAgentView(Component):
         return reader.read().then(function(result) {{
           if (result.done) {{
             finalize();
-            saveMessages(message, fullText, currentToolCalls);
+            saveMessages(message, fullText, currentToolCalls, sentAttachmentUrls);
             return;
           }}
           buffer += decoder.decode(result.value, {{stream: true}});
@@ -529,7 +693,7 @@ class ThreadedAgentView(Component):
                 var data = JSON.parse(line.slice(6));
                 handleEvent(data);
                 if (data.type === 'done') {{
-                  saveMessages(message, fullText, currentToolCalls);
+                  saveMessages(message, fullText, currentToolCalls, sentAttachmentUrls);
                   return;
                 }}
               }} catch(ex) {{}}
@@ -544,7 +708,7 @@ class ThreadedAgentView(Component):
       if (err.name === 'AbortError') {{
         setStatus('');
         finalize();
-        saveMessages(message, fullText, currentToolCalls);
+        saveMessages(message, fullText, currentToolCalls, sentAttachmentUrls);
         return;
       }}
       if (bubbleEl) {{
@@ -595,8 +759,16 @@ class ThreadedAgentView(Component):
             f'{status_html}'
             f'<div id="{cid}-messages" class="flex-1 overflow-y-auto p-4 space-y-4"></div>'
             f'{metrics_html}'
-            f'<form id="{cid}-form" class="p-4 border-t border-base-300 flex gap-2">'
-            f'<input id="{cid}-input" type="text" class="input input-bordered flex-1"'
+            f'<div id="{cid}-file-preview" class="px-4 pt-2 flex flex-wrap gap-2 hidden"></div>'
+            f'<form id="{cid}-form" class="p-4 border-t border-base-300 flex gap-2 items-end">'
+            + (
+                f'<input id="{cid}-files" type="file" multiple accept="{escape(self.accept)}" class="hidden" />'
+                f'<button id="{cid}-attach" type="button" class="btn btn-ghost btn-sm"'
+                f' title="Attach files">\U0001F4CE</button>'
+                if self.enable_attachments else
+                f'<input id="{cid}-files" type="file" class="hidden" />'
+            )
+            + f'<input id="{cid}-input" type="text" class="input input-bordered flex-1"'
             f' placeholder="{placeholder_escaped}" autocomplete="off" />'
             f'<button id="{cid}-btn" type="submit" class="btn btn-primary">'
             f'{send_label_escaped}</button>'
