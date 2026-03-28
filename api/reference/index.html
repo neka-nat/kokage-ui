@@ -881,6 +881,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LangChain / LangGraph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1153,6 +1181,34 @@
     
   
     Agent Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/langchain_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LangChain Demo
   
 
     
@@ -1717,6 +1773,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#tool-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Registry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm-framework-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Framework Adapters
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1910,6 +1988,28 @@
     <span class="md-ellipsis">
       
         AI Agent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Registry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm-framework-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Framework Adapters
       
     </span>
   </a>
@@ -2717,6 +2817,57 @@
 <tr>
 <td><code>FilePreview</code></td>
 <td>Rich content preview (JSON tree, CSV table, code, image, text)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tool-registry">Tool Registry</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ToolRegistry</code></td>
+<td>Decorator-based tool registry for AI agent tools</td>
+</tr>
+<tr>
+<td><code>ToolInfo</code></td>
+<td>Tool metadata (name, description, parameters, func)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="llm-framework-adapters">LLM Framework Adapters</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>langchain_agent_stream</code></td>
+<td><code>ai.langchain</code></td>
+<td>Convert LangChain <code>astream_events</code> v2 directly to SSE StreamingResponse</td>
+</tr>
+<tr>
+<td><code>langgraph_agent_stream</code></td>
+<td><code>ai.langgraph</code></td>
+<td>Convert LangGraph <code>astream</code> directly to SSE StreamingResponse (messages/updates modes)</td>
+</tr>
+<tr>
+<td><code>LangChainCallbackHandler</code></td>
+<td><code>ai.langchain</code></td>
+<td>Callback-based adapter for <code>AgentExecutor</code> and legacy runnables</td>
+</tr>
+<tr>
+<td><code>to_langchain_tools</code></td>
+<td><code>ai.langchain</code></td>
+<td>Convert <code>ToolRegistry</code> / callables to LangChain <code>StructuredTool</code></td>
 </tr>
 </tbody>
 </table>

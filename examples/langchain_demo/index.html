@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://neka-nat.github.io/kokage-ui/guide/datagrid/">
+        <link rel="canonical" href="https://neka-nat.github.io/kokage-ui/examples/langchain_demo/">
       
       
-        <link rel="prev" href="../storage/">
+        <link rel="prev" href="../agent_demo/">
       
       
-        <link rel="next" href="../admin/">
+        <link rel="next" href="../chart_demo/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>DataGrid - kokage-ui</title>
+        <title>LangChain Demo - kokage-ui</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#datagrid" class="md-skip">
+        <a href="#langchain-demo" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              DataGrid
+              LangChain Demo
             
           </span>
         </div>
@@ -261,13 +261,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../elements/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../guide/elements/" class="md-tabs__link">
           
   
   
@@ -283,11 +281,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../examples/hello/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../hello/" class="md-tabs__link">
           
   
   
@@ -441,31 +441,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -483,7 +480,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -501,7 +498,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../elements/" class="md-nav__link">
+      <a href="../../guide/elements/" class="md-nav__link">
         
   
   
@@ -529,7 +526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../components/" class="md-nav__link">
+      <a href="../../guide/components/" class="md-nav__link">
         
   
   
@@ -557,7 +554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../pages/" class="md-nav__link">
+      <a href="../../guide/pages/" class="md-nav__link">
         
   
   
@@ -585,7 +582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/" class="md-nav__link">
+      <a href="../../guide/models/" class="md-nav__link">
         
   
   
@@ -613,7 +610,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../crud/" class="md-nav__link">
+      <a href="../../guide/crud/" class="md-nav__link">
         
   
   
@@ -641,7 +638,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../storage/" class="md-nav__link">
+      <a href="../../guide/storage/" class="md-nav__link">
         
   
   
@@ -649,6 +646,546 @@
     
   
     SQL Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/datagrid/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DataGrid
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/admin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auth
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/htmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    htmx Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming Chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LangChain / LangGraph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hello/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hello World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../todo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Todo App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../admin_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../realtime/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real-time
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chat_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agent_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Demo
   
 
     
@@ -685,7 +1222,7 @@
   <span class="md-ellipsis">
     
   
-    DataGrid
+    LangChain Demo
   
 
     
@@ -703,7 +1240,7 @@
   <span class="md-ellipsis">
     
   
-    DataGrid
+    LangChain Demo
   
 
     
@@ -729,10 +1266,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#run" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        Run
       
     </span>
   </a>
@@ -740,10 +1277,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#datagrid-parameters" class="md-nav__link">
+  <a href="#pages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DataGrid Parameters
+        Pages
       
     </span>
   </a>
@@ -751,10 +1288,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#datagridstate" class="md-nav__link">
+  <a href="#toolregistry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DataGridState
+        ToolRegistry
       
     </span>
   </a>
@@ -762,43 +1299,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#columnfilter" class="md-nav__link">
+  <a href="#source" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ColumnFilter
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-cell-renderers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Cell Renderers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#extra-columns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Extra Columns
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bulk-actions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bulk Actions
+        Source
       
     </span>
   </a>
@@ -821,544 +1325,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../admin/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Admin Dashboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Auth
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../theme/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Theme
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../notifications/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Notifications
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../htmx/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    htmx Patterns
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../chat/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streaming Chat
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../agent/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Agent View
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../langchain/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LangChain / LangGraph
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Examples
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Examples
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/hello/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Hello World
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/todo/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Todo App
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/dashboard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Dashboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/admin_demo/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Admin Demo
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/blog/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Blog App
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/realtime/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Real-time
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/chat_demo/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Chat Demo
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/agent_demo/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Agent Demo
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/langchain_demo/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LangChain Demo
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../examples/chart_demo/" class="md-nav__link">
+      <a href="../chart_demo/" class="md-nav__link">
         
   
   
@@ -1386,7 +1353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/auth_demo/" class="md-nav__link">
+      <a href="../auth_demo/" class="md-nav__link">
         
   
   
@@ -1725,10 +1692,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#run" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        Run
       
     </span>
   </a>
@@ -1736,10 +1703,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#datagrid-parameters" class="md-nav__link">
+  <a href="#pages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DataGrid Parameters
+        Pages
       
     </span>
   </a>
@@ -1747,10 +1714,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#datagridstate" class="md-nav__link">
+  <a href="#toolregistry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DataGridState
+        ToolRegistry
       
     </span>
   </a>
@@ -1758,43 +1725,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#columnfilter" class="md-nav__link">
+  <a href="#source" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ColumnFilter
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-cell-renderers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Cell Renderers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#extra-columns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Extra Columns
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bulk-actions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bulk Actions
+        Source
       
     </span>
   </a>
@@ -1821,238 +1755,53 @@
   
 
 
-<h1 id="datagrid">DataGrid</h1>
-<p><code>DataGrid</code> is an advanced table component with sorting, filtering, pagination, bulk actions, column toggling, and CSV export. It's powered by htmx for seamless interactions.</p>
-<h2 id="quick-start">Quick Start</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Request</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGrid</span><span class="p">,</span> <span class="n">DataGridState</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nd">@ui</span><span class="o">.</span><span class="n">fragment</span><span class="p">(</span><span class="s2">&quot;/items/_list&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">items_list</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">state</span> <span class="o">=</span> <span class="n">DataGridState</span><span class="o">.</span><span class="n">from_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">skip</span> <span class="o">=</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">20</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">items</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="k">await</span> <span class="n">storage</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">search</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">total_pages</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="n">total</span> <span class="o">//</span> <span class="mi">20</span><span class="p">))</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="k">return</span> <span class="n">DataGrid</span><span class="p">(</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="n">Item</span><span class="p">,</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="n">items</span><span class="p">,</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="n">data_url</span><span class="o">=</span><span class="s2">&quot;/items/_list&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="n">sort_field</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">sort_field</span><span class="p">,</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="n">sort_order</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">sort_order</span><span class="p">,</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="n">page</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">page</span><span class="p">,</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        <span class="n">total_pages</span><span class="o">=</span><span class="n">total_pages</span><span class="p">,</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="n">total_items</span><span class="o">=</span><span class="n">total</span><span class="p">,</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="p">)</span>
+<h1 id="langchain-demo">LangChain Demo</h1>
+<p>Demonstrates three LangChain/LangGraph integration patterns with kokage-ui's AgentView.</p>
+<h2 id="run">Run</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>kokage-ui<span class="o">[</span>langchain<span class="o">]</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uvicorn<span class="w"> </span>examples.langchain_demo:app<span class="w"> </span>--reload
 </code></pre></div>
-<h2 id="datagrid-parameters">DataGrid Parameters</h2>
+<p>Open <a href="http://localhost:8000">http://localhost:8000</a> in your browser.</p>
+<h2 id="pages">Pages</h2>
 <table>
 <thead>
 <tr>
-<th>Parameter</th>
-<th>Type</th>
+<th>Path</th>
+<th>Adapter</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>model</code></td>
-<td>type[BaseModel]</td>
-<td>Pydantic model class</td>
+<td><code>/</code></td>
+<td><code>langchain_stream</code></td>
+<td>Converts LangChain <code>astream_events</code> v2 to AgentEvent</td>
 </tr>
 <tr>
-<td><code>rows</code></td>
-<td>list[BaseModel]</td>
-<td>Data rows to display</td>
+<td><code>/langgraph</code></td>
+<td><code>langgraph_stream</code></td>
+<td>Converts LangGraph <code>astream</code> (messages mode) to AgentEvent</td>
 </tr>
 <tr>
-<td><code>data_url</code></td>
-<td>str</td>
-<td>htmx endpoint for all interactions</td>
-</tr>
-<tr>
-<td><code>grid_id</code></td>
-<td>str</td>
-<td>HTML id (default: <code>"datagrid"</code>)</td>
-</tr>
-<tr>
-<td><code>exclude</code></td>
-<td>list[str] | None</td>
-<td>Fields to exclude</td>
-</tr>
-<tr>
-<td><code>include</code></td>
-<td>list[str] | None</td>
-<td>Fields to include (whitelist)</td>
-</tr>
-<tr>
-<td><code>sort_field</code></td>
-<td>str | None</td>
-<td>Current sort field</td>
-</tr>
-<tr>
-<td><code>sort_order</code></td>
-<td>str</td>
-<td><code>"asc"</code> or <code>"desc"</code> (default: <code>"asc"</code>)</td>
-</tr>
-<tr>
-<td><code>filters</code></td>
-<td>dict[str, ColumnFilter] | None</td>
-<td>Per-column filters</td>
-</tr>
-<tr>
-<td><code>filter_values</code></td>
-<td>dict[str, str] | None</td>
-<td>Current filter values</td>
-</tr>
-<tr>
-<td><code>bulk_actions</code></td>
-<td>list[tuple[str, str]] | None</td>
-<td><code>[(label, action_url), ...]</code></td>
-</tr>
-<tr>
-<td><code>id_field</code></td>
-<td>str</td>
-<td>Primary key field (default: <code>"id"</code>)</td>
-</tr>
-<tr>
-<td><code>column_toggle</code></td>
-<td>bool</td>
-<td>Enable column visibility toggle</td>
-</tr>
-<tr>
-<td><code>visible_columns</code></td>
-<td>list[str] | None</td>
-<td>Currently visible columns</td>
-</tr>
-<tr>
-<td><code>cell_renderers</code></td>
-<td>dict[str, Callable] | None</td>
-<td>Custom cell renderers</td>
-</tr>
-<tr>
-<td><code>extra_columns</code></td>
-<td>dict[str, Callable] | None</td>
-<td>Additional columns <code>{name: (row) -&gt; Component}</code></td>
-</tr>
-<tr>
-<td><code>page</code></td>
-<td>int</td>
-<td>Current page (default: 1)</td>
-</tr>
-<tr>
-<td><code>total_pages</code></td>
-<td>int</td>
-<td>Total pages</td>
-</tr>
-<tr>
-<td><code>total_items</code></td>
-<td>int</td>
-<td>Total item count</td>
-</tr>
-<tr>
-<td><code>per_page</code></td>
-<td>int</td>
-<td>Items per page (default: 20)</td>
-</tr>
-<tr>
-<td><code>csv_url</code></td>
-<td>str | None</td>
-<td>CSV export endpoint URL</td>
-</tr>
-<tr>
-<td><code>zebra</code></td>
-<td>bool</td>
-<td>Zebra-striped rows (default: <code>True</code>)</td>
-</tr>
-<tr>
-<td><code>compact</code></td>
-<td>bool</td>
-<td>Compact table style (default: <code>False</code>)</td>
+<td><code>/callback</code></td>
+<td><code>LangChainCallbackHandler</code></td>
+<td>Callback-based adapter for legacy <code>AgentExecutor</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="datagridstate">DataGridState</h2>
-<p>Parse grid state from request query parameters:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">state</span> <span class="o">=</span> <span class="n">DataGridState</span><span class="o">.</span><span class="n">from_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># state.sort_field   → &quot;name&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># state.sort_order   → &quot;asc&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># state.page         → 2</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># state.filter_values → {&quot;f_name&quot;: &quot;alice&quot;}</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># state.clean_filters → {&quot;name&quot;: &quot;alice&quot;}  (without f_ prefix)</span>
+<h2 id="toolregistry">ToolRegistry</h2>
+<p>The demo defines tools with <code>ToolRegistry</code> — a decorator-based registry that works standalone and can be converted to LangChain tools via <code>to_langchain_tools()</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui.ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolRegistry</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">registry</span> <span class="o">=</span> <span class="n">ToolRegistry</span><span class="p">()</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nd">@registry</span><span class="o">.</span><span class="n">tool</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Search the knowledge base.&quot;&quot;&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="o">...</span>
 </code></pre></div>
-<p>Query parameters: <code>sort=field</code>, <code>order=asc|desc</code>, <code>page=N</code>, <code>f_name=value</code> (filters), <code>col=field</code> (visible columns).</p>
-<h2 id="columnfilter">ColumnFilter</h2>
-<p>Define per-column filter inputs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kokage_ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColumnFilter</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">filters</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">ColumnFilter</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Filter name...&quot;</span><span class="p">),</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">ColumnFilter</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;select&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="s2">&quot;Active&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;inactive&quot;</span><span class="p">,</span> <span class="s2">&quot;Inactive&quot;</span><span class="p">)]),</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="n">ColumnFilter</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;number_range&quot;</span><span class="p">),</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>"text"</code></td>
-<td>Text input with debounced keyup</td>
-</tr>
-<tr>
-<td><code>"select"</code></td>
-<td>Dropdown with predefined options</td>
-</tr>
-<tr>
-<td><code>"number_range"</code></td>
-<td>Min/max number inputs</td>
-</tr>
-</tbody>
-</table>
-<h2 id="custom-cell-renderers">Custom Cell Renderers</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">DataGrid</span><span class="p">(</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">Item</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">items</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">data_url</span><span class="o">=</span><span class="s2">&quot;/items/_list&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">cell_renderers</span><span class="o">=</span><span class="p">{</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">A</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">href</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;/items/</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">Span</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="s2">&quot;font-mono&quot;</span><span class="p">),</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="p">},</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">)</span>
-</code></pre></div>
-<h2 id="extra-columns">Extra Columns</h2>
-<p>Add computed columns (e.g., action buttons):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">render_actions</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">return</span> <span class="n">Div</span><span class="p">(</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="n">A</span><span class="p">(</span><span class="s2">&quot;Edit&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;/items/</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/edit&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="s2">&quot;btn btn-warning btn-xs&quot;</span><span class="p">),</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="n">ConfirmDelete</span><span class="p">(</span><span class="s2">&quot;Delete&quot;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;/items/</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="s2">&quot;btn btn-error btn-xs&quot;</span><span class="p">),</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="bp">cls</span><span class="o">=</span><span class="s2">&quot;flex gap-1&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="p">)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">DataGrid</span><span class="p">(</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">Item</span><span class="p">,</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">items</span><span class="p">,</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">data_url</span><span class="o">=</span><span class="s2">&quot;/items/_list&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="n">extra_columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Actions&quot;</span><span class="p">:</span> <span class="n">render_actions</span><span class="p">},</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">)</span>
-</code></pre></div>
-<h2 id="bulk-actions">Bulk Actions</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">DataGrid</span><span class="p">(</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">Item</span><span class="p">,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">items</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">data_url</span><span class="o">=</span><span class="s2">&quot;/items/_list&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">bulk_actions</span><span class="o">=</span><span class="p">[</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="p">(</span><span class="s2">&quot;Delete Selected&quot;</span><span class="p">,</span> <span class="s2">&quot;/items/_bulk_delete&quot;</span><span class="p">),</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="p">(</span><span class="s2">&quot;Export Selected&quot;</span><span class="p">,</span> <span class="s2">&quot;/items/_export&quot;</span><span class="p">),</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="p">],</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">)</span>
-</code></pre></div>
-<p>Bulk action endpoints receive <code>selected</code> form values (list of IDs from checked rows).</p>
+<h2 id="source">Source</h2>
+<p>::: examples.langchain_demo</p>
 
 
 
