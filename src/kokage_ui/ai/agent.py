@@ -192,10 +192,16 @@ class AgentView(Component):
 
     Args:
         send_url: POST endpoint URL for sending messages (required).
+        interrupt_url: POST endpoint URL for resuming after interrupt.
+            When set, enables human-in-the-loop: on ``interrupt`` events
+            the UI shows an approval modal. The endpoint receives JSON
+            with ``{"decisions": [{"type": "approve"|"reject"|"edit", ...}]}``.
         messages: Initial messages to display.
         placeholder: Input field placeholder text.
         send_label: Submit button label.
         stop_label: Stop button label shown during streaming.
+        approve_label: Approve button label in interrupt modal.
+        reject_label: Reject button label in interrupt modal.
         agent_name: Display name for agent messages.
         user_name: Display name for user messages.
         height: CSS height for the container.
@@ -211,10 +217,13 @@ class AgentView(Component):
         self,
         *,
         send_url: str,
+        interrupt_url: str | None = None,
         messages: list[AgentMessage] | None = None,
         placeholder: str = "メッセージを入力...",
         send_label: str = "送信",
         stop_label: str = "停止",
+        approve_label: str = "承認",
+        reject_label: str = "拒否",
         agent_name: str = "Agent",
         user_name: str = "You",
         height: str = "700px",
@@ -229,10 +238,13 @@ class AgentView(Component):
         **attrs: Any,
     ) -> None:
         self.send_url = send_url
+        self.interrupt_url = interrupt_url
         self.messages = messages or []
         self.placeholder = placeholder
         self.send_label = send_label
         self.stop_label = stop_label
+        self.approve_label = approve_label
+        self.reject_label = reject_label
         self.agent_name = agent_name
         self.user_name = user_name
         self.height = height
@@ -262,10 +274,13 @@ class AgentView(Component):
 
         # Escape JS string values
         js_send_url = json.dumps(self.send_url, ensure_ascii=False)
+        js_interrupt_url = json.dumps(self.interrupt_url, ensure_ascii=False) if self.interrupt_url else "null"
         js_user_name = json.dumps(self.user_name, ensure_ascii=False)
         js_agent_name = json.dumps(self.agent_name, ensure_ascii=False)
         js_send_label = json.dumps(self.send_label, ensure_ascii=False)
         js_stop_label = json.dumps(self.stop_label, ensure_ascii=False)
+        js_approve_label = json.dumps(self.approve_label, ensure_ascii=False)
+        js_reject_label = json.dumps(self.reject_label, ensure_ascii=False)
         js_tool_expanded = "true" if self.tool_expanded else "false"
         js_enable_attach = "true" if self.enable_attachments else "false"
         js_accept = json.dumps(self.accept, ensure_ascii=False)
@@ -296,10 +311,13 @@ class AgentView(Component):
 (function(){{
   var agentId = {json.dumps(self.agent_id)};
   var sendUrl = {js_send_url};
+  var interruptUrl = {js_interrupt_url};
   var userName = {js_user_name};
   var agentName = {js_agent_name};
   var sendLabel = {js_send_label};
   var stopLabel = {js_stop_label};
+  var approveLabel = {js_approve_label};
+  var rejectLabel = {js_reject_label};
   var toolExpanded = {js_tool_expanded};
   var enableAttach = {js_enable_attach};
   var acceptTypes = {js_accept};
@@ -504,6 +522,118 @@ class AgentView(Component):
     input.focus();
   }}
 
+  function showInterruptModal(data) {{
+    var modalId = agentId + '-interrupt-modal';
+    var existing = document.getElementById(modalId);
+    if (existing) existing.remove();
+
+    var actions = (data.metrics && data.metrics.action_requests) || [];
+    var configs = (data.metrics && data.metrics.review_configs) || [];
+
+    var toolName = data.tool_name || 'tool';
+    var toolInput = typeof data.tool_input === 'object'
+      ? JSON.stringify(data.tool_input, null, 2)
+      : String(data.tool_input || '');
+
+    var actionsHtml = '';
+    for (var i = 0; i < actions.length; i++) {{
+      var a = actions[i];
+      var aInput = typeof a.args === 'object' ? JSON.stringify(a.args, null, 2) : String(a.args || '');
+      actionsHtml += '<div class="mb-3">'
+        + '<div class="font-semibold text-sm">\\ud83d\\udd27 ' + escapeHtml(a.name || 'tool') + '()</div>'
+        + '<pre class="bg-base-300 p-2 rounded mt-1 text-xs whitespace-pre-wrap">' + escapeHtml(aInput) + '</pre>'
+        + '</div>';
+    }}
+    if (!actionsHtml) {{
+      actionsHtml = '<div class="mb-3">'
+        + '<div class="font-semibold text-sm">\\ud83d\\udd27 ' + escapeHtml(toolName) + '()</div>'
+        + '<pre class="bg-base-300 p-2 rounded mt-1 text-xs whitespace-pre-wrap">' + escapeHtml(toolInput) + '</pre>'
+        + '</div>';
+    }}
+
+    var modal = document.createElement('dialog');
+    modal.id = modalId;
+    modal.className = 'modal modal-open';
+    modal.innerHTML = '<div class="modal-box">'
+      + '<h3 class="font-bold text-lg mb-4">\\u26a0\\ufe0f ' + escapeHtml(data.content || 'Approval required') + '</h3>'
+      + '<div class="max-h-60 overflow-y-auto">' + actionsHtml + '</div>'
+      + '<div class="modal-action">'
+      + '<button class="btn btn-error" data-decision="reject">' + escapeHtml(rejectLabel) + '</button>'
+      + '<button class="btn btn-success" data-decision="approve">' + escapeHtml(approveLabel) + '</button>'
+      + '</div></div>';
+
+    document.body.appendChild(modal);
+
+    modal.querySelectorAll('[data-decision]').forEach(function(btn) {{
+      btn.addEventListener('click', function() {{
+        var decision = btn.getAttribute('data-decision');
+        modal.remove();
+        var decisions = [];
+        var count = actions.length || 1;
+        for (var j = 0; j < count; j++) {{
+          decisions.push({{type: decision}});
+        }}
+        resumeAgent(decisions);
+      }});
+    }});
+  }}
+
+  function resumeAgent(decisions) {{
+    if (!interruptUrl) return;
+    setStreaming(true);
+    setStatus(decisions[0] && decisions[0].type === 'approve' ? 'Resuming...' : 'Rejecting...');
+
+    abortController = new AbortController();
+    fetch(interruptUrl, {{
+      method: 'POST',
+      headers: {{'Content-Type': 'application/json'}},
+      body: JSON.stringify({{decisions: decisions}}),
+      signal: abortController.signal
+    }}).then(function(response) {{
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      var reader = response.body.getReader();
+      var decoder = new TextDecoder();
+      var buffer = '';
+
+      function read() {{
+        return reader.read().then(function(result) {{
+          if (result.done) {{
+            finalize();
+            return;
+          }}
+          buffer += decoder.decode(result.value, {{stream: true}});
+          var lines = buffer.split('\\n');
+          buffer = lines.pop();
+          for (var i = 0; i < lines.length; i++) {{
+            var line = lines[i].trim();
+            if (line.startsWith('data: ')) {{
+              try {{
+                var evData = JSON.parse(line.slice(6));
+                handleEvent(evData);
+                if (evData.type === 'done') return;
+              }} catch(ex) {{}}
+            }}
+          }}
+          return read();
+        }});
+      }}
+      return read();
+    }}).catch(function(err) {{
+      if (err.name === 'AbortError') {{
+        setStatus('');
+        finalize();
+        return;
+      }}
+      if (bubbleEl) {{
+        var errSpan = document.createElement('span');
+        errSpan.className = 'text-error';
+        errSpan.textContent = err.message;
+        bubbleEl.appendChild(errSpan);
+      }}
+      setStreaming(false);
+    }});
+  }}
+
   function handleEvent(data) {{
     switch(data.type) {{
       case 'text':
@@ -543,6 +673,13 @@ class AgentView(Component):
 
       case 'status':
         setStatus(data.content || '');
+        break;
+
+      case 'interrupt':
+        if (interruptUrl && bubbleEl) {{
+          setStatus('');
+          showInterruptModal(data);
+        }}
         break;
 
       case 'error':

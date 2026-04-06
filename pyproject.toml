@@ -24,11 +24,15 @@ dev = [
 langchain = [
     "langchain-core>=0.3",
 ]
+deepagents = [
+    "deepagents>=0.1",
+    "langchain-core>=0.3",
+]
 markdown = [
     "markdown>=3.5",
 ]
 all = [
-    "kokage-ui[sql,langchain,markdown]",
+    "kokage-ui[sql,langchain,deepagents,markdown]",
 ]
 docs = [
     "mkdocs-material>=9.0",

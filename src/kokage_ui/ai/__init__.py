@@ -17,6 +17,10 @@ _LANGCHAIN_EXPORTS = {
     "LangChainCallbackHandler": "langchain",
     "to_langchain_tools": "langchain",
     "langgraph_agent_stream": "langgraph",
+    "deep_agent_stream": "deepagents",
+    "deep_agent_resume": "deepagents",
+    "DeepAgentConfig": "deepagents",
+    "to_deep_agent_tools": "deepagents",
 }
 
 
@@ -53,4 +57,8 @@ __all__ = [
     "langchain_agent_stream",
     "langgraph_agent_stream",
     "to_langchain_tools",
+    "deep_agent_stream",
+    "deep_agent_resume",
+    "DeepAgentConfig",
+    "to_deep_agent_tools",
 ]
