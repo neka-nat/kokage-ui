@@ -2,146 +2,154 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/getting-started/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/api/reference/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/catalog/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/catalog/components/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/catalog/elements/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/catalog/features/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/catalog/fields/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/catalog/htmx/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/catalog/models/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/admin_demo/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/agent_demo/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/auth_demo/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/blog/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/chart_demo/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/chat_demo/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/dashboard/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
+    </url>
+    <url>
+         <loc>https://neka-nat.github.io/kokage-ui/examples/deepagents_demo/</loc>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/hello/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/langchain_demo/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/realtime/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/examples/todo/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/admin/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/agent/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/auth/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/chat/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/components/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/crud/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/datagrid/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
+    </url>
+    <url>
+         <loc>https://neka-nat.github.io/kokage-ui/guide/deepagents/</loc>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/elements/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/htmx/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/langchain/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/models/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/notifications/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/pages/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/storage/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
     <url>
          <loc>https://neka-nat.github.io/kokage-ui/guide/theme/</loc>
-         <lastmod>2026-03-28</lastmod>
+         <lastmod>2026-04-07</lastmod>
     </url>
 </urlset>

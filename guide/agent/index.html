@@ -1135,6 +1135,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#human-in-the-loop-interrupt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Human-in-the-Loop (Interrupt)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1159,6 +1170,34 @@
     
   
     LangChain / LangGraph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepagents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep Agents
   
 
     
@@ -1472,6 +1511,34 @@
     
   
     LangChain Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/deepagents_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep Agents Demo
   
 
     
@@ -2069,6 +2136,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#human-in-the-loop-interrupt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Human-in-the-Loop (Interrupt)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2144,6 +2222,12 @@
 <td>POST endpoint URL</td>
 </tr>
 <tr>
+<td><code>interrupt_url</code></td>
+<td>str | None</td>
+<td>None</td>
+<td>POST endpoint for HITL resume (enables approval modal)</td>
+</tr>
+<tr>
 <td><code>messages</code></td>
 <td>list[AgentMessage] | None</td>
 <td>None</td>
@@ -2204,6 +2288,18 @@
 <td>Default tool panel state</td>
 </tr>
 <tr>
+<td><code>approve_label</code></td>
+<td>str</td>
+<td><code>"承認"</code></td>
+<td>Approve button label in interrupt modal</td>
+</tr>
+<tr>
+<td><code>reject_label</code></td>
+<td>str</td>
+<td><code>"拒否"</code></td>
+<td>Reject button label in interrupt modal</td>
+</tr>
+<tr>
 <td><code>agent_id</code></td>
 <td>str | None</td>
 <td>None</td>
@@ -2250,6 +2346,16 @@
 <td><code>"status"</code></td>
 <td><code>content</code></td>
 <td>Status bar update</td>
+</tr>
+<tr>
+<td><code>"plan"</code></td>
+<td><code>content</code></td>
+<td>Task plan update (JSON, used by <code>DeepAgentView</code>)</td>
+</tr>
+<tr>
+<td><code>"interrupt"</code></td>
+<td><code>content</code>, <code>tool_name</code>, <code>tool_input</code>, <code>metrics</code></td>
+<td>Human-in-the-loop approval request</td>
 </tr>
 <tr>
 <td><code>"error"</code></td>
@@ -2427,6 +2533,20 @@
 <a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>│ [メッセージを入力...]          [送信] / [停止] │
 <a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>└──────────────────────────────────────────────┘
 </code></pre></div>
+<h2 id="human-in-the-loop-interrupt">Human-in-the-Loop (Interrupt)</h2>
+<p>AgentView supports human-in-the-loop approval via the <code>interrupt</code> event type. When an <code>interrupt</code> event is received and <code>interrupt_url</code> is set, the UI shows a DaisyUI modal with tool details and approve/reject buttons.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">AgentView</span><span class="p">(</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">send_url</span><span class="o">=</span><span class="s2">&quot;/api/agent&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">interrupt_url</span><span class="o">=</span><span class="s2">&quot;/api/agent/resume&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">approve_label</span><span class="o">=</span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">reject_label</span><span class="o">=</span><span class="s2">&quot;Deny&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">)</span>
+</code></pre></div>
+<p>The resume endpoint receives a JSON payload:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span><span class="nt">&quot;decisions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;approve&quot;</span><span class="p">}]}</span>
+</code></pre></div>
+<p>Decision types: <code>"approve"</code>, <code>"reject"</code>, or <code>"edit"</code> (with <code>"edited_action"</code> dict).</p>
+<p>See <a href="../deepagents/">Deep Agents Integration</a> for a complete HITL setup example.</p>
 
 
 
