@@ -550,8 +550,8 @@ async def _handle_messages(
             # Emit plan event for write_todos
             if config.include_plan and t_name == "write_todos":
                 yield AgentEvent(
-                    type="status",
-                    content=f"Plan updated",
+                    type="plan",
+                    content=result_str,
                 )
 
             yield AgentEvent(
@@ -635,7 +635,7 @@ async def _handle_updates(
                         hint = _detect_result_hint(result_str, t_name)
 
                     if config.include_plan and t_name == "write_todos":
-                        yield AgentEvent(type="status", content="Plan updated")
+                        yield AgentEvent(type="plan", content=result_str)
 
                     yield AgentEvent(
                         type="tool_result",

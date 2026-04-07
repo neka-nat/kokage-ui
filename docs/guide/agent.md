@@ -47,6 +47,7 @@ The main agent dashboard component. Renders a status bar, message area with tool
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `send_url` | str | (required) | POST endpoint URL |
+| `interrupt_url` | str \| None | None | POST endpoint for HITL resume (enables approval modal) |
 | `messages` | list[AgentMessage] \| None | None | Initial messages |
 | `placeholder` | str | `"メッセージを入力..."` | Input placeholder |
 | `send_label` | str | `"送信"` | Submit button label |
@@ -57,6 +58,8 @@ The main agent dashboard component. Renders a status bar, message area with tool
 | `show_metrics` | bool | True | Show metrics bar |
 | `show_status` | bool | True | Show status bar |
 | `tool_expanded` | bool | False | Default tool panel state |
+| `approve_label` | str | `"承認"` | Approve button label in interrupt modal |
+| `reject_label` | str | `"拒否"` | Reject button label in interrupt modal |
 | `agent_id` | str \| None | None | Auto-generated if omitted |
 
 ### Stop Button
@@ -84,6 +87,8 @@ Framework-agnostic SSE event for agent streaming. Works with any LLM framework (
 | `"tool_call"` | `call_id`, `tool_name`, `tool_input` | Tool invocation started |
 | `"tool_result"` | `call_id`, `result` | Tool execution completed |
 | `"status"` | `content` | Status bar update |
+| `"plan"` | `content` | Task plan update (JSON, used by `DeepAgentView`) |
+| `"interrupt"` | `content`, `tool_name`, `tool_input`, `metrics` | Human-in-the-loop approval request |
 | `"error"` | `content` | Error message |
 | `"done"` | `metrics` | Stream complete |
 
@@ -254,3 +259,26 @@ async def run(message: str):
 │ [メッセージを入力...]          [送信] / [停止] │
 └──────────────────────────────────────────────┘
 ```
+
+## Human-in-the-Loop (Interrupt)
+
+AgentView supports human-in-the-loop approval via the `interrupt` event type. When an `interrupt` event is received and `interrupt_url` is set, the UI shows a DaisyUI modal with tool details and approve/reject buttons.
+
+```python
+AgentView(
+    send_url="/api/agent",
+    interrupt_url="/api/agent/resume",
+    approve_label="Allow",
+    reject_label="Deny",
+)
+```
+
+The resume endpoint receives a JSON payload:
+
+```json
+{"decisions": [{"type": "approve"}]}
+```
+
+Decision types: `"approve"`, `"reject"`, or `"edit"` (with `"edited_action"` dict).
+
+See [Deep Agents Integration](deepagents.md) for a complete HITL setup example.

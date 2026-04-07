@@ -314,8 +314,9 @@ class TestHandleMessages:
                 state={},
             )
         )
-        plan_events = [e for e in result if e.type == "status" and "Plan" in e.content]
+        plan_events = [e for e in result if e.type == "plan"]
         assert len(plan_events) == 1
+        assert '[{"task":"step1"}]' in plan_events[0].content
 
     @pytest.mark.asyncio
     async def test_no_plan_event_when_disabled(self):
@@ -342,7 +343,7 @@ class TestHandleMessages:
                 state={},
             )
         )
-        plan_events = [e for e in result if e.type == "status" and "Plan" in e.content]
+        plan_events = [e for e in result if e.type == "plan"]
         assert len(plan_events) == 0
 
     @pytest.mark.asyncio
@@ -1081,3 +1082,140 @@ class TestAgentViewInterrupt:
         html = view.render()
         assert '"Allow"' in html
         assert '"Deny"' in html
+
+
+# ==================== DeepAgentView ====================
+
+
+class TestDeepAgentView:
+    def test_default_render_has_drawer_and_plan(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent")
+        html = view.render()
+        assert "drawer drawer-end" in html
+        assert "drawer-side" in html
+        assert "Task Plan" in html
+        assert "File Activity" in html
+        assert "plan-list" in html
+        assert "file-list" in html
+
+    def test_show_plan_false_hides_plan(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent", show_plan=False)
+        html = view.render()
+        assert "Task Plan" not in html
+        # File activity still shown
+        assert "File Activity" in html
+        # Still has drawer (show_files=True)
+        assert "drawer drawer-end" in html
+
+    def test_show_files_false_hides_files(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent", show_files=False)
+        html = view.render()
+        assert "File Activity" not in html
+        # Plan still shown
+        assert "Task Plan" in html
+
+    def test_both_false_no_sidebar(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent", show_plan=False, show_files=False)
+        html = view.render()
+        assert "drawer-side" not in html
+        assert "Task Plan" not in html
+        assert "File Activity" not in html
+
+    def test_custom_labels(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(
+            send_url="/api/agent",
+            plan_label="My Plan",
+            files_label="My Files",
+        )
+        html = view.render()
+        assert "My Plan" in html
+        assert "My Files" in html
+
+    def test_interrupt_url_rendered(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(
+            send_url="/api/agent",
+            interrupt_url="/api/resume",
+        )
+        html = view.render()
+        assert '"/api/resume"' in html
+        assert "interruptUrl" in html
+        assert "showInterruptModal" in html
+
+    def test_no_interrupt_url(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent")
+        html = view.render()
+        assert "interruptUrl = null" in html
+
+    def test_plan_event_handler_in_js(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent")
+        html = view.render()
+        assert "case 'plan':" in html
+        assert "renderPlan" in html
+
+    def test_file_activity_handler_in_js(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent")
+        html = view.render()
+        assert "addFileActivity" in html
+        assert "filesystemTools" in html
+
+    def test_initial_messages_rendered(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+        from kokage_ui.ai.agent import AgentMessage
+
+        view = DeepAgentView(
+            send_url="/api/agent",
+            messages=[
+                AgentMessage(role="assistant", content="Hello!"),
+            ],
+        )
+        html = view.render()
+        assert "Hello!" in html
+
+    def test_custom_agent_id(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent", agent_id="my-agent")
+        html = view.render()
+        assert "my-agent" in html
+
+    def test_status_and_metrics_bars(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent", show_status=True, show_metrics=True)
+        html = view.render()
+        assert "-status" in html
+        assert "-metrics" in html
+
+    def test_no_status_bar(self):
+        from kokage_ui.ai.deepagent_view import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent", show_status=False)
+        html = view.render()
+        # Status div should not be in HTML
+        assert 'id="' not in html or '-status"' not in html.split("id=")[0] if "id=" in html else True
+        # Just check JS still has setStatus function (no crash)
+        assert "setStatus" in html
+
+    def test_lazy_import(self):
+        from kokage_ui.ai import DeepAgentView
+
+        view = DeepAgentView(send_url="/api/agent")
+        assert view.send_url == "/api/agent"

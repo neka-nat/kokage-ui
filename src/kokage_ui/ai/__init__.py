@@ -21,6 +21,7 @@ _LANGCHAIN_EXPORTS = {
     "deep_agent_resume": "deepagents",
     "DeepAgentConfig": "deepagents",
     "to_deep_agent_tools": "deepagents",
+    "DeepAgentView": "deepagent_view",
 }
 
 
@@ -60,5 +61,6 @@ __all__ = [
     "deep_agent_stream",
     "deep_agent_resume",
     "DeepAgentConfig",
+    "DeepAgentView",
     "to_deep_agent_tools",
 ]

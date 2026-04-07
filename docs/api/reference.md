@@ -233,3 +233,8 @@ All elements inherit from `Component`. Children are positional args, attributes 
 | `langgraph_agent_stream` | `ai.langgraph` | Convert LangGraph `astream` directly to SSE StreamingResponse (messages/updates modes) |
 | `LangChainCallbackHandler` | `ai.langchain` | Callback-based adapter for `AgentExecutor` and legacy runnables |
 | `to_langchain_tools` | `ai.langchain` | Convert `ToolRegistry` / callables to LangChain `StructuredTool` |
+| `deep_agent_stream` | `ai.deepagents` | Convert Deep Agent graph to SSE StreamingResponse |
+| `deep_agent_resume` | `ai.deepagents` | Resume Deep Agent after interrupt with approval decisions |
+| `DeepAgentConfig` | `ai.deepagents` | Configuration for `deep_agent_stream` behavior |
+| `to_deep_agent_tools` | `ai.deepagents` | Convert `ToolRegistry` to Deep Agents tool list |
+| `DeepAgentView` | `ai.deepagent_view` | Agent dashboard with task plan sidebar and file activity |
